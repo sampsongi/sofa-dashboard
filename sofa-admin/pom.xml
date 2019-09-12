@@ -16,6 +16,7 @@
         <module>sofa-admin-common</module>
         <module>sofa-admin-framework</module>
         <module>sofa-admin-system</module>
+        <module>sofa-admin-job</module>
     </modules>
 
     <properties>

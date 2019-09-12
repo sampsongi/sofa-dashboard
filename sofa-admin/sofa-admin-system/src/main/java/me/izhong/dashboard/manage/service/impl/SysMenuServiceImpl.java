@@ -188,7 +188,7 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
 
     @Override
     public int selectCountMenuByParentId(Long parentId) {
-        return menuDao.findAllByParentId(parentId).size();
+        return menuDao.findAllByParentIdAndIsDelete(parentId,false).size();
     }
 
     @Override

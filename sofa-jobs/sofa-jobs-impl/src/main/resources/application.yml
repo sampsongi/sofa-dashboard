@@ -1,0 +1,7 @@
+### xxl-job, access token
+xxl:
+  job:
+    accessToken:
+
+### xxl-job, i18n (default empty as chinese, "en" as english)
+    i18n:

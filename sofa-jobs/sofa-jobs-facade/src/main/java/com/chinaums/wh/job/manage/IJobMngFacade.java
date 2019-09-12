@@ -1,6 +1,9 @@
 package com.chinaums.wh.job.manage;
 
 import com.chinaums.wh.job.model.Job;
+import com.chinaums.wh.job.model.LogStatics;
+import com.chinaums.wh.job.model.RegistryParam;
+import com.chinaums.wh.job.model.ReturnT;
 
 import java.util.List;
 
@@ -25,4 +28,19 @@ public interface IJobMngFacade {
     void pause(String jobKey);
 
     void start(String jobKey);
+
+    /**
+     *  agent注册自己的地址到调度器
+     * @param registryParam
+     * @return
+     */
+    ReturnT<String> registryAgent(RegistryParam registryParam);
+
+    /**
+     * agent上送执行日志，结果到调度器
+     * @param
+     * @return
+     */
+    ReturnT<String> uploadStatics(LogStatics logStatics);
+
 }

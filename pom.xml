@@ -10,6 +10,8 @@
     <modules>
         <module>sofa-admin</module>
         <module>sofa-jobs</module>
+        <module>sofa-commons</module>
+        <module>sofa-db-commons</module>
     </modules>
 
     <parent>
@@ -52,6 +54,11 @@
                 <groupId>com.alipay.sofa</groupId>
                 <artifactId>registry-client-all</artifactId>
                 <version>5.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>me.izhong.sofa</groupId>
+                <artifactId>sofa-commons</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

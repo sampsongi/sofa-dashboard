@@ -4,6 +4,9 @@ import com.alipay.sofa.runtime.api.annotation.SofaService;
 import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
 import com.chinaums.wh.job.manage.IJobMngFacade;
 import com.chinaums.wh.job.model.Job;
+import com.chinaums.wh.job.model.LogStatics;
+import com.chinaums.wh.job.model.RegistryParam;
+import com.chinaums.wh.job.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +59,17 @@ public class JobMngImpl implements IJobMngFacade {
 
     public void start(String jobKey) {
 
+    }
+
+    @Override
+    public ReturnT<String> registryAgent(RegistryParam registryParam) {
+        //记录agent还活着
+        return null;
+    }
+
+    @Override
+    public ReturnT<String> uploadStatics(LogStatics logStatics) {
+        //收集agent的日志
+        return null;
     }
 }
