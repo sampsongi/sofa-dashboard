@@ -1,9 +1,9 @@
 package me.izhong.dashboard.manage.aspect;
 
 import com.alibaba.fastjson.JSON;
+import com.chinaums.wh.model.UserInfo;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.SystemConstants;
-import me.izhong.dashboard.manage.domain.UserInfo;
 import me.izhong.dashboard.manage.entity.SysOperLog;
 import me.izhong.dashboard.manage.factory.AsyncManager;
 import me.izhong.dashboard.manage.factory.AsyncFactory;

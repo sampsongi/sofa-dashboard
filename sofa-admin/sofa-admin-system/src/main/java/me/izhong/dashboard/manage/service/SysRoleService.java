@@ -1,5 +1,6 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.entity.SysRole;
 import me.izhong.dashboard.manage.entity.SysUserRole;
 import com.chinaums.wh.db.common.exception.BusinessException;
@@ -7,7 +8,7 @@ import com.chinaums.wh.db.common.exception.BusinessException;
 import java.util.List;
 import java.util.Set;
 
-public interface SysRoleService extends CrudBaseService<Long,SysRole>{
+public interface SysRoleService extends CrudBaseService<Long,SysRole> {
 
     /**
      * 根据用户ID查询角色

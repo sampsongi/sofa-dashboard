@@ -1,11 +1,11 @@
 package me.izhong.dashboard.web.demo.controller;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import com.chinaums.wh.common.util.Convert;
 import me.izhong.dashboard.web.demo.domain.UserOperateModel;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;

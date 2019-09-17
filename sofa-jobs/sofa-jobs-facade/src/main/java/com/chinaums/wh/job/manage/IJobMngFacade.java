@@ -1,33 +1,39 @@
 package com.chinaums.wh.job.manage;
 
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.LogStatics;
 import com.chinaums.wh.job.model.RegistryParam;
-import com.chinaums.wh.job.model.ReturnT;
+import com.chinaums.wh.model.ReturnT;
 
 import java.util.List;
 
 public interface IJobMngFacade {
 
+    PageModel<Job> pageList(PageRequest request, Job ino);
+
     List<Job> search(String jobKey, String jobName, String jobGroup);
 
     long count(String jobKey, String jobName, String jobGroup);
 
+    Job findByJobId(Long jobId);
+
     Job findByJobKey(String jobKey);
 
-    void add(Job job);
+    ReturnT<Job> add(Job job);
 
-    void delete(Job job);
+    ReturnT<Job> remove(Long jobId);
 
-    Job edit(Job job);
+    ReturnT<Job> update(Job job);
 
-    void enable(String jobKey);
+    ReturnT<Job> enable(Long jobId);
 
-    void disable(String jobKey);
+    ReturnT<Job> disable(Long jobId);
 
-    void pause(String jobKey);
+    ReturnT<Job> kill(Long jobId);
 
-    void start(String jobKey);
+    ReturnT<Job> start(Long jobId);
 
     /**
      *  agent注册自己的地址到调度器

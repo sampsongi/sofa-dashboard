@@ -1,11 +1,11 @@
 package me.izhong.dashboard.manage.entity;
 
+import com.chinaums.wh.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.chinaums.wh.db.common.annotation.AutoId;
 import com.chinaums.wh.db.common.annotation.PrimaryId;
 import com.chinaums.wh.db.common.annotation.Search;
-import me.izhong.dashboard.manage.domain.TimedBasedEntity;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

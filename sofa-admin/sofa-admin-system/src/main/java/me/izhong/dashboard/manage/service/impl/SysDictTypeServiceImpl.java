@@ -1,5 +1,7 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.domain.PageRequest;
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.dashboard.manage.constants.UserConstants;
 import me.izhong.dashboard.manage.dao.DictTypeDao;
@@ -8,8 +10,6 @@ import me.izhong.dashboard.manage.entity.SysDictData;
 import me.izhong.dashboard.manage.entity.SysDictType;
 import me.izhong.dashboard.manage.service.SysDictDataService;
 import me.izhong.dashboard.manage.service.SysDictTypeService;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

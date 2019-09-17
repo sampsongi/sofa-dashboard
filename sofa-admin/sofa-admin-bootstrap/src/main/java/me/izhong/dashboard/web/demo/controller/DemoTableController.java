@@ -1,10 +1,10 @@
 package me.izhong.dashboard.web.demo.controller;
 
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

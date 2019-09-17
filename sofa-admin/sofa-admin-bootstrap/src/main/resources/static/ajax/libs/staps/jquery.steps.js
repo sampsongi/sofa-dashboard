@@ -362,12 +362,12 @@
     }
 
     /**
-     * Gets a valid enum value by checking a specific enum key or value.
+     * Gets a valid type value by checking a specific type key or value.
      *
      * @static
      * @private
      * @method getValidEnumValue
-     * @param enumType {Object} Type of enum
+     * @param enumType {Object} Type of type
      * @param keyOrValue {Object} Key as `String` or value as `Integer` to check for
      */
     function getValidEnumValue(enumType, keyOrValue) {
@@ -378,7 +378,7 @@
         if (typeof keyOrValue === "string") {
             var value = enumType[keyOrValue];
             if (value === undefined) {
-                throwError("The enum key '{0}' does not exist.", keyOrValue);
+                throwError("The type key '{0}' does not exist.", keyOrValue);
             }
 
             return value;
@@ -391,7 +391,7 @@
                 }
             }
 
-            throwError("Invalid enum value '{0}'.", keyOrValue);
+            throwError("Invalid type value '{0}'.", keyOrValue);
         }
         // Type is not supported
         else {
@@ -1333,7 +1333,7 @@
     };
 
     /**
-     * An enum represents the different content types of a step and their loading mechanisms.
+     * An type represents the different content types of a step and their loading mechanisms.
      *
      * @class contentMode
      * @for steps
@@ -1371,7 +1371,7 @@
     };
 
     /**
-     * An enum represents the orientation of the steps navigation.
+     * An type represents the orientation of the steps navigation.
      *
      * @class stepsOrientation
      * @for steps
@@ -1399,7 +1399,7 @@
     };
 
     /**
-     * An enum that represents the various transition animations.
+     * An type that represents the various transition animations.
      *
      * @class transitionEffect
      * @for steps

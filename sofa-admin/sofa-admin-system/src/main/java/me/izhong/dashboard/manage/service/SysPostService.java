@@ -1,11 +1,12 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.entity.SysPost;
 import me.izhong.dashboard.manage.entity.SysUser;
 
 import java.util.List;
 
-public interface SysPostService extends CrudBaseService<Long,SysPost>{
+public interface SysPostService extends CrudBaseService<Long,SysPost> {
 
 
     /**

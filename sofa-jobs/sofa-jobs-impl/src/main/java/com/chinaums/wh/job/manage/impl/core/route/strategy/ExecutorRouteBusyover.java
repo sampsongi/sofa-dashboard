@@ -1,16 +1,14 @@
 package com.chinaums.wh.job.manage.impl.core.route.strategy;
 
-import com.chinaums.wh.job.manage.impl.core.conf.XxlJobScheduler;
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouter;
 import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-import me.izhong.dashboard.job.core.biz.ExecutorBiz;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.biz.model.TriggerParam;
+import com.chinaums.wh.job.model.TriggerParam;
+import com.chinaums.wh.model.ReturnT;
+
 
 import java.util.List;
 
 /**
- * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteBusyover extends ExecutorRouter {
 
@@ -21,8 +19,8 @@ public class ExecutorRouteBusyover extends ExecutorRouter {
             // beat
             ReturnT<String> idleBeatResult = null;
             try {
-                ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
-                idleBeatResult = executorBiz.idleBeat(triggerParam.getJobId());
+                //ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+                //idleBeatResult = executorBiz.idleBeat(triggerParam.getJobId());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 idleBeatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );

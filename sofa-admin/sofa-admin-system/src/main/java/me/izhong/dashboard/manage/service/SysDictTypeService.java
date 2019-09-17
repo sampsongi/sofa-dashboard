@@ -1,13 +1,14 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.domain.PageRequest;
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.domain.Ztree;
 import me.izhong.dashboard.manage.entity.SysDictType;
-import me.izhong.dashboard.manage.domain.PageRequest;
 
 import java.util.List;
 
 
-public interface SysDictTypeService extends CrudBaseService<Long,SysDictType>{
+public interface SysDictTypeService extends CrudBaseService<Long,SysDictType> {
 
     /**
      * 根据字典类型查询信息

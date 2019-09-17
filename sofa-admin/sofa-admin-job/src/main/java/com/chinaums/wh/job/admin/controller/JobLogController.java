@@ -1,20 +1,15 @@
 package com.chinaums.wh.job.admin.controller;
 
-import com.chinaums.wh.job.manage.impl.core.conf.XxlJobScheduler;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-import com.chinaums.wh.job.manage.impl.service.XxlJobGroupService;
-import com.chinaums.wh.job.manage.impl.service.XxlJobInfoService;
-import com.chinaums.wh.job.manage.impl.service.XxlJobLogService;
-import me.izhong.dashboard.job.core.biz.ExecutorBiz;
-import me.izhong.dashboard.job.core.biz.model.LogResult;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.util.DateUtil;
+
+import com.chinaums.wh.common.util.DateUtil;
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
+
+import com.chinaums.wh.db.common.util.PageRequestUtil;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.job.admin.service.JobServiceReference;
+import com.chinaums.wh.job.model.Job;
+import com.chinaums.wh.job.model.JobGroup;
+import com.chinaums.wh.job.model.JobLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,39 +23,32 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
-/**
- * index controller
- * @author xuxueli 2015-12-19 16:13:16
- */
 @Controller
 @RequestMapping("/joblog")
 public class JobLogController {
 	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
+
 	@Resource
-	private XxlJobGroupService xxlJobGroupService;
-	@Resource
-	public XxlJobInfoService xxlJobInfoService;
-	@Resource
-	public XxlJobLogService xxlJobLogService;
+	private JobServiceReference jobServiceReference;
 
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Long jobId) {
 
 		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupService.selectAll();
+		List<JobGroup> jobGroupList_all =  jobServiceReference.jobGroupService.selectAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = jobGroupList_all;
+		List<JobGroup> jobGroupList = jobGroupList_all;
 
 
 		model.addAttribute("JobGroupList", jobGroupList);
 
 		// 任务
 		if (jobId > 0) {
-			XxlJobInfo jobInfo = xxlJobInfoService.selectByPId(jobId);
+			Job jobInfo = jobServiceReference.jobService.findByJobId(jobId);
 			if (jobInfo == null) {
-				throw new RuntimeException(I18nUtil.getString("jobinfo_field_id") + I18nUtil.getString("system_unvalid"));
+				throw new RuntimeException("未找到");
 			}
 
 			model.addAttribute("jobInfo", jobInfo);
@@ -70,15 +58,10 @@ public class JobLogController {
 		return "joblog/joblog.index";
 	}
 
-	@RequestMapping("/getJobsByGroup")
-	@AjaxWrapper
-	public PageModel<XxlJobInfo> getJobsByGroup(HttpServletRequest request, XxlJobInfo jobInfo){
-		return xxlJobInfoService.selectPage(PageRequest.fromRequest(request),jobInfo);
-	}
 	
 	@RequestMapping("/pageList")
 	@AjaxWrapper
-	public PageModel<XxlJobLog> pageList(HttpServletRequest request, XxlJobLog jLog, String filterTime) {
+	public PageModel<JobLog> pageList(HttpServletRequest request, JobLog jLog, String filterTime) {
 
 		// parse param
 		Date triggerTimeStart = null;
@@ -86,12 +69,12 @@ public class JobLogController {
 		if (filterTime!=null && filterTime.trim().length()>0) {
 			String[] temp = filterTime.split(" - ");
 			if (temp!=null && temp.length == 2) {
-				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
-				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
+//				triggerTimeStart = DateUtil.parseDateTime(temp[0]);
+//				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
 		
-		return xxlJobLogService.selectPage(PageRequest.fromRequest(request),jLog);
+		return jobServiceReference.jobService.selectPage(PageRequest.fromRequest(request),jLog);
 	}
 
 	@RequestMapping("/logDetailPage")

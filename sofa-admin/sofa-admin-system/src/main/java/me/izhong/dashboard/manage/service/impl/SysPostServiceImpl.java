@@ -1,5 +1,6 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.PostDao;
 import me.izhong.dashboard.manage.entity.SysPost;
 import me.izhong.dashboard.manage.entity.SysUser;

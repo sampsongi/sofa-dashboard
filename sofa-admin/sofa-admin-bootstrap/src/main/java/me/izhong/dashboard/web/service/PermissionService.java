@@ -1,7 +1,7 @@
 package me.izhong.dashboard.web.service;
 
+import com.chinaums.wh.model.UserInfo;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.domain.UserInfo;
 import me.izhong.dashboard.manage.service.SysMenuService;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.apache.shiro.SecurityUtils;

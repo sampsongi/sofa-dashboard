@@ -1,12 +1,13 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.entity.SysMenu;
 import me.izhong.dashboard.manage.domain.Ztree;
 
 import java.util.List;
 import java.util.Set;
 
-public interface SysMenuService extends CrudBaseService<Long,SysMenu>{
+public interface SysMenuService extends CrudBaseService<Long,SysMenu> {
 
     /**
      * 根据用户ID查询菜单

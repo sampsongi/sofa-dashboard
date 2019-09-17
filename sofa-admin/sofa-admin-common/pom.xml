@@ -15,7 +15,7 @@
 
     <dependencies>
 		<dependency>
-			<artifactId>sofa-dashboard</artifactId>
+			<artifactId>sofa-db-commons</artifactId>
 			<groupId>me.izhong.sofa</groupId>
 			<version>${project.version}</version>
 		</dependency>

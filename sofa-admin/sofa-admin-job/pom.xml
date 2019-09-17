@@ -35,5 +35,9 @@
             <groupId>me.izhong.sofa</groupId>
             <artifactId>sofa-admin-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>me.izhong.sofa</groupId>
+            <artifactId>sofa-admin-framework</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,14 +1,14 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.entity.SysNotice;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.service.SysNoticeService;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

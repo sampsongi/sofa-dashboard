@@ -1,4 +1,4 @@
-package com.chinaums.wh.db.common.domain;
+package com.chinaums.wh.domain;
 
 import lombok.Data;
 

@@ -1,16 +1,14 @@
 package com.chinaums.wh.job.manage.impl.core.route;
 
 
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.biz.model.TriggerParam;
+import com.chinaums.wh.job.model.TriggerParam;
+import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * Created by xuxueli on 17/3/10.
- */
+
 public abstract class ExecutorRouter {
     protected static Logger logger = LoggerFactory.getLogger(ExecutorRouter.class);
 

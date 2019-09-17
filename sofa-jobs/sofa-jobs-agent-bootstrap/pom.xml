@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sofa-jobs-agent</artifactId>
+    <artifactId>sofa-jobs-agent-bootstrap</artifactId>
 
     <!-- 这里放工程公共的jar -->
     <dependencies>

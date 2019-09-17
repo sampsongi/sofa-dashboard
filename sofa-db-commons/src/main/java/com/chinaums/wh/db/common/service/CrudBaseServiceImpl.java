@@ -1,8 +1,8 @@
 package com.chinaums.wh.db.common.service;
 
 import com.chinaums.wh.common.util.Convert;
-import com.chinaums.wh.db.common.domain.PageModel;
-import com.chinaums.wh.db.common.domain.PageRequest;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import com.chinaums.wh.db.common.util.CriteriaUtil;
 import com.mongodb.client.result.DeleteResult;

@@ -1,9 +1,9 @@
 package me.izhong.dashboard.manage.service;
 
 
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.entity.SysUser;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 
 import java.util.Date;
 import java.util.List;

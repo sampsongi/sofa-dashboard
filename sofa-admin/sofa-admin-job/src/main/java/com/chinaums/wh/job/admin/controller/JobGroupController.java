@@ -1,26 +1,24 @@
 package com.chinaums.wh.job.admin.controller;
 
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-import com.chinaums.wh.job.manage.impl.service.XxlJobGroupService;
-import com.chinaums.wh.job.manage.impl.service.XxlJobInfoService;
-import com.chinaums.wh.job.manage.impl.service.XxlJobRegistryService;
-import me.izhong.dashboard.job.core.enums.RegistryConfig;
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.job.admin.service.JobServiceReference;
+import com.chinaums.wh.job.model.JobGroup;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.expection.job.TaskException;
-import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import com.chinaums.wh.common.util.Convert;
+import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.quartz.SchedulerException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +38,13 @@ public class JobGroupController {
 	private String prefix = "monitor/djob/group";
 
 	@Resource
-	public XxlJobInfoService xxlJobInfoService;
-	@Resource
-	public XxlJobGroupService xxlJobGroupService;
-	@Resource
-	private XxlJobRegistryService xxlJobRegistryService;
+	private JobServiceReference jobServiceReference;
 
 	@RequestMapping
 	public String index(Model model) {
 
 		// job group (executor)
-		List<XxlJobGroup> list = xxlJobGroupService.selectAll();
+		List<JobGroup> list = jobServiceReference.jobGroupService.selectAll();
 
 		model.addAttribute("list", list);
 		return prefix + "/group";
@@ -58,8 +52,8 @@ public class JobGroupController {
 
 	@RequestMapping("/list")
 	@AjaxWrapper
-	public PageModel<XxlJobGroup> pageList(HttpServletRequest request, XxlJobGroup ino) {
-		return xxlJobGroupService.selectPage(PageRequest.fromRequest(request),ino);
+	public PageModel<JobGroup> pageList(HttpServletRequest request, JobGroup ino) {
+		return jobServiceReference.jobGroupService.selectPage(PageRequestUtil.fromRequest(request),ino);
 	}
 
 	/**
@@ -77,32 +71,30 @@ public class JobGroupController {
 	@RequiresPermissions("monitor:job:add")
 	@PostMapping("/add")
 	@AjaxWrapper
-	public XxlJobGroup addSave(XxlJobGroup xxlJobGroup) throws SchedulerException, TaskException
+	public JobGroup addSave(JobGroup JobGroup) throws BusinessException
 	{
-		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
-			throw BusinessException.build(I18nUtil.getString("system_please_input")+"AppName");
+		if (JobGroup.getGroupName()==null || JobGroup.getGroupName().trim().length()==0) {
+			throw BusinessException.build("GroupName不能为空");
 		}
-		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
-			throw BusinessException.build(I18nUtil.getString("jobgroup_field_appName_length") );
+		if (JobGroup.getGroupName().length()<4 || JobGroup.getGroupName().length()>64) {
+            throw BusinessException.build("GroupName长度4-64");
 		}
-		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
-			throw BusinessException.build(I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title"));
-		}
-		if (xxlJobGroup.getAddressType()!=0) {
-			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
-				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
-			}
-			String[] addresss = xxlJobGroup.getAddressList().split(",");
-			for (String item: addresss) {
-				if (item==null || item.trim().length()==0) {
-					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
-				}
-			}
-		}
+		
+//		if (JobGroup.getAddressType()!=0) {
+//			if (JobGroup.getAddressList()==null || JobGroup.getAddressList().trim().length()==0) {
+//				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
+//			}
+//			String[] addresss = JobGroup.getAddressList().split(",");
+//			for (String item: addresss) {
+//				if (item==null || item.trim().length()==0) {
+//					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
+//				}
+//			}
+//		}
 
-		xxlJobGroup.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
-		xxlJobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
-		return xxlJobGroupService.insert(xxlJobGroup);
+		JobGroup.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
+		JobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
+		return jobServiceReference.jobGroupService.add(JobGroup);
 	}
 
 
@@ -112,7 +104,7 @@ public class JobGroupController {
 	@GetMapping("/edit/{groupId}")
 	public String edit(@PathVariable("groupId") Long groupId, ModelMap mmap)
 	{
-		mmap.put("group", xxlJobGroupService.selectByPId(groupId));
+		mmap.put("group", jobServiceReference.jobGroupService.find(groupId));
 		return prefix + "/edit";
 	}
 
@@ -123,94 +115,91 @@ public class JobGroupController {
 	@RequiresPermissions("monitor:job:edit")
 	@PostMapping("/edit")
 	@AjaxWrapper
-	public XxlJobGroup editSave(XxlJobGroup xxlJobGroup) throws SchedulerException, TaskException
+	public JobGroup editSave(JobGroup JobGroup) throws BusinessException
 	{
-		if (xxlJobGroup.getAppName()==null || xxlJobGroup.getAppName().trim().length()==0) {
-			throw BusinessException.build(I18nUtil.getString("system_please_input")+"AppName");
+		if (JobGroup.getGroupName()==null || JobGroup.getGroupName().trim().length()==0) {
+			throw BusinessException.build("GroupName不能为空");
 		}
-		if (xxlJobGroup.getAppName().length()<4 || xxlJobGroup.getAppName().length()>64) {
-			throw BusinessException.build(I18nUtil.getString("jobgroup_field_appName_length") );
+		if (JobGroup.getGroupName().length()<4 || JobGroup.getGroupName().length()>64) {
+			throw BusinessException.build("GroupName长度4-64");
 		}
-		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
-			throw BusinessException.build(I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title"));
-		}
-		if (xxlJobGroup.getAddressType() == 0) {
-			// 0=自动注册
-			List<String> registryList = findRegistryByAppName(xxlJobGroup.getAppName());
-			String addressListStr = null;
-			if (registryList!=null && !registryList.isEmpty()) {
-				Collections.sort(registryList);
-				addressListStr = "";
-				for (String item:registryList) {
-					addressListStr += item + ",";
-				}
-				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
-			}
-			xxlJobGroup.setAddressList(addressListStr);
-		} else {
-			// 1=手动录入
-			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
-				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
-			}
-			String[] addresss = xxlJobGroup.getAddressList().split(",");
-			for (String item: addresss) {
-				if (item==null || item.trim().length()==0) {
-					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
-				}
-			}
-		}
-		xxlJobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
-		return xxlJobGroupService.update(xxlJobGroup);
+//		if (JobGroup.getAddressType() == 0) {
+//			// 0=自动注册
+//			List<String> registryList = findRegistryByAppName(JobGroup.getAppName());
+//			String addressListStr = null;
+//			if (registryList!=null && !registryList.isEmpty()) {
+//				Collections.sort(registryList);
+//				addressListStr = "";
+//				for (String item:registryList) {
+//					addressListStr += item + ",";
+//				}
+//				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+//			}
+//			JobGroup.setAddressList(addressListStr);
+//		} else {
+//			// 1=手动录入
+//			if (JobGroup.getAddressList()==null || JobGroup.getAddressList().trim().length()==0) {
+//				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
+//			}
+//			String[] addresss = JobGroup.getAddressList().split(",");
+//			for (String item: addresss) {
+//				if (item==null || item.trim().length()==0) {
+//					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
+//				}
+//			}
+//		}
+		JobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
+		return jobServiceReference.jobGroupService.update(JobGroup);
 	}
 
-	private List<String> findRegistryByAppName(String appNameParam){
-		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-		List<XxlJobRegistry> list = xxlJobRegistryService.findNormal(RegistryConfig.DEAD_TIMEOUT);
-		if (list != null) {
-			for (XxlJobRegistry item: list) {
-				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
-					String appName = item.getRegistryKey();
-					List<String> registryList = appAddressMap.get(appName);
-					if (registryList == null) {
-						registryList = new ArrayList<String>();
-					}
-
-					if (!registryList.contains(item.getRegistryValue())) {
-						registryList.add(item.getRegistryValue());
-					}
-					appAddressMap.put(appName, registryList);
-				}
-			}
-		}
-		return appAddressMap.get(appNameParam);
-	}
+//	private List<String> findRegistryByAppName(String appNameParam){
+//		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
+//		List<XxlJobRegistry> list = xxlJobRegistryService.findNormal(RegistryConfig.DEAD_TIMEOUT);
+//		if (list != null) {
+//			for (XxlJobRegistry item: list) {
+//				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+//					String appName = item.getRegistryKey();
+//					List<String> registryList = appAddressMap.get(appName);
+//					if (registryList == null) {
+//						registryList = new ArrayList<String>();
+//					}
+//
+//					if (!registryList.contains(item.getRegistryValue())) {
+//						registryList.add(item.getRegistryValue());
+//					}
+//					appAddressMap.put(appName, registryList);
+//				}
+//			}
+//		}
+//		return appAddressMap.get(appNameParam);
+//	}
 
 	@RequestMapping("/remove")
 	@AjaxWrapper
 	public Long remove(String ids){
 
 		// valid
-		long count = xxlJobInfoService.count();
-		if (count > 0) {
-			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_0") );
-		}
-
-		List<XxlJobGroup> allList = xxlJobGroupService.selectAll();
-		if (allList.size() == 1) {
-			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_1") );
-		}
+//		long count = jobServiceReference.jobGroupService.count();
+//		if (count > 0) {
+//			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_0") );
+//		}
+//
+//		List<JobGroup> allList = JobGroupService.selectAll();
+//		if (allList.size() == 1) {
+//			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_1") );
+//		}
 
 		List<Long> idLongs = Convert.toLongList(ids);
 		if(idLongs.size() < 1)
 			throw BusinessException.build("删除的数量不能小于1");
 
-		return xxlJobGroupService.remove(idLongs);
+		return jobServiceReference.jobGroupService.remove(idLongs);
 	}
 
 	@RequestMapping("/find")
 	@AjaxWrapper
-	public XxlJobGroup loadById(long id){
-		return xxlJobGroupService.selectByPId(id);
+	public JobGroup loadById(long id){
+		return jobServiceReference.jobGroupService.find(id);
 	}
 
 }

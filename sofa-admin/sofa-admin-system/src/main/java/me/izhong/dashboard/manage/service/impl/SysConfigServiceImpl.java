@@ -1,9 +1,9 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.ConfigDao;
 import me.izhong.dashboard.manage.entity.SysConfig;
 import me.izhong.dashboard.manage.service.SysConfigService;
-import me.izhong.dashboard.manage.domain.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;

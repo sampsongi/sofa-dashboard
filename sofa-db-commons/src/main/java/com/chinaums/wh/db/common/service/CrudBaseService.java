@@ -1,7 +1,7 @@
 package com.chinaums.wh.db.common.service;
 
-import com.chinaums.wh.db.common.domain.PageModel;
-import com.chinaums.wh.db.common.domain.PageRequest;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import org.springframework.data.mongodb.core.query.Query;
 

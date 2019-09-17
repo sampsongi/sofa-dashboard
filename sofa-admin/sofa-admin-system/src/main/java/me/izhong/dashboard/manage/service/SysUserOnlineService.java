@@ -1,11 +1,12 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.entity.SysUserOnline;
 
 import java.util.Date;
 import java.util.List;
 
-public interface SysUserOnlineService extends CrudBaseService<String,SysUserOnline>{
+public interface SysUserOnlineService extends CrudBaseService<String,SysUserOnline> {
 
     public void batchDeleteOnline(List<String> sessionIds);
 

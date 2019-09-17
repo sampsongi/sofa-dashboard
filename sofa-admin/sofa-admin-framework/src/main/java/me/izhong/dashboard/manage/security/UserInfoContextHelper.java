@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.security;
 
-import me.izhong.dashboard.manage.domain.UserInfo;
+import com.chinaums.wh.model.UserInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;

@@ -1,9 +1,9 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.dashboard.manage.dao.DictDataDao;
 import me.izhong.dashboard.manage.entity.SysDictData;
-import me.izhong.dashboard.manage.domain.PageModel;
 import me.izhong.dashboard.manage.service.SysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

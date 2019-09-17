@@ -1,11 +1,11 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.dashboard.manage.dao.UserOnlineDao;
 import me.izhong.dashboard.manage.entity.SysUserOnline;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysUserOnlineService;
-import me.izhong.dashboard.manage.domain.PageModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;

@@ -12,4 +12,11 @@
     <artifactId>sofa-jobs-facade</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>me.izhong.sofa</groupId>
+            <artifactId>sofa-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

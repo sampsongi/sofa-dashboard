@@ -1,8 +1,8 @@
 package com.chinaums.wh.job.manage.impl.core.route.strategy;
 
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouter;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.biz.model.TriggerParam;
+import com.chinaums.wh.job.model.TriggerParam;
+import com.chinaums.wh.model.ReturnT;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentMap;
  *      a(*)、LFU(Least Frequently Used)：最不经常使用，频率/次数
  *      b、LRU(Least Recently Used)：最近最久未使用，时间
  *
- * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteLFU extends ExecutorRouter {
 

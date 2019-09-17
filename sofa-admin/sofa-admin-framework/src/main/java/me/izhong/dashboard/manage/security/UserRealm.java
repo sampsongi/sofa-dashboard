@@ -1,8 +1,8 @@
 package me.izhong.dashboard.manage.security;
 
 import com.chinaums.wh.db.common.exception.BusinessException;
+import com.chinaums.wh.model.UserInfo;
 import me.izhong.dashboard.manage.constants.Global;
-import me.izhong.dashboard.manage.domain.UserInfo;
 import me.izhong.dashboard.manage.entity.SysDept;
 import me.izhong.dashboard.manage.entity.SysRole;
 import me.izhong.dashboard.manage.entity.SysUser;

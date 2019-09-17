@@ -3,7 +3,7 @@ package com.chinaums.wh.job.manage.impl.core.trigger;
 import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
 
 /**
- * trigger type enum
+ * trigger type type
  *
  * @author xuxueli 2018-09-16 04:56:41
  */

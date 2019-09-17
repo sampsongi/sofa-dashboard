@@ -1,14 +1,12 @@
 package com.chinaums.wh.job.manage.impl.core.route.strategy;
 
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouter;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.biz.model.TriggerParam;
+import com.chinaums.wh.job.model.TriggerParam;
+import com.chinaums.wh.model.ReturnT;
 
 import java.util.List;
 
-/**
- * Created by xuxueli on 17/3/10.
- */
+
 public class ExecutorRouteFirst extends ExecutorRouter {
 
     @Override

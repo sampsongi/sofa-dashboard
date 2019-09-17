@@ -1,12 +1,13 @@
 package me.izhong.dashboard.manage.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.entity.SysDept;
 import me.izhong.dashboard.manage.domain.Ztree;
 
 
 import java.util.List;
 
-public interface SysDeptService extends CrudBaseService<Long,SysDept>{
+public interface SysDeptService extends CrudBaseService<Long,SysDept> {
 
     List<Long> selectAllDeptId();
 

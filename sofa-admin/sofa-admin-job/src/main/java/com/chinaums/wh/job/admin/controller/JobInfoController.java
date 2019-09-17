@@ -1,21 +1,14 @@
 package com.chinaums.wh.job.admin.controller;
 
+import com.chinaums.wh.common.util.CronUtil;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
+import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.job.admin.service.JobServiceReference;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
-import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
-import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouteStrategyEnum;
-import com.chinaums.wh.job.manage.impl.core.thread.JobTriggerPoolHelper;
-import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
-import com.chinaums.wh.job.manage.impl.service.XxlJobGroupService;
-import com.chinaums.wh.job.manage.impl.service.XxlJobService;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.enums.ExecutorBlockStrategyEnum;
-import me.izhong.dashboard.job.core.glue.GlueTypeEnum;
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
-import me.izhong.dashboard.quartz.domain.SysJob;
-import me.izhong.dashboard.quartz.util.CronUtil;
+import com.chinaums.wh.job.model.Job;
+import com.chinaums.wh.job.model.JobGroup;
+import com.chinaums.wh.job.type.GlueTypeEnum;
+import com.chinaums.wh.model.ReturnT;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +17,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
- * index controller
- * @author xuxueli 2015-12-19 16:13:16
- */
 @Controller
 @RequestMapping("/monitor/djob")
 public class JobInfoController {
@@ -41,16 +30,15 @@ public class JobInfoController {
 	public String job( Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup)
 	{
 		// 枚举-字典
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
+		//model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
 		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
+		//model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
 
-		jobServiceReference.jobGroupService.count()
 		// 执行器列表
-		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupService.selectAll();
+		List<JobGroup> jobGroupList_all =  jobServiceReference.jobGroupService.selectAll();
 
 		// filter group
-		List<XxlJobGroup> jobGroupList = jobGroupList_all;
+		List<JobGroup> jobGroupList = jobGroupList_all;
 		if (jobGroupList==null || jobGroupList.size()==0) {
 		//	throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
@@ -62,58 +50,56 @@ public class JobInfoController {
 
 	@RequestMapping("/list")
 	@AjaxWrapper
-	public PageModel<XxlJobInfo> pageList(HttpServletRequest request, XxlJobInfo ino) {
-		return xxlJobService.pageList(PageRequest.fromRequest(request),ino);
+	public PageModel<Job> pageList(HttpServletRequest request, Job ino) {
+		return jobServiceReference.jobService.pageList(PageRequestUtil.fromRequest(request),ino);
 	}
 	
 	@RequestMapping("/add")
 	@AjaxWrapper
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
-		return xxlJobService.add(jobInfo);
+	public ReturnT<Job> add(Job jobInfo) {
+		return jobServiceReference.jobService.add(jobInfo);
 	}
 	
 	@RequestMapping("/update")
 	@AjaxWrapper
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
-		return xxlJobService.update(jobInfo);
+	public ReturnT<Job> update(Job jobInfo) {
+		return jobServiceReference.jobService.update(jobInfo);
 	}
 	
 	@RequestMapping("/remove")
 	@AjaxWrapper
-	public ReturnT<String> remove(int id) {
-		return xxlJobService.remove(id);
+	public ReturnT<Job> remove(Long id) {
+		return jobServiceReference.jobService.remove(id);
 	}
 	
 	@RequestMapping("/stop")
 	@AjaxWrapper
-	public ReturnT<String> pause(int id) {
-		return xxlJobService.stop(id);
+	public ReturnT<Job> pause(Long id) {
+		return jobServiceReference.jobService.kill(id);
 	}
 	
 	@RequestMapping("/start")
 	@AjaxWrapper
-	public ReturnT<String> start(int id) {
-		return xxlJobService.start(id);
+	public ReturnT<Job> start(Long id) {
+		return jobServiceReference.jobService.start(id);
 	}
 	
 	@RequestMapping("/trigger")
 	@AjaxWrapper
-	//@PermissionLimit(limit = false)
-	public ReturnT<String> triggerJob(int id, String executorParam) {
+	public ReturnT<Job> triggerJob(Long id, String executorParam) {
 		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
 		}
-
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
-		return ReturnT.SUCCESS;
+		return jobServiceReference.jobService.start(id);
+		//JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
 	}
 
 	@PostMapping("/checkCronExpressionIsValid")
 	@ResponseBody
-	public boolean checkCronExpressionIsValid(SysJob job)
+	public boolean checkCronExpressionIsValid(String CronExpression)
 	{
-		return CronUtil.isValid(job.getCronExpression());
+		return CronUtil.isValid(CronExpression);
 	}
 	
 }
