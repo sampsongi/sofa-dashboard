@@ -1,11 +1,11 @@
 package me.izhong.dashboard.manage.convertor;
 
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.annotation.AutoId;
-import me.izhong.dashboard.manage.annotation.CreateTimeAdvise;
-import me.izhong.dashboard.manage.annotation.UpdateTimeAdvise;
+import com.chinaums.wh.db.common.annotation.AutoId;
+import com.chinaums.wh.db.common.annotation.CreateTimeAdvise;
+import com.chinaums.wh.db.common.annotation.UpdateTimeAdvise;
 import me.izhong.dashboard.manage.entity.SysSeqInfo;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;

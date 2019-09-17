@@ -1,14 +1,12 @@
 package me.izhong.dashboard.manage.util;
 
-import me.izhong.dashboard.manage.annotation.Excel;
-import me.izhong.dashboard.manage.annotation.Excel.Type;
-import me.izhong.dashboard.manage.annotation.Excels;
+import com.chinaums.wh.common.util.Convert;
+import com.chinaums.wh.db.common.annotation.Excel;
+import com.chinaums.wh.db.common.annotation.Excels;
 import me.izhong.dashboard.manage.constants.Global;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -147,7 +145,7 @@ public class ExcelUtil<T> {
             for (int col = 0; col < allFields.length; col++) {
                 Field field = allFields[col];
                 Excel attr = field.getAnnotation(Excel.class);
-                if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
+                if (attr != null && (attr.type() == Excel.Type.ALL || attr.type() == type)) {
                     // 设置类的私有字段属性可访问.
                     field.setAccessible(true);
                     Integer column = cellMap.get(attr.name());
@@ -189,7 +187,7 @@ public class ExcelUtil<T> {
                         val = Convert.toBigDecimal(val);
                     } else if (Date.class == fieldType) {
                         if (val instanceof String) {
-                            val = DateUtil.parseDate(val);
+                            val = com.chinaums.wh.common.util.DateUtil.parseDate(val);
                         } else if (val instanceof Double) {
                             val = org.apache.poi.ss.usermodel.DateUtil.getJavaDate((Double) val);
                         }
@@ -219,7 +217,7 @@ public class ExcelUtil<T> {
      * @return 结果
      */
     public String exportExcel(List<T> list, String sheetName) {
-        this.init(list, sheetName, Type.EXPORT);
+        this.init(list, sheetName, Excel.Type.EXPORT);
         return exportExcel();
     }
 
@@ -230,7 +228,7 @@ public class ExcelUtil<T> {
      * @return 结果
      */
     public String importTemplateExcel(String sheetName) {
-        this.init(null, sheetName, Type.IMPORT);
+        this.init(null, sheetName, Excel.Type.IMPORT);
         return exportExcel();
     }
 
@@ -255,7 +253,7 @@ public class ExcelUtil<T> {
                     Excel excel = (Excel) os[1];
                     this.createCell(excel, row, column++);
                 }
-                if (Type.EXPORT.equals(type)) {
+                if (Excel.Type.EXPORT.equals(type)) {
                     fillExcelData(index, row);
                 }
             }
@@ -441,7 +439,7 @@ public class ExcelUtil<T> {
                 String readConverterExp = attr.readConverterExp();
                 if (StringUtils.isNotEmpty(dateFormat) && value != null)
                 {
-                    cell.setCellValue(DateUtil.parseDateToStr(dateFormat, (Date) value));
+                    cell.setCellValue(com.chinaums.wh.common.util.DateUtil.parseDateToStr(dateFormat, (Date) value));
                 }
                 else if (StringUtils.isNotEmpty(readConverterExp) &&  value != null)
                 {
@@ -653,7 +651,7 @@ public class ExcelUtil<T> {
      * 放到字段集合中
      */
     private void putToField(Field field, Excel attr) {
-        if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
+        if (attr != null && (attr.type() == Excel.Type.ALL || attr.type() == type)) {
             this.fields.add(new Object[]{field, attr});
         }
     }

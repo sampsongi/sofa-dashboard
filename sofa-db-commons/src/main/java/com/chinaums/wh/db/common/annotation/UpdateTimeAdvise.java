@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.annotation;
+package com.chinaums.wh.db.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AutoId {
+public @interface UpdateTimeAdvise {
 }

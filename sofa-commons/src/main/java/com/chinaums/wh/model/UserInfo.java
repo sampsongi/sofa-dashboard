@@ -1,8 +1,7 @@
-package me.izhong.dashboard.manage.domain;
+package com.chinaums.wh.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import me.izhong.dashboard.manage.expection.user.UserHasNotPermissionException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -71,7 +70,7 @@ public class UserInfo {
 
     public void checkScopePermission(String perm, Long deptId){
         if(!hashScopePermission(perm,deptId))
-            throw new UserHasNotPermissionException("缺少数据对应的部门权限:" + perm + ",部门ID:" + deptId) ;
+            throw new RuntimeException("缺少数据对应的部门权限:" + perm + ",部门ID:" + deptId) ;
     }
 
     @Override

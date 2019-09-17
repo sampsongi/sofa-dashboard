@@ -1,13 +1,13 @@
-package me.izhong.dashboard.manage.domain;
+package com.chinaums.wh.db.common.domain;
 
+import com.chinaums.wh.common.util.TimeUtil;
+import com.chinaums.wh.model.UserInfo;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
@@ -228,15 +228,15 @@ public class PageRequest {
         //    return;
 
         if (StringUtils.isNotBlank(status)) {
-            aggregationOperations.add(Aggregation.match(Criteria.where("status").is(status)));
+            aggregationOperations.add(match(Criteria.where("status").is(status)));
         }
 
         if (beginDate != null && endDate != null) {
-            aggregationOperations.add(Aggregation.match(Criteria.where("createTime").gte(beginDate).lte(endDate)));
+            aggregationOperations.add(match(Criteria.where("createTime").gte(beginDate).lte(endDate)));
         } else if (beginDate != null) {
-            aggregationOperations.add(Aggregation.match(Criteria.where("createTime").gte(beginDate)));
+            aggregationOperations.add(match(Criteria.where("createTime").gte(beginDate)));
         } else if (endDate != null) {
-            aggregationOperations.add(Aggregation.match(Criteria.where("createTime").lte(endDate)));
+            aggregationOperations.add(match(Criteria.where("createTime").lte(endDate)));
         }
         injectAggregationOnlyPage(aggregationOperations);
     }
@@ -247,18 +247,18 @@ public class PageRequest {
         //    return;
 
         if (StringUtils.isNotBlank(orderByColumn)) {
-            aggregationOperations.add(Aggregation.sort(new Sort(Sort.Direction.fromOptionalString(isAsc).orElse(Sort.Direction.ASC), orderByColumn)));
+            aggregationOperations.add(sort(new Sort(Sort.Direction.fromOptionalString(isAsc).orElse(Sort.Direction.ASC), orderByColumn)));
         }
         if (pageNum < 1)
             pageNum = 1;
         if (pageSize > Integer.MAX_VALUE)
             pageSize = Integer.MAX_VALUE;
         Pageable pageableRequest = org.springframework.data.domain.PageRequest.of((int) pageNum - 1, (int) pageSize);
-        aggregationOperations.add(Aggregation.skip((pageNum - 1) * pageSize));
-        aggregationOperations.add(Aggregation.limit(pageSize));
+        aggregationOperations.add(skip((pageNum - 1) * pageSize));
+        aggregationOperations.add(limit(pageSize));
 
         if(depts != null && depts.size() > 0) {
-            aggregationOperations.add(Aggregation.match(Criteria.where("deptId").in(depts)));
+            aggregationOperations.add(match(Criteria.where("deptId").in(depts)));
         }
     }
 }

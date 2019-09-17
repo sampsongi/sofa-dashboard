@@ -1,20 +1,20 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.constants.Global;
 import me.izhong.dashboard.manage.entity.SysDept;
 import me.izhong.dashboard.manage.entity.SysUser;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.security.service.PasswordService;
 import me.izhong.dashboard.manage.service.SysDeptService;
 import me.izhong.dashboard.manage.service.SysPostService;
 import me.izhong.dashboard.manage.service.SysRoleService;
 import me.izhong.dashboard.manage.service.SysUserService;
-import me.izhong.dashboard.manage.util.Convert;
+import com.chinaums.wh.common.util.Convert;
 import me.izhong.dashboard.manage.util.ExcelUtil;
 import me.izhong.dashboard.manage.util.TimeUtil;
 import me.izhong.dashboard.manage.domain.UserInfo;

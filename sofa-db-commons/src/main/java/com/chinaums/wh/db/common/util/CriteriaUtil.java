@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.util;
+package com.chinaums.wh.db.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

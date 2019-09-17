@@ -3,7 +3,7 @@ package me.izhong.dashboard.manage.security.session;
 import me.izhong.dashboard.manage.constants.ShiroConstants;
 import me.izhong.dashboard.manage.entity.SysUserOnline;
 import me.izhong.dashboard.manage.service.SysUserOnlineService;
-import me.izhong.dashboard.manage.util.DateUtil;
+import com.chinaums.wh.common.util.DateUtil;
 import me.izhong.dashboard.manage.util.SpringUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.session.ExpiredSessionException;

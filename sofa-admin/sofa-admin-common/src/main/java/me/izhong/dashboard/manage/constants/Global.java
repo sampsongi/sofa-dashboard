@@ -1,13 +1,12 @@
 package me.izhong.dashboard.manage.constants;
 
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.util.SpringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 

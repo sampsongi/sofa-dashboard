@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.annotation;
+package com.chinaums.wh.db.common.annotation;
 
 import java.lang.annotation.*;
 

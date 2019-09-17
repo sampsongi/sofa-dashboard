@@ -1,5 +1,6 @@
 package me.izhong.dashboard.manage.util;
 
+import com.chinaums.wh.common.util.Convert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -147,7 +148,7 @@ public class ReflectUtil {
                         args[i] = Convert.toFloat(args[i]);
                     } else if (cs[i] == Date.class) {
                         if (args[i] instanceof String) {
-                            args[i] = me.izhong.dashboard.manage.util.DateUtil.parseDate(args[i]);
+                            args[i] = com.chinaums.wh.common.util.DateUtil.parseDate(args[i]);
                         } else {
                             args[i] = DateUtil.getJavaDate((Double) args[i]);
                         }

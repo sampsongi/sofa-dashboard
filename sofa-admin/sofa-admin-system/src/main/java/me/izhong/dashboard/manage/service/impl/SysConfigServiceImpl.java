@@ -2,20 +2,11 @@ package me.izhong.dashboard.manage.service.impl;
 
 import me.izhong.dashboard.manage.dao.ConfigDao;
 import me.izhong.dashboard.manage.entity.SysConfig;
-import me.izhong.dashboard.manage.expection.BusinessException;
 import me.izhong.dashboard.manage.service.SysConfigService;
 import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class SysConfigServiceImpl extends CrudBaseServiceImpl<Long,SysConfig> implements SysConfigService {

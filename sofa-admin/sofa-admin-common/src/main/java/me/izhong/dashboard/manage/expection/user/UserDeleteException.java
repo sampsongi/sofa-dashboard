@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.expection.user;
 
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 
 public class UserDeleteException extends BusinessException {
 

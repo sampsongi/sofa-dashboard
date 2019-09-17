@@ -1,9 +1,9 @@
 package me.izhong.dashboard.web.controller;
 
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.config.ServerConfig;
 import me.izhong.dashboard.manage.constants.Global;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.util.FileUploadUtil;
 import me.izhong.dashboard.manage.util.FileUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;

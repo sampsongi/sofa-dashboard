@@ -1,10 +1,10 @@
 package me.izhong.dashboard.web.controller.admin;
 
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.entity.SysPost;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.service.SysPostService;
 import me.izhong.dashboard.manage.domain.PageModel;

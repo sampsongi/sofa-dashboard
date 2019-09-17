@@ -1,16 +1,15 @@
-package me.izhong.dashboard.manage.service.impl;
+package com.chinaums.wh.db.common.service;
 
+import com.chinaums.wh.common.util.Convert;
+import com.chinaums.wh.db.common.domain.PageModel;
+import com.chinaums.wh.db.common.domain.PageRequest;
+import com.chinaums.wh.db.common.exception.BusinessException;
+import com.chinaums.wh.db.common.util.CriteriaUtil;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.annotation.PrimaryId;
-import me.izhong.dashboard.manage.annotation.Search;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
-import me.izhong.dashboard.manage.expection.BusinessException;
-import me.izhong.dashboard.manage.service.CrudBaseService;
-import me.izhong.dashboard.manage.util.Convert;
-import me.izhong.dashboard.manage.util.CriteriaUtil;
+import com.chinaums.wh.db.common.annotation.PrimaryId;
+import com.chinaums.wh.db.common.annotation.Search;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;

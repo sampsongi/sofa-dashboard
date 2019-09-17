@@ -1,17 +1,14 @@
 package me.izhong.dashboard.manage.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.izhong.dashboard.manage.annotation.AutoId;
-import me.izhong.dashboard.manage.annotation.Excel;
-import me.izhong.dashboard.manage.annotation.PrimaryId;
-import me.izhong.dashboard.manage.annotation.Search;
+import com.chinaums.wh.db.common.annotation.AutoId;
+import com.chinaums.wh.db.common.annotation.Excel;
+import com.chinaums.wh.db.common.annotation.PrimaryId;
+import com.chinaums.wh.db.common.annotation.Search;
 import me.izhong.dashboard.manage.domain.TimedBasedEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 

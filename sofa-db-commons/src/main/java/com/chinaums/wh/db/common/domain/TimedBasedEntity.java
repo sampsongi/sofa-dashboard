@@ -1,10 +1,9 @@
-package me.izhong.dashboard.manage.domain;
+package com.chinaums.wh.db.common.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.chinaums.wh.db.common.annotation.CreateTimeAdvise;
+import com.chinaums.wh.db.common.annotation.UpdateTimeAdvise;
 import lombok.Data;
-import me.izhong.dashboard.manage.annotation.CreateTimeAdvise;
-import me.izhong.dashboard.manage.annotation.UpdateTimeAdvise;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;

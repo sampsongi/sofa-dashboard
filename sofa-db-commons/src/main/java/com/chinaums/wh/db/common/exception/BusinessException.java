@@ -1,7 +1,6 @@
-package me.izhong.dashboard.manage.expection;
+package com.chinaums.wh.db.common.exception;
 
-import me.izhong.dashboard.web.bean.ResponseContainer;
-
+import com.chinaums.wh.db.common.constant.ErrCode;
 
 public class BusinessException extends RuntimeException {
 
@@ -21,11 +20,11 @@ public class BusinessException extends RuntimeException {
     }
 
     public static BusinessException build(String msg) {
-        return new BusinessException(ResponseContainer.FAIL_CODE, msg);
+        return new BusinessException(ErrCode.SUCCESS_CODE, msg);
     }
 
     public static BusinessException build(String msg, Exception e) {
-        return new BusinessException(ResponseContainer.FAIL_CODE, msg, e);
+        return new BusinessException(ErrCode.FAIL_CODE, msg, e);
     }
 
     public static BusinessException build(String code, String msg) {

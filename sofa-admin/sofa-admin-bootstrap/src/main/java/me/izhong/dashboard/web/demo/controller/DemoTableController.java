@@ -2,7 +2,7 @@ package me.izhong.dashboard.web.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.domain.PageModel;
 import me.izhong.dashboard.manage.domain.PageRequest;
 import org.springframework.stereotype.Controller;

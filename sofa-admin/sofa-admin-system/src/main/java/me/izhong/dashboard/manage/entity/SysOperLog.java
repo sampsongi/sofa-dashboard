@@ -2,7 +2,7 @@ package me.izhong.dashboard.manage.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.izhong.dashboard.manage.annotation.*;
+import com.chinaums.wh.db.common.annotation.*;
 import me.izhong.dashboard.manage.domain.TimedBasedEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

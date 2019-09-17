@@ -2,9 +2,7 @@ package me.izhong.dashboard.manage.service;
 
 import me.izhong.dashboard.manage.entity.SysRole;
 import me.izhong.dashboard.manage.entity.SysUserRole;
-import me.izhong.dashboard.manage.expection.BusinessException;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
+import com.chinaums.wh.db.common.exception.BusinessException;
 
 import java.util.List;
 import java.util.Set;

@@ -1,8 +1,8 @@
 package me.izhong.dashboard.web.demo.controller;
 
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
-import me.izhong.dashboard.manage.expection.BusinessException;
-import me.izhong.dashboard.manage.util.Convert;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.exception.BusinessException;
+import com.chinaums.wh.common.util.Convert;
 import me.izhong.dashboard.web.demo.domain.UserOperateModel;
 import me.izhong.dashboard.manage.domain.PageModel;
 import me.izhong.dashboard.manage.domain.PageRequest;

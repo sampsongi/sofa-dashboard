@@ -1,16 +1,13 @@
 package me.izhong.dashboard.manage.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.dao.UserDao;
 import me.izhong.dashboard.manage.dao.UserOnlineDao;
 import me.izhong.dashboard.manage.entity.SysUserOnline;
-import me.izhong.dashboard.manage.expection.BusinessException;
-import me.izhong.dashboard.manage.domain.PageRequest;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysUserOnlineService;
 import me.izhong.dashboard.manage.domain.PageModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;

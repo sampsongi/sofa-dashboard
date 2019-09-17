@@ -1,5 +1,6 @@
 package me.izhong.dashboard.web.bean;
 
+import com.chinaums.wh.db.common.constant.ErrCode;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -7,8 +8,8 @@ import java.io.Serializable;
 @Data
 public class ResponseContainer<T> implements Serializable {
 
-    public static final String SUCCESS_CODE = "SUCCESS";
-    public static final String FAIL_CODE = "FAIL";
+    public static final String SUCCESS_CODE = ErrCode.SUCCESS_CODE;
+    public static final String FAIL_CODE = ErrCode.FAIL_CODE;
     private String code;
     private String msg;
 

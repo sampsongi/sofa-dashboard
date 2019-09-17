@@ -2,9 +2,9 @@ package me.izhong.dashboard.manage.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.izhong.dashboard.manage.annotation.AutoId;
-import me.izhong.dashboard.manage.annotation.PrimaryId;
-import me.izhong.dashboard.manage.annotation.Search;
+import com.chinaums.wh.db.common.annotation.AutoId;
+import com.chinaums.wh.db.common.annotation.PrimaryId;
+import com.chinaums.wh.db.common.annotation.Search;
 import me.izhong.dashboard.manage.domain.TimedBasedEntity;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Transient;

@@ -1,8 +1,6 @@
 package me.izhong.dashboard.manage.service;
 
 import me.izhong.dashboard.manage.entity.SysConfig;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 
 public interface SysConfigService extends CrudBaseService<Long,SysConfig> {
 

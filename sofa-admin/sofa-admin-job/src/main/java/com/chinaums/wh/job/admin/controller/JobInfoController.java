@@ -11,7 +11,7 @@ import com.chinaums.wh.job.manage.impl.service.XxlJobService;
 import me.izhong.dashboard.job.core.biz.model.ReturnT;
 import me.izhong.dashboard.job.core.enums.ExecutorBlockStrategyEnum;
 import me.izhong.dashboard.job.core.glue.GlueTypeEnum;
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.domain.PageModel;
 import me.izhong.dashboard.manage.domain.PageRequest;
 import me.izhong.dashboard.quartz.domain.SysJob;

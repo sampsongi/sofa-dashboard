@@ -12,7 +12,7 @@ import me.izhong.dashboard.job.core.biz.ExecutorBiz;
 import me.izhong.dashboard.job.core.biz.model.LogResult;
 import me.izhong.dashboard.job.core.biz.model.ReturnT;
 import me.izhong.dashboard.job.core.util.DateUtil;
-import me.izhong.dashboard.manage.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.domain.PageModel;
 import me.izhong.dashboard.manage.domain.PageRequest;
 import org.slf4j.Logger;

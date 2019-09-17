@@ -1,8 +1,6 @@
 package me.izhong.dashboard.manage.service;
 
 import me.izhong.dashboard.manage.entity.SysDictData;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
 import me.izhong.dashboard.manage.service.impl.CrudBaseServiceImpl;
 
 import java.util.List;

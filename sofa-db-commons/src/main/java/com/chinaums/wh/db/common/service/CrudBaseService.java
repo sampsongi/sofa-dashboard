@@ -1,9 +1,8 @@
-package me.izhong.dashboard.manage.service;
+package com.chinaums.wh.db.common.service;
 
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
-import me.izhong.dashboard.manage.entity.SysPost;
-import me.izhong.dashboard.manage.expection.BusinessException;
+import com.chinaums.wh.db.common.domain.PageModel;
+import com.chinaums.wh.db.common.domain.PageRequest;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;

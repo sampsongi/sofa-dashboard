@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.util;
+package com.chinaums.wh.common.util;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 

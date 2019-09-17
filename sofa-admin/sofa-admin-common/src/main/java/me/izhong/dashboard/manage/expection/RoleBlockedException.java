@@ -1,5 +1,7 @@
 package me.izhong.dashboard.manage.expection;
 
+import com.chinaums.wh.db.common.exception.BusinessException;
+
 public class RoleBlockedException extends BusinessException {
 
 
