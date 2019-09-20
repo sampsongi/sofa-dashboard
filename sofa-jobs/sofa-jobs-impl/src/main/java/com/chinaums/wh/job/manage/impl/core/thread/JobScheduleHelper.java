@@ -6,7 +6,10 @@ import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,16 +17,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author xuxueli 2019-05-21
- */
+@Component
 public class JobScheduleHelper {
     private static Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
-
-    private static JobScheduleHelper instance = new JobScheduleHelper();
-    public static JobScheduleHelper getInstance(){
-        return instance;
-    }
 
     public static final long PRE_READ_MS = 5000;    // pre read
 
@@ -33,6 +29,7 @@ public class JobScheduleHelper {
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Long, List<Long>> ringData = new ConcurrentHashMap<>();
 
+    @PostConstruct
     public void start(){
 
         // schedule thread
@@ -305,6 +302,7 @@ public class JobScheduleHelper {
         logger.debug(">>>>>>>>>>> xxl-job, shecule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
+    @PreDestroy
     public void toStop(){
 
         // 1、stop schedule

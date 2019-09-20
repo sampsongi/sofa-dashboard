@@ -6,23 +6,24 @@ import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class JobRegistryMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobRegistryMonitorHelper.class);
 
-	private static JobRegistryMonitorHelper instance = new JobRegistryMonitorHelper();
-	public static JobRegistryMonitorHelper getInstance(){
-		return instance;
-	}
-
 	private Thread registryThread;
 	private volatile boolean toStop = false;
+
+	@PostConstruct
 	public void start(){
 		registryThread = new Thread(new Runnable() {
 			@Override
@@ -96,6 +97,7 @@ public class JobRegistryMonitorHelper {
 		registryThread.start();
 	}
 
+	@PreDestroy
 	public void toStop(){
 		toStop = true;
 		// interrupt and wait

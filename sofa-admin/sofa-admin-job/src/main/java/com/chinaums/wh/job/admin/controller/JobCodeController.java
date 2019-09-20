@@ -5,6 +5,7 @@ import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.JobScript;
 import com.chinaums.wh.job.type.GlueTypeEnum;
 import com.chinaums.wh.model.ReturnT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequestMapping("/jobcode")
 public class JobCodeController {
 	
-	@Resource
+	@Autowired(required = false)
 	private JobServiceReference jobServiceReference;
 
 	@RequestMapping

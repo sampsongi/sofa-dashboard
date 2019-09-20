@@ -9,6 +9,7 @@ import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.JobGroup;
 import com.chinaums.wh.job.type.GlueTypeEnum;
 import com.chinaums.wh.model.ReturnT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class JobInfoController {
 
 	private String prefix = "monitor/djob";
 
-	@Resource
+	@Autowired(required = false)
 	private JobServiceReference jobServiceReference;
 
 	@GetMapping()

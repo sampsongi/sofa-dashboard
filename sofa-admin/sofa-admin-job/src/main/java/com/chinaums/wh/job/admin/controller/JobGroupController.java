@@ -12,6 +12,7 @@ import me.izhong.dashboard.manage.expection.job.TaskException;
 import com.chinaums.wh.common.util.Convert;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -37,7 +38,7 @@ public class JobGroupController {
 
 	private String prefix = "monitor/djob/group";
 
-	@Resource
+	@Autowired(required = false)
 	private JobServiceReference jobServiceReference;
 
 	@RequestMapping

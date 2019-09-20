@@ -1,0 +1,15 @@
+server:
+  port: 8801
+spring:
+  main:
+    web-application-type: none
+  data:
+    mongodb:
+      uri: mongodb://172.30.251.33:27017/uis
+xxl:
+  job:
+    accessToken:
+
+### xxl-job, i18n (default empty as chinese, "en" as english)
+    i18n:
+

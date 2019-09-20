@@ -2,9 +2,12 @@ package com.chinaums.wh.job.manage.impl.core.thread;
 
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
 import com.chinaums.wh.job.manage.impl.core.trigger.XxlJobTrigger;
+import com.chinaums.wh.job.manage.impl.core.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author xuxueli 2018-07-03 21:08:07
  */
+@Component
 public class JobTriggerPoolHelper {
     private static Logger logger = LoggerFactory.getLogger(JobTriggerPoolHelper.class);
 
@@ -100,6 +104,7 @@ public class JobTriggerPoolHelper {
         });
     }
 
+    @PreDestroy
     public void stop() {
         //triggerPool.shutdown();
         fastTriggerPool.shutdownNow();
@@ -108,9 +113,6 @@ public class JobTriggerPoolHelper {
     }
 
     // ---------------------- helper ----------------------
-
-    private static JobTriggerPoolHelper helper = new JobTriggerPoolHelper();
-
     /**
      * @param jobId
      * @param triggerType
@@ -123,11 +125,7 @@ public class JobTriggerPoolHelper {
      *          not null: cover job param
      */
     public static void trigger(long jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam) {
-        helper.addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
-    }
-
-    public static void toStop() {
-        helper.stop();
+        SpringUtil.getBean(JobTriggerPoolHelper.class).addTrigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
     }
 
 }

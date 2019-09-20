@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -28,6 +29,7 @@ import java.util.Arrays;
         DataSourceAutoConfiguration.class})
 //,MongoAutoConfiguration.class
 @EnableCaching
+@ComponentScan(value = {"com.chinaums,me.izhong"})
 @EnableConfigurationProperties(ApplicationProperties.class)
 @Slf4j
 public class DashboardMainApplication {

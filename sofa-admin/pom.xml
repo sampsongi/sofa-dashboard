@@ -38,7 +38,6 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <swagger.version>2.9.2</swagger.version>
         <pagehelper.boot.version>1.2.5</pagehelper.boot.version>
-        <fastjson.version>1.2.47</fastjson.version>
         <oshi.version>3.9.1</oshi.version>
         <commons.io.version>2.5</commons.io.version>
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
@@ -46,7 +45,6 @@
         <poi.version>3.17</poi.version>
         <velocity.version>1.7</velocity.version>
         <quartz.version>2.2.1</quartz.version>
-        <quartz-mongodb.version>2.1.0</quartz-mongodb.version>
         <mongodb-driver.version>3.8.2</mongodb-driver.version>
         <spring-data-mongodb.version>2.1.9.RELEASE</spring-data-mongodb.version>
     </properties>
@@ -147,7 +145,6 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
             </dependency>
 
             <!-- swagger2-->

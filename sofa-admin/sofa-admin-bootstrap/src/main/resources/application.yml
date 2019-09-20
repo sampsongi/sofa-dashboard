@@ -24,6 +24,8 @@ spring:
     max-file-size:  10MB
     # 设置总上传的文件大小
     max-request-size:  20MB
+  application:
+    name: 分布式任务调度总控
     # 服务模块
 #  devtools:
 #    restart:
@@ -106,7 +108,9 @@ dashboard:
     addressEnabled: false
     userLocalDatabase: true
     filepath: /Users/jimmy/space/tianru/zdashboard/dashboard-common/src/main/resources/data/qqwry.dat
-
+service:
+  unique:
+    id: 1
 ### xxl-job, access token
 xxl:
   job:
