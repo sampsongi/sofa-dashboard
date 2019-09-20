@@ -1,8 +1,8 @@
 package com.chinaums.wh.job.manage.impl.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLogGlue;
 import com.chinaums.wh.job.manage.impl.service.XxlJobLogGlueService;
-import me.izhong.dashboard.manage.service.impl.CrudBaseServiceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

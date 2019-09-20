@@ -1,10 +1,10 @@
 package com.chinaums.wh.job.manage.impl.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import com.mongodb.client.result.UpdateResult;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
 import com.chinaums.wh.job.manage.impl.service.XxlJobLogService;
-import me.izhong.dashboard.manage.service.impl.CrudBaseServiceImpl;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;

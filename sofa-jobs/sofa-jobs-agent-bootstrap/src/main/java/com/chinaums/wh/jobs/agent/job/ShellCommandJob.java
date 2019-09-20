@@ -1,9 +1,8 @@
 package com.chinaums.wh.jobs.agent.job;
 
-import com.chinaums.wh.model.ReturnT;
 import com.chinaums.wh.jobs.agent.service.JobServiceReference;
+import com.chinaums.wh.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.exec.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,12 +39,14 @@ public class ShellCommandJob extends IJobHandler {
 
     @Override
     public ReturnT<String> execute(String param) throws Exception {
+        log.info("shell command job run with param: {}",param);
         // JobRunLog jobLog = new JobRunLog();
         // 定时任务日志通过接口送到 jobs-bootstrap
         // jobServiceReference.getJobMngFacade().uploadStatics();
-        String logging = null;
-        FileOutputStream fos = null;
         try {
+            /* String logging = null;
+        FileOutputStream fos = null;
+
             String path = ContextUtil.getBean(JobsConfigBean.class)
                     .getJobLogPath();
             String appPath = ContextUtil.getBean(JobsConfigBean.class)
@@ -134,10 +135,10 @@ public class ShellCommandJob extends IJobHandler {
 
             if (!"N".equals(logging)) {
                 jobLog = configService.saveJobRunLog(jobLog);
-            }
+            }*/
         } catch (Exception e) {
             log.error("任务失败", e);
-            jobLog.setRunEndTime(new Date());
+            /*jobLog.setRunEndTime(new Date());
             jobLog.setRunUsedTime(jobLog.getRunEndTime().getTime()
                     - jobLog.getRunStartTime().getTime());
             jobLog.setRunResultMsg(StringUtils.left(e.getMessage(), 200));
@@ -156,15 +157,15 @@ public class ShellCommandJob extends IJobHandler {
                             + ctx.getJobDetail().getKey().getName(),
                     e.getMessage(), new File(jobLog.getLogFile()));
 
-            throw new JobExecutionException(e);
+            throw new JobExecutionException(e);*/
         }finally {
-            if(null != fos){
+            /*if(null != fos){
                 try {
                     fos.close();
                 } catch (IOException e) {
                     log.error(e.getMessage(),e);
                 }
-            }
+            }*/
         }
         return ReturnT.SUCCESS;
     }

@@ -1,10 +1,9 @@
 package com.chinaums.wh.job.manage.impl.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
 import com.mongodb.client.result.UpdateResult;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
 import com.chinaums.wh.job.manage.impl.service.XxlJobRegistryService;
-import me.izhong.dashboard.manage.service.impl.CrudBaseServiceImpl;
-import me.izhong.dashboard.manage.util.CriteriaUtil;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -58,7 +57,7 @@ public class XxlJobRegistryServiceImpl extends CrudBaseServiceImpl<Long,XxlJobRe
         List<XxlJobRegistry> ls = super.selectList(query, null, null);
         if(ls == null || ls.size() == 0)
             return null;
-        return ls.stream().map(e->e.getJobRegistryId()).collect(Collectors.toList());
+        return ls.stream().map(e -> e.getJobRegistryId()).collect(Collectors.toList());
     }
 
     @Override

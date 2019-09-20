@@ -1,5 +1,6 @@
 package me.izhong.dashboard.manage.service.impl;
 
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
@@ -207,7 +208,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
         Query query = new Query();
         addSearchToQuery(searchUser, query);
 
-        pageRequest.injectQuery(query);
+        PageRequestUtil.injectQuery(pageRequest,query);
 
         return super.selectPage(query, pageRequest,searchUser);
     }
@@ -570,7 +571,8 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
                 SysUser.class, Map.class).getUniqueMappedResult();
         long count = countMap == null ? 0 : (Integer) countMap.get("c");
 
-        request.injectAggregationOnlyPage(aggregationOperations);
+        PageRequestUtil.injectAggregationOnlyPage(request,aggregationOperations);
+
         //获取list
         List<SysUser> sysUserList = mongoTemplate.aggregate(Aggregation.newAggregation(aggregationOperations),
                 SysUser.class, SysUser.class).getMappedResults();

@@ -1,6 +1,7 @@
 package com.chinaums.wh.db.common.service;
 
 import com.chinaums.wh.common.util.Convert;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
@@ -60,7 +61,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
             query = new Query();
         }
         if(request != null)
-            request.injectQuery(query);
+            PageRequestUtil.injectQuery(request,query);
 
         injectObject(query, target);
         log.info("query list sql:{}",query);
@@ -85,7 +86,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
         }
 
         if(request != null)
-            request.injectQuery(query);
+            PageRequestUtil.injectQuery(request,query);
 
         injectObject(query, target);
         return doCount(query);

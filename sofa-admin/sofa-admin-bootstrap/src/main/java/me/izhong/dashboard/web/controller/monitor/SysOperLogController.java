@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.monitor;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -37,7 +38,7 @@ public class SysOperLogController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(HttpServletRequest request, SysOperLog sysOperLog) {
-        return sysOperLogService.selectPage(PageRequest.fromRequest(request), sysOperLog);
+        return sysOperLogService.selectPage(PageRequestUtil.fromRequest(request), sysOperLog);
     }
 
     @Log(title = "操作日志", businessType = BusinessType.EXPORT)
@@ -45,7 +46,7 @@ public class SysOperLogController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(HttpServletRequest request, SysOperLog sysOperLog) {
-        List<SysOperLog> list = sysOperLogService.selectList(PageRequest.fromRequestIgnorePageSize(request), sysOperLog);
+        List<SysOperLog> list = sysOperLogService.selectList(PageRequestUtil.fromRequestIgnorePageSize(request), sysOperLog);
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
         return util.exportExcel(list, "操作日志");
     }

@@ -1,19 +1,14 @@
 package com.chinaums.wh.job.manage.impl.core.trigger;
 
-
-import com.xxl.rpc.util.IpUtil;
-import com.xxl.rpc.util.ThrowableUtil;
+import com.chinaums.wh.common.util.IpUtil;
 import com.chinaums.wh.job.manage.impl.core.conf.XxlJobAdminConfig;
-import com.chinaums.wh.job.manage.impl.core.conf.XxlJobScheduler;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouteStrategyEnum;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-import me.izhong.dashboard.job.core.biz.ExecutorBiz;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.biz.model.TriggerParam;
-import me.izhong.dashboard.job.core.enums.ExecutorBlockStrategyEnum;
+import com.chinaums.wh.job.model.TriggerParam;
+import com.chinaums.wh.job.type.ExecutorBlockStrategyEnum;
+import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +136,7 @@ public class XxlJobTrigger {
                 }
             }
         } else {
-            routeAddressResult = new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobconf_trigger_address_empty"));
+            routeAddressResult = new ReturnT<String>(ReturnT.FAIL_CODE, "地址为空");
         }
 
         // 4、trigger remote executor
@@ -154,21 +149,21 @@ public class XxlJobTrigger {
 
         // 5、collection trigger info
         StringBuffer triggerMsgSb = new StringBuffer();
-        triggerMsgSb.append(I18nUtil.getString("jobconf_trigger_type")).append("：").append(triggerType.getTitle());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_admin_adress")).append("：").append(IpUtil.getIp());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regtype")).append("：")
-                .append( (group.getAddressType() == 0)?I18nUtil.getString("jobgroup_field_addressType_0"):I18nUtil.getString("jobgroup_field_addressType_1") );
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobconf_trigger_exe_regaddress")).append("：").append(group.getRegistryList());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorRouteStrategy")).append("：").append(executorRouteStrategyEnum.getTitle());
+        triggerMsgSb.append("触发类型：").append(triggerType.getTitle());
+        triggerMsgSb.append("<br>").append("管理IP：").append(IpUtil.getHostIp());
+        triggerMsgSb.append("<br>").append("注册类型：").append(group.getAddressType() );
+        triggerMsgSb.append("<br>").append("注册地址：").append(group.getRegistryList());
+        triggerMsgSb.append("<br>").append("路由策略：").append(executorRouteStrategyEnum.getTitle());
         if (shardingParam != null) {
             triggerMsgSb.append("("+shardingParam+")");
         }
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorBlockStrategy")).append("：").append(blockStrategy.getTitle());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_timeout")).append("：").append(jobInfo.getExecutorTimeout());
-        triggerMsgSb.append("<br>").append(I18nUtil.getString("jobinfo_field_executorFailRetryCount")).append("：").append(finalFailRetryCount);
+        triggerMsgSb.append("<br>").append("阻塞策略：").append(blockStrategy.getTitle());
+        triggerMsgSb.append("<br>").append("超时时间：").append(jobInfo.getExecutorTimeout());
+        triggerMsgSb.append("<br>").append("重试次数：").append(finalFailRetryCount);
 
-        triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_run") +"<<<<<<<<<<< </span><br>")
-                .append((routeAddressResult!=null&&routeAddressResult.getMsg()!=null)?routeAddressResult.getMsg()+"<br><br>":"").append(triggerResult.getMsg()!=null?triggerResult.getMsg():"");
+        triggerMsgSb.append("<br><br><span style=\"color:#00c0ef;\" > >>>>>>>>>>>"+ "触发调度" +"<<<<<<<<<<< </span><br>")
+                .append((routeAddressResult!=null&&routeAddressResult.getMsg()!=null)?routeAddressResult.getMsg()+"<br><br>":"")
+                .append(triggerResult.getMsg()!=null?triggerResult.getMsg():"");
 
         // 6、save log trigger-info
         jobLog.setExecutorAddress(address);
@@ -192,15 +187,15 @@ public class XxlJobTrigger {
      */
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = null;
-        try {
-            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
-            runResult = executorBiz.run(triggerParam);
-        } catch (Exception e) {
-            logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
-            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, ThrowableUtil.toString(e));
-        }
+//        try {
+//            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
+//            runResult = executorBiz.run(triggerParam);
+//        } catch (Exception e) {
+//            logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
+//            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, e.toString());
+//        }
 
-        StringBuffer runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
+        StringBuffer runResultSB = new StringBuffer("触发调度：");
         runResultSB.append("<br>address：").append(address);
         runResultSB.append("<br>code：").append(runResult.getCode());
         runResultSB.append("<br>msg：").append(runResult.getMsg());

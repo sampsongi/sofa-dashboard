@@ -1,5 +1,6 @@
 package me.izhong.dashboard.web.controller.admin;
 
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class RoleAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel<SysRole> list(SysRole sysRole, HttpServletRequest request) {
-        PageModel<SysRole> list = sysRoleService.selectPage(PageRequest.fromRequest(request), sysRole);
+        PageModel<SysRole> list = sysRoleService.selectPage(PageRequestUtil.fromRequest(request), sysRole);
         return list;
     }
 
@@ -56,7 +57,7 @@ public class RoleAdminController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(SysRole sysRole, HttpServletRequest request) {
-        List<SysRole> list = sysRoleService.selectList(PageRequest.fromRequestIgnorePageSize(request), sysRole);
+        List<SysRole> list = sysRoleService.selectList(PageRequestUtil.fromRequestIgnorePageSize(request), sysRole);
         ExcelUtil<SysRole> util = new ExcelUtil<SysRole>(SysRole.class);
         return util.exportExcel(list, "角色数据");
     }
@@ -223,7 +224,7 @@ public class RoleAdminController {
     @PostMapping("/authUser/allocatedList")
     @AjaxWrapper
     public PageModel<SysUser> allocatedList(Long roleId, SysUser user, HttpServletRequest request) {
-        return sysUserService.selectAllocatedList(PageRequest.fromRequest(request), roleId, user, null);
+        return sysUserService.selectAllocatedList(PageRequestUtil.fromRequest(request), roleId, user, null);
     }
 
     /**
@@ -233,7 +234,7 @@ public class RoleAdminController {
     @PostMapping("/authUser/unallocatedList")
     @AjaxWrapper
     public PageModel<SysUser> unallocatedList(Long roleId, SysUser user, HttpServletRequest request) {
-        return sysUserService.selectUnallocatedList(PageRequest.fromRequest(request), roleId, user, null);
+        return sysUserService.selectUnallocatedList(PageRequestUtil.fromRequest(request), roleId, user, null);
     }
 
     /**

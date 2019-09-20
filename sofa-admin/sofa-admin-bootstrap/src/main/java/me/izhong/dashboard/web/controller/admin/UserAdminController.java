@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.common.util.TimeUtil;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.model.UserInfo;
@@ -79,7 +80,7 @@ public class UserAdminController {
         searchUser.setDeptId(deptId);
         searchUser.setIsDelete(false);
 
-        PageRequest pageRequest = PageRequest.fromRequest(request);
+        PageRequest pageRequest = PageRequestUtil.fromRequest(request);
         pageRequest.setDepts(UserInfoContextHelper.getLoginUser().getScopeData(PermissionConstants.User.VIEW));
 
         PageModel<SysUser> pe = sysUserService.getPage(pageRequest, searchUser);
@@ -234,7 +235,7 @@ public class UserAdminController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(HttpServletRequest request, SysUser user) {
-        PageModel<SysUser> list = sysUserService.getPage(PageRequest.fromRequestIgnorePageSize(request), user);
+        PageModel<SysUser> list = sysUserService.getPage(PageRequestUtil.fromRequestIgnorePageSize(request), user);
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         return util.exportExcel(list.getRows(), "用户数据");
     }

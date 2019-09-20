@@ -1,9 +1,9 @@
 package com.chinaums.wh.job.manage.impl.core.model;
 
+import com.chinaums.wh.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import com.chinaums.wh.db.common.annotation.AutoId;
 import com.chinaums.wh.db.common.annotation.PrimaryId;
-import me.izhong.dashboard.manage.domain.TimedBasedEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.io.Serializable;

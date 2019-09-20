@@ -1,12 +1,75 @@
 package com.chinaums.wh.job.manage.impl.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
-import me.izhong.dashboard.manage.service.CrudBaseService;
+import com.chinaums.wh.model.ReturnT;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
     List<XxlJobInfo> scheduleJobQuery(long maxNextTime);
 
     void scheduleUpdate(XxlJobInfo jobInfo);
+
+    public PageModel<XxlJobInfo> pageList(PageRequest request, XxlJobInfo jobInfo);
+
+    /**
+     * add job
+     *
+     * @param jobInfo
+     * @return
+     */
+    public ReturnT<String> addJob(XxlJobInfo jobInfo);
+
+    /**
+     * update job
+     *
+     * @param jobInfo
+     * @return
+     */
+    public ReturnT<String> updateJob(XxlJobInfo jobInfo);
+
+    /**
+     * remove job
+     * 	 *
+     * @param id
+     * @return
+     */
+    public ReturnT<String> removeJob(long id);
+
+    /**
+     * start job
+     *
+     * @param id
+     * @return
+     */
+    public ReturnT<String> startJob(long id);
+
+    /**
+     * stop job
+     *
+     * @param id
+     * @return
+     */
+    public ReturnT<String> stopJob(long id);
+
+    /**
+     * dashboard info
+     *
+     * @return
+     */
+    public Map<String,Object> dashboardInfo();
+
+    /**
+     * chart info
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ReturnT<Map<String,Object>> chartInfo(Date startDate, Date endDate);
 }

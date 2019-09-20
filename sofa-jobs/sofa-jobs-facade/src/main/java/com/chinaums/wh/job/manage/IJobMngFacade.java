@@ -2,11 +2,10 @@ package com.chinaums.wh.job.manage;
 
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
-import com.chinaums.wh.job.model.Job;
-import com.chinaums.wh.job.model.LogStatics;
-import com.chinaums.wh.job.model.RegistryParam;
+import com.chinaums.wh.job.model.*;
 import com.chinaums.wh.model.ReturnT;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IJobMngFacade {
@@ -21,17 +20,17 @@ public interface IJobMngFacade {
 
     Job findByJobKey(String jobKey);
 
-    ReturnT<Job> add(Job job);
+    ReturnT<String> add(Job job);
 
-    ReturnT<Job> remove(Long jobId);
+    ReturnT<String> remove(Long jobId);
 
-    ReturnT<Job> update(Job job);
+    ReturnT<String> update(Job job);
 
-    ReturnT<Job> enable(Long jobId);
+    ReturnT<String> enable(Long jobId);
 
-    ReturnT<Job> disable(Long jobId);
+    ReturnT<String> disable(Long jobId);
 
-    ReturnT<Job> kill(Long jobId);
+    ReturnT<String> kill(Long jobId);
 
     ReturnT<Job> start(Long jobId);
 
@@ -49,4 +48,19 @@ public interface IJobMngFacade {
      */
     ReturnT<String> uploadStatics(LogStatics logStatics);
 
+    /**
+     * 日志相关
+     * @param request
+     * @param ino
+     * @return
+     */
+    PageModel<JobLog> logPageList(PageRequest request, JobLog ino);
+
+    JobLog findJobLogByJobLogId(Long jobLogId);
+
+    void clearLog(long jobGroup, long jobId, Date clearBeforeTime, int clearBeforeNum);
+
+    ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum);
+
+    void update(JobLog jobLog);
 }

@@ -56,25 +56,25 @@ public class JobInfoController {
 	
 	@RequestMapping("/add")
 	@AjaxWrapper
-	public ReturnT<Job> add(Job jobInfo) {
+	public ReturnT<String> add(Job jobInfo) {
 		return jobServiceReference.jobService.add(jobInfo);
 	}
 	
 	@RequestMapping("/update")
 	@AjaxWrapper
-	public ReturnT<Job> update(Job jobInfo) {
+	public ReturnT<String> update(Job jobInfo) {
 		return jobServiceReference.jobService.update(jobInfo);
 	}
 	
 	@RequestMapping("/remove")
 	@AjaxWrapper
-	public ReturnT<Job> remove(Long id) {
+	public ReturnT<String> remove(Long id) {
 		return jobServiceReference.jobService.remove(id);
 	}
 	
 	@RequestMapping("/stop")
 	@AjaxWrapper
-	public ReturnT<Job> pause(Long id) {
+	public ReturnT<String> stop(Long id) {
 		return jobServiceReference.jobService.kill(id);
 	}
 	

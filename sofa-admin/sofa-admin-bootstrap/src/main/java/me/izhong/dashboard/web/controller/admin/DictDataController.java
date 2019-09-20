@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -41,7 +42,7 @@ public class DictDataController {
     @RequiresPermissions(PermissionConstants.Dict.VIEW)
     @AjaxWrapper
     public PageModel list(SysDictData sysDictData, HttpServletRequest request) {
-        PageModel<SysDictData> list = sysDictDataService.selectPage(PageRequest.fromRequest(request), sysDictData);
+        PageModel<SysDictData> list = sysDictDataService.selectPage(PageRequestUtil.fromRequest(request), sysDictData);
         return list;
     }
 
@@ -50,7 +51,7 @@ public class DictDataController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(SysDictData sysDictData, HttpServletRequest request) {
-        List<SysDictData> list = sysDictDataService.selectList(PageRequest.fromRequestIgnorePageSize(request), sysDictData);
+        List<SysDictData> list = sysDictDataService.selectList(PageRequestUtil.fromRequestIgnorePageSize(request), sysDictData);
         ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
         return util.exportExcel(list, "字典数据");
     }

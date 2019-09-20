@@ -6,12 +6,10 @@ import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
 import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
+import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.javamail.MimeMessageHelper;
 
-import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -41,7 +42,7 @@ public class DictTypeController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysDictType sysDictType, HttpServletRequest request) {
-        PageModel<SysDictType> list = sysDictTypeService.selectPage(PageRequest.fromRequest(request), sysDictType);
+        PageModel<SysDictType> list = sysDictTypeService.selectPage(PageRequestUtil.fromRequest(request), sysDictType);
         return list;
     }
 
@@ -51,7 +52,7 @@ public class DictTypeController {
     @AjaxWrapper
     public Object export(SysDictType sysDictType, HttpServletRequest request) {
 
-        List<SysDictType> list = sysDictTypeService.selectList(PageRequest.fromRequestIgnorePageSize(request), sysDictType);
+        List<SysDictType> list = sysDictTypeService.selectList(PageRequestUtil.fromRequestIgnorePageSize(request), sysDictType);
         ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
         String name = util.exportExcel(list, "字典类型");
         Map map = new HashMap<>();
@@ -160,7 +161,7 @@ public class DictTypeController {
     @ResponseBody
     public List<Ztree> treeData(HttpServletRequest request)
     {
-        List<Ztree> ztrees = sysDictTypeService.selectDictTree(PageRequest.fromRequestIgnorePageSize(request), new SysDictType());
+        List<Ztree> ztrees = sysDictTypeService.selectDictTree(PageRequestUtil.fromRequestIgnorePageSize(request), new SysDictType());
         return ztrees;
     }
 }

@@ -58,7 +58,7 @@ public class JobCodeController {
 		exists_jobInfo.setGlueSource(glueSource);
 		exists_jobInfo.setGlueRemark(glueRemark);
 		exists_jobInfo.setGlueUpdateTime(new Date());
-		jobServiceReference.jobService.edit(exists_jobInfo);
+		jobServiceReference.jobService.update(exists_jobInfo);
 
 		// log old code
 		JobScript xxlJobLogGlue = new JobScript();

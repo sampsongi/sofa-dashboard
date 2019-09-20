@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -37,7 +38,7 @@ public class ConfigAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysConfig sysConfig, HttpServletRequest request) {
-        return sysConfigService.selectPage(PageRequest.fromRequest(request), sysConfig);
+        return sysConfigService.selectPage(PageRequestUtil.fromRequest(request), sysConfig);
     }
 
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
@@ -45,7 +46,7 @@ public class ConfigAdminController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(SysConfig sysConfig, HttpServletRequest request) {
-        PageModel<SysConfig> list = sysConfigService.selectPage(PageRequest.fromRequestIgnorePageSize(request), sysConfig);
+        PageModel<SysConfig> list = sysConfigService.selectPage(PageRequestUtil.fromRequestIgnorePageSize(request), sysConfig);
         ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
         return util.exportExcel(list.getRows(), "参数数据");
     }

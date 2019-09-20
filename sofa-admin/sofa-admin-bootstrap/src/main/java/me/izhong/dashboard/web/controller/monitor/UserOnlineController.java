@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.monitor;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -45,7 +46,7 @@ public class UserOnlineController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel<SysUserOnline> list(HttpServletRequest request, SysUserOnline sysUserOnline) {
-        return sysUserOnlineService.selectPage(PageRequest.fromRequest(request), sysUserOnline);
+        return sysUserOnlineService.selectPage(PageRequestUtil.fromRequest(request), sysUserOnline);
     }
 
     @RequiresPermissions(PermissionConstants.UserOnline.FORCE_LOGOUT)

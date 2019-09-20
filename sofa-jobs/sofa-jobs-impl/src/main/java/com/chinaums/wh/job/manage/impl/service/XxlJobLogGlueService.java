@@ -1,8 +1,7 @@
 package com.chinaums.wh.job.manage.impl.service;
 
+import com.chinaums.wh.db.common.service.CrudBaseService;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLogGlue;
-import me.izhong.dashboard.manage.service.CrudBaseService;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 

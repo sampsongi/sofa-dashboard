@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -37,7 +38,7 @@ public class PostAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysPost sysPost, HttpServletRequest request) {
-        PageRequest pageRequest = PageRequest.fromRequest(request);
+        PageRequest pageRequest = PageRequestUtil.fromRequest(request);
         PageModel<SysPost> list = sysPostService.selectPage(pageRequest, sysPost);
         return list;
     }
@@ -47,7 +48,7 @@ public class PostAdminController {
     @PostMapping("/export")
     @ResponseBody
     public String export(SysPost sysPost, HttpServletRequest request) {
-        PageRequest pageRequest = PageRequest.fromRequestIgnorePageSize(request);
+        PageRequest pageRequest = PageRequestUtil.fromRequestIgnorePageSize(request);
         PageModel<SysPost> list = sysPostService.selectPage(pageRequest, sysPost);
         ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
         return util.exportExcel(list.getRows(), "岗位数据");

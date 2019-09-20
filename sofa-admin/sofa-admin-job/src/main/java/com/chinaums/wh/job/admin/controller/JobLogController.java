@@ -10,6 +10,8 @@ import com.chinaums.wh.job.admin.service.JobServiceReference;
 import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.JobGroup;
 import com.chinaums.wh.job.model.JobLog;
+import com.chinaums.wh.job.model.LogResult;
+import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,6 @@ import java.util.List;
 @RequestMapping("/joblog")
 public class JobLogController {
 	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
-
 
 	@Resource
 	private JobServiceReference jobServiceReference;
@@ -74,7 +75,7 @@ public class JobLogController {
 			}
 		}
 		
-		return jobServiceReference.jobService.selectPage(PageRequest.fromRequest(request),jLog);
+		return jobServiceReference.jobService.logPageList(PageRequestUtil.fromRequest(request),jLog);
 	}
 
 	@RequestMapping("/logDetailPage")
@@ -82,16 +83,16 @@ public class JobLogController {
 
 		// base check
 		ReturnT<String> logStatue = ReturnT.SUCCESS;
-		XxlJobLog jobLog = xxlJobLogService.selectByPId(id);
+		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(id);
 		if (jobLog == null) {
-            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
+            throw new RuntimeException("日志异常");
 		}
 
         model.addAttribute("triggerCode", jobLog.getTriggerCode());
         model.addAttribute("handleCode", jobLog.getHandleCode());
         model.addAttribute("executorAddress", jobLog.getExecutorAddress());
         model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-        model.addAttribute("logId", jobLog.getId());
+        model.addAttribute("logId", jobLog.getJobLogId());
 		return "joblog/joblog.detail";
 	}
 
@@ -99,12 +100,13 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long logId, int fromLineNum){
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
-			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
+//			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
+//			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
 
+			ReturnT<LogResult> logResult = jobServiceReference.jobService.catLog(triggerTime, logId, fromLineNum);
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                XxlJobLog jobLog = xxlJobLogService.selectByPId(logId);
+                JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(logId);
                 if (jobLog.getHandleCode() > 0) {
                     logResult.getContent().setEnd(true);
                 }
@@ -121,30 +123,29 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<String> logKill(long id){
 		// base check
-		XxlJobLog log = xxlJobLogService.selectByPId(id);
-		XxlJobInfo jobInfo = xxlJobInfoService.selectByPId(log.getJobId());
+		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(id);
+		Job jobInfo = jobServiceReference.jobService.findByJobId(jobLog.getJobId());
 		if (jobInfo==null) {
-			return new ReturnT<String>(500, I18nUtil.getString("jobinfo_glue_jobid_unvalid"));
+			return new ReturnT<String>(500, "任务不存在");
 		}
-		if (ReturnT.SUCCESS_CODE != log.getTriggerCode()) {
-			return new ReturnT<String>(500, I18nUtil.getString("joblog_kill_log_limit"));
+		if (ReturnT.SUCCESS_CODE != jobLog.getTriggerCode()) {
+			return new ReturnT<String>(500, "日志执行异常，不kill");
 		}
 
 		// request of kill
 		ReturnT<String> runResult = null;
 		try {
-			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(log.getExecutorAddress());
-			runResult = executorBiz.kill(jobInfo.getJobId());
+			runResult = jobServiceReference.jobService.kill(jobInfo.getJobId());
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			runResult = new ReturnT<String>(500, e.getMessage());
 		}
 
 		if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
-			log.setHandleCode(ReturnT.FAIL_CODE);
-			log.setHandleMsg( I18nUtil.getString("joblog_kill_log_byman")+":" + (runResult.getMsg()!=null?runResult.getMsg():""));
-			log.setHandleTime(new Date());
-			xxlJobLogService.update(log);
+			jobLog.setHandleCode(ReturnT.FAIL_CODE);
+			jobLog.setHandleMsg((runResult.getMsg()!=null?runResult.getMsg():""));
+			jobLog.setHandleTime(new Date());
+			jobServiceReference.jobService.update(jobLog);
 			return new ReturnT<String>(runResult.getMsg());
 		} else {
 			return new ReturnT<String>(500, runResult.getMsg());
@@ -176,10 +177,10 @@ public class JobLogController {
 		} else if (type == 9) {
 			clearBeforeNum = 0;			// 清理所有日志数据
 		} else {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "类型异常");
 		}
 
-		xxlJobLogService.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
+		jobServiceReference.jobService.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
 		return ReturnT.SUCCESS;
 	}
 

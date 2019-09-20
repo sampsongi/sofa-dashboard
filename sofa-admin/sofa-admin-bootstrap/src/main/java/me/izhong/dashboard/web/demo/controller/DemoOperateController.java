@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.demo.controller;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.db.common.exception.BusinessException;
@@ -91,7 +92,7 @@ public class DemoOperateController {
                 }
             }
         }
-        PageRequest pageDomain = PageRequest.fromRequest(request);
+        PageRequest pageDomain = PageRequestUtil.fromRequest(request);
         if (pageDomain.getPageNum() < 0 || pageDomain.getPageSize() < 0) {
             rspData.setRows(userList);
             rspData.setCount((long) userList.size());

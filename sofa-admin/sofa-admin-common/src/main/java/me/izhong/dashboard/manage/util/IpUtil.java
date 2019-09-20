@@ -2,7 +2,6 @@ package me.izhong.dashboard.manage.util;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.config.GlobalConfig;
 import me.izhong.dashboard.manage.constants.Global;
 import me.izhong.dashboard.manage.plugin.ip.IPLocation;
 import me.izhong.dashboard.manage.plugin.ip.Location;
@@ -141,22 +140,6 @@ public class IpUtil {
             return null;
         }
         return bytes;
-    }
-
-    public static String getHostIp() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-        }
-        return "127.0.0.1";
-    }
-
-    public static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-        }
-        return "未知";
     }
 
     public static final String IP_URL = "http://ip.taobao.com/service/getIpInfo.php";

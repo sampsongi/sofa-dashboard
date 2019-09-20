@@ -1,9 +1,9 @@
 package com.chinaums.wh.job.manage.impl.core.thread;
 
+import com.chinaums.wh.job.manage.impl.core.conf.RegistryConfig;
 import com.chinaums.wh.job.manage.impl.core.conf.XxlJobAdminConfig;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
-import me.izhong.dashboard.job.core.enums.RegistryConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * job registry instance
- * @author xuxueli 2016-10-02 19:10:24
- */
 public class JobRegistryMonitorHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobRegistryMonitorHelper.class);
 
@@ -48,7 +44,7 @@ public class JobRegistryMonitorHelper {
 							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryService().findNormal(RegistryConfig.DEAD_TIMEOUT);
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
-									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+									//if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 										String appName = item.getRegistryKey();
 										List<String> registryList = appAddressMap.get(appName);
 										if (registryList == null) {
@@ -59,7 +55,7 @@ public class JobRegistryMonitorHelper {
 											registryList.add(item.getRegistryValue());
 										}
 										appAddressMap.put(appName, registryList);
-									}
+									//}
 								}
 							}
 

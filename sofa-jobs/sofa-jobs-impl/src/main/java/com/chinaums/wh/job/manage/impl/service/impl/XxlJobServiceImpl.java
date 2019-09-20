@@ -1,33 +1,34 @@
 package com.chinaums.wh.job.manage.impl.service.impl;
 
+import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
+import com.chinaums.wh.domain.PageModel;
+import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.job.manage.impl.core.cron.CronExpression;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
+import com.chinaums.wh.job.manage.impl.core.model.XxlJobRegistry;
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouteStrategyEnum;
 import com.chinaums.wh.job.manage.impl.core.thread.JobScheduleHelper;
 import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
 import com.chinaums.wh.job.manage.impl.service.*;
-import me.izhong.dashboard.job.core.biz.model.ReturnT;
-import me.izhong.dashboard.job.core.enums.ExecutorBlockStrategyEnum;
-import me.izhong.dashboard.job.core.glue.GlueTypeEnum;
-import me.izhong.dashboard.job.core.util.DateUtil;
-import me.izhong.dashboard.manage.domain.PageModel;
-import me.izhong.dashboard.manage.domain.PageRequest;
+import com.chinaums.wh.job.type.ExecutorBlockStrategyEnum;
+import com.chinaums.wh.job.type.GlueTypeEnum;
+import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
 
-/**
- * core job action for xxl-job
- * @author xuxueli 2016-5-28 15:30:33
- */
 @Service
-public class XxlJobServiceImpl implements XxlJobService {
+public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> implements XxlJobInfoService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
 
 	@Resource
@@ -38,6 +39,32 @@ public class XxlJobServiceImpl implements XxlJobService {
 	public XxlJobLogService xxlJobLogService;
 	@Resource
 	private XxlJobLogGlueService xxlJobLogGlueService;
+
+	@Override
+	public List<XxlJobInfo> scheduleJobQuery(long maxNextTime) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("triggerNextTime").lte(maxNextTime));
+		query.addCriteria(Criteria.where("triggerStatus").is(1));
+		return super.selectList(query, null, null);
+	}
+
+	@Override
+	public void scheduleUpdate(XxlJobInfo jobInfo) {
+		Assert.notNull(jobInfo,"");
+		Assert.notNull(jobInfo.getJobId(),"");
+		Assert.notNull(jobInfo.getTriggerLastTime(),"");
+		Assert.notNull(jobInfo.getTriggerNextTime(),"");
+		Assert.notNull(jobInfo.getTriggerStatus(),"");
+
+		Query query = new Query();
+		query.addCriteria(Criteria.where("jobId").is(jobInfo.getJobId()));
+
+		Update update = new Update();
+		update.set("triggerLastTime",jobInfo.getTriggerLastTime());
+		update.set("triggerNextTime",jobInfo.getTriggerNextTime());
+		update.set("triggerStatus",jobInfo.getTriggerStatus());
+		mongoTemplate.updateMulti(query, update, XxlJobRegistry.class);
+	}
 
 	@Override
 	public PageModel<XxlJobInfo> pageList(PageRequest request, XxlJobInfo jobInfo){
@@ -57,33 +84,33 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> add(XxlJobInfo jobInfo) {
+	public ReturnT<String> addJob(XxlJobInfo jobInfo) {
 		// valid
 		XxlJobGroup group = xxlJobGroupService.selectByPId(jobInfo.getJobGroup());
 		if (group == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose")+I18nUtil.getString("jobinfo_field_jobgroup")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );
 		}
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid") );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "cron必填" );
 		}
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "描述必填" );
 		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "author必填");
 		}
 		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略必填" );
 		}
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞测落" );
 		}
-		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
-		}
-		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
-		}
+//		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
+//			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
+//		}
+//		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
+//			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
+//		}
 
 		// fix "\r" in shell
 		if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
@@ -118,10 +145,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		// add in db
 		xxlJobInfoService.insert(jobInfo);
 		if (jobInfo.getJobId() < 1) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "插入异常" );
 		}
 
-		return new ReturnT<String>(String.valueOf(jobInfo.getId()));
+		return new ReturnT<String>(String.valueOf(jobInfo.getJobId()));
 	}
 
 	private boolean isNumeric(String str){
@@ -134,7 +161,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> update(XxlJobInfo jobInfo) {
+	public ReturnT<String> updateJob(XxlJobInfo jobInfo) {
 
 		// valid
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
@@ -225,7 +252,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> remove(long id) {
+	public ReturnT<String> removeJob(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 		if (xxlJobInfo == null) {
 			return ReturnT.SUCCESS;
@@ -238,7 +265,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> start(long id) {
+	public ReturnT<String> startJob(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
 		// next trigger time (5s后生效，避开预读周期)
@@ -263,7 +290,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 	}
 
 	@Override
-	public ReturnT<String> stop(long id) {
+	public ReturnT<String> stopJob(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
 		xxlJobInfo.setTriggerStatus(0);

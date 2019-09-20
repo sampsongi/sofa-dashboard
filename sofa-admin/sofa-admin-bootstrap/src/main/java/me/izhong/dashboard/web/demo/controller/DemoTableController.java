@@ -1,5 +1,6 @@
 package me.izhong.dashboard.web.demo.controller;
 
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -201,7 +202,7 @@ public class DemoTableController {
                 }
             }
         }
-        PageRequest pageDomain = PageRequest.fromRequest(req);
+        PageRequest pageDomain = PageRequestUtil.fromRequest(req);
         if (pageDomain.getPageNum() <= 0 || pageDomain.getPageSize() < 0) {
             return PageModel.instance(userList.size(), userList);
         }

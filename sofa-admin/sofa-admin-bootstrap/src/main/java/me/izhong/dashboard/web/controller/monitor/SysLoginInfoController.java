@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.monitor;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -37,7 +38,7 @@ public class SysLoginInfoController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel<SysLoginInfo> list(HttpServletRequest request, SysLoginInfo sysLoginInfo) {
-        return sysLoginInfoService.selectPage(PageRequest.fromRequest(request), sysLoginInfo);
+        return sysLoginInfoService.selectPage(PageRequestUtil.fromRequest(request), sysLoginInfo);
     }
 
     @Log(title = "登陆日志", businessType = BusinessType.EXPORT)
@@ -45,7 +46,7 @@ public class SysLoginInfoController {
     @PostMapping("/export")
     @AjaxWrapper
     public String export(HttpServletRequest request, SysLoginInfo sysLoginInfo) {
-        List<SysLoginInfo> list = sysLoginInfoService.selectList(PageRequest.fromRequestIgnorePageSize(request), sysLoginInfo);
+        List<SysLoginInfo> list = sysLoginInfoService.selectList(PageRequestUtil.fromRequestIgnorePageSize(request), sysLoginInfo);
         ExcelUtil<SysLoginInfo> util = new ExcelUtil<SysLoginInfo>(SysLoginInfo.class);
         return util.exportExcel(list, "登陆日志");
     }

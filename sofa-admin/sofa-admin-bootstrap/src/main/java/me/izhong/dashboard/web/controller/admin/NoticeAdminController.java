@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
 import me.izhong.dashboard.manage.annotation.Log;
@@ -39,7 +40,7 @@ public class NoticeAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysNotice sysNotice, HttpServletRequest request) {
-        return sysNoticeService.selectPage(PageRequest.fromRequest(request), sysNotice);
+        return sysNoticeService.selectPage(PageRequestUtil.fromRequest(request), sysNotice);
     }
 
     @GetMapping("/add")
