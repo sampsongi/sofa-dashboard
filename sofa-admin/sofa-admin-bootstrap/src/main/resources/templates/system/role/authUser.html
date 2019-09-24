@@ -48,7 +48,7 @@
 </div>
 <th:block th:include="include :: footer"/>
 <script th:inline="javascript">
-    var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
+    var removeFlag = [[${@permission.hasPermi('system:role:removeJobGroup')}]];
     var datas = [[${@dict.getType('sys_normal_disable')}]];
     var prefix = ctx + "system/role/authUser";
 

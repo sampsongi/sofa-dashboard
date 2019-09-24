@@ -1392,7 +1392,7 @@ public final class CronExpression implements Serializable, Cloneable {
                         continue;
                     }
 
-                    // find date of last occurrence of this day in this month...
+                    // findJobGroup date of last occurrence of this day in this month...
                     while ((day + daysToAdd + 7) <= lDay) {
                         daysToAdd += 7;
                     }

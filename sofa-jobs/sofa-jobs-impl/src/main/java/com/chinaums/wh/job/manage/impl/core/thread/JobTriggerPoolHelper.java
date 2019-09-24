@@ -57,7 +57,7 @@ public class JobTriggerPoolHelper {
 
 
     /**
-     * add trigger
+     * addJobScript trigger
      */
     public void addTrigger(final long jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
 

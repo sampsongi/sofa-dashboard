@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class JobGroup implements Serializable {
     private String groupName;
-    private String groupKey;
+    private String remark;
     private Long groupId;
     private List<String> groupUrl;
 

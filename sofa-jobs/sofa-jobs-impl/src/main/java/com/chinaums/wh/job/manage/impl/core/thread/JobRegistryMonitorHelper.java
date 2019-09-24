@@ -34,7 +34,7 @@ public class JobRegistryMonitorHelper {
 						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
-							// remove dead address (admin/executor)
+							// removeJobGroup dead address (admin/executor)
 							List<Long> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryService().findDead(RegistryConfig.DEAD_TIMEOUT);
 							if (ids!=null && ids.size()>0) {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryService().remove(ids);
@@ -62,17 +62,17 @@ public class JobRegistryMonitorHelper {
 
 							// fresh group address
 							for (XxlJobGroup group: groupList) {
-								List<String> registryList = appAddressMap.get(group.getAppName());
-								String addressListStr = null;
-								if (registryList!=null && !registryList.isEmpty()) {
-									Collections.sort(registryList);
-									addressListStr = "";
-									for (String item:registryList) {
-										addressListStr += item + ",";
-									}
-									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
-								}
-								group.setAddressList(addressListStr);
+								List<String> registryList = appAddressMap.get(group.getGroupName());
+//								String addressListStr = null;
+//								if (registryList!=null && !registryList.isEmpty()) {
+//									Collections.sort(registryList);
+//									addressListStr = "";
+//									for (String item:registryList) {
+//										addressListStr += item + ",";
+//									}
+//									addressListStr = addressListStr.substring(0, addressListStr.length()-1);
+//								}
+								group.setAddressList(registryList);
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().update(group);
 							}
 						}

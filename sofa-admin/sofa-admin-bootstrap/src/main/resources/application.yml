@@ -118,3 +118,26 @@ xxl:
 
 ### xxl-job, i18n (default empty as chinese, "en" as english)
     i18n:
+
+com:
+  alipay:
+    sofa:
+      rpc:
+        registry:
+          address: zookeeper://144.131.254.141:2181
+
+
+---
+spring:
+  profiles: zz
+
+  data:
+    mongodb:
+      uri: mongodb://10.10.51.212:27017/training
+
+com:
+  alipay:
+    sofa:
+      rpc:
+        registry:
+          address: zookeeper://10.10.51.212:2181

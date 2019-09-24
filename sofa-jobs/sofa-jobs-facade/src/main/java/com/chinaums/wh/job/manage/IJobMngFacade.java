@@ -63,4 +63,34 @@ public interface IJobMngFacade {
     ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum);
 
     void update(JobLog jobLog);
+
+    /**
+     * script
+     * @param jobId
+     * @return
+     */
+    List<JobScript> findJobScriptByJobId(Long jobId);
+
+    JobScript findByJobScriptId(String scriptId);
+
+    void addJobScript(JobScript script);
+
+    void removeOldLog(Long jobId, int keeyDays);
+
+
+    /**
+     * group
+     * @return
+     */
+    List<JobGroup> selectAllJobGroup();
+
+    PageModel<JobGroup> selectJobGroupPage(PageRequest request, JobGroup ino);
+
+    JobGroup findJobGroup(Long groupId);
+
+    JobGroup addJobGroup(JobGroup group);
+
+    JobGroup updateJobGroup(JobGroup group);
+
+    long removeJobGroup(List<Long> groupId);
 }

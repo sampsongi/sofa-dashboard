@@ -40,7 +40,7 @@ public class ExecutorRouteLFU extends ExecutorRouter {
                 lfuItemMap.put(address, new Random().nextInt(addressList.size()));  // 初始化时主动Random一次，缓解首次压力
             }
         }
-        // remove old
+        // removeJobGroup old
         List<String> delKeys = new ArrayList<>();
         for (String existKey: lfuItemMap.keySet()) {
             if (!addressList.contains(existKey)) {

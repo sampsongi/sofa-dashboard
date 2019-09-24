@@ -12,6 +12,8 @@ import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouteStrategyEnum;
 import com.chinaums.wh.job.manage.impl.core.thread.JobScheduleHelper;
 import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
+import com.chinaums.wh.job.manage.impl.core.util.JobGroupUtil;
+import com.chinaums.wh.job.manage.impl.core.util.JobUtil;
 import com.chinaums.wh.job.manage.impl.service.*;
 import com.chinaums.wh.job.manage.impl.service.impl.XxlJobServiceImpl;
 import com.chinaums.wh.job.model.*;
@@ -19,14 +21,17 @@ import com.chinaums.wh.job.type.ExecutorBlockStrategyEnum;
 import com.chinaums.wh.job.type.GlueTypeEnum;
 import com.chinaums.wh.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -109,12 +114,6 @@ public class JobMngImpl implements IJobMngFacade {
         if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
             return new ReturnT<String>(ReturnT.FAIL_CODE,"阻塞策略不能为空" );
         }
-//        if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
-//            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
-//        }
-//        if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
-//            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
-//        }
 
         // fix "\r" in shell
         if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
@@ -146,7 +145,7 @@ public class JobMngImpl implements IJobMngFacade {
             jobInfo.setChildJobId(temp);
         }
 
-        // add in db
+        // addJobScript in db
         jobInfoService.insert(jobInfo);
         if (jobInfo.getJobId() < 1) {
             return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_add")+I18nUtil.getString("system_fail")) );
@@ -173,20 +172,24 @@ public class JobMngImpl implements IJobMngFacade {
         XxlJobInfo jobInfo = new XxlJobInfo();
         BeanUtils.copyProperties(job,jobInfo);
 // valid
+        XxlJobGroup group = jobGroupService.selectByPId(jobInfo.getJobGroup());
+        if (group == null) {
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "任务分组必填" );
+        }
         if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid") );
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "crond必填");
         }
         if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_jobdesc")) );
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "描述不能为空" );
         }
         if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+I18nUtil.getString("jobinfo_field_author")) );
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "作者不能为空");
         }
         if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorRouteStrategy")+I18nUtil.getString("system_unvalid")) );
+            return new ReturnT<String>(ReturnT.FAIL_CODE, "路由配置异常" );
         }
         if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
-            return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_executorBlockStrategy")+I18nUtil.getString("system_unvalid")) );
+            return new ReturnT<String>(ReturnT.FAIL_CODE,"阻塞策略不能为空" );
         }
 
         // ChildJobId valid
@@ -342,5 +345,83 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public void update(JobLog jobLog) {
 
+    }
+
+    @Override
+    public List<JobScript> findJobScriptByJobId(Long jobId) {
+        return null;
+    }
+
+    @Override
+    public JobScript findByJobScriptId(String scriptId) {
+        return null;
+    }
+
+    @Override
+    public void addJobScript(JobScript script) {
+
+    }
+
+    @Override
+    public void removeOldLog(Long jobId, int keeyDays) {
+
+    }
+
+    /**
+     * group
+     * @return
+     */
+    @Override
+    public List<JobGroup> selectAllJobGroup() {
+        List<XxlJobGroup> gs = jobGroupService.selectAll();
+        if(gs != null && gs.size() > 0) {
+            return gs.stream().map(e->{
+                return JobGroupUtil.toRpcBean(e);
+            }).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    @Override
+    public PageModel<JobGroup> selectJobGroupPage(PageRequest request, JobGroup ino) {
+        XxlJobGroup se = null;
+        if(ino !=null) {
+            se = JobGroupUtil.toDbBean(ino);
+        }
+        PageModel<XxlJobGroup> gs = jobGroupService.selectPage(request,se);
+        if(gs != null && gs.getRows().size() > 0) {
+            List<JobGroup> jgs = gs.getRows().stream().map(e -> {
+                return JobGroupUtil.toRpcBean(e);
+            }).collect(Collectors.toList());
+            return PageModel.instance(gs.getCount(),jgs);
+        }
+        return null;
+    }
+
+    @Override
+    public JobGroup findJobGroup(Long groupId) {
+        return JobGroupUtil.toRpcBean(jobGroupService.selectByPId(groupId));
+    }
+
+    @Override
+    public JobGroup addJobGroup(JobGroup group) {
+        XxlJobGroup db = jobGroupService.insert(JobGroupUtil.toDbBean(group));
+        return JobGroupUtil.toRpcBean(db);
+    }
+
+    @Override
+    public JobGroup updateJobGroup(JobGroup group) {
+        XxlJobGroup db = jobGroupService.update(JobGroupUtil.toDbBean(group));
+        return JobGroupUtil.toRpcBean(db);
+    }
+
+    @Transactional
+    @Override
+    public long removeJobGroup(List<Long> groupIds) {
+        long c = 0;
+        for(Long l:groupIds){
+            c += jobGroupService.deleteByPId(l);
+        }
+        return c;
     }
 }

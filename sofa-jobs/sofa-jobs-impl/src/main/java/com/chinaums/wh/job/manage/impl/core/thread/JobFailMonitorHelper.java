@@ -162,12 +162,12 @@ public class JobFailMonitorHelper {
 			String personal = I18nUtil.getString("admin_name_full");
 			String title = I18nUtil.getString("jobconf_monitor");
 			String content = MessageFormat.format(mailBodyTemplate,
-					group!=null?group.getTitle():"null",
+					group!=null?group.getRemark():"null",
 					info.getId(),
 					info.getJobDesc(),
 					alarmContent);
 
-			Set<String> emailSet = new HashSet<String>(Arrays.asList(info.getAlarmEmail().split(",")));
+			Set<String> emailSet = new HashSet<>(Arrays.asList(info.getAlarmEmail().split(",")));
 			for (String email: emailSet) {
 
 				// make mail

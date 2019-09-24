@@ -66,7 +66,7 @@
 <th:block th:include="include :: footer"/>
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:config:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:config:remove')}]];
+    var removeFlag = [[${@permission.hasPermi('system:config:removeJobGroup')}]];
     var datas = [[${@dict.getType('sys_yes_no')}]];
     var prefix = ctx + "system/config";
 

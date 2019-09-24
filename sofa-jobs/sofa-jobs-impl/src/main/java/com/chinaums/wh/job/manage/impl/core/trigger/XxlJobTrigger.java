@@ -151,8 +151,8 @@ public class XxlJobTrigger {
         StringBuffer triggerMsgSb = new StringBuffer();
         triggerMsgSb.append("触发类型：").append(triggerType.getTitle());
         triggerMsgSb.append("<br>").append("管理IP：").append(IpUtil.getHostIp());
-        triggerMsgSb.append("<br>").append("注册类型：").append(group.getAddressType() );
-        triggerMsgSb.append("<br>").append("注册地址：").append(group.getRegistryList());
+        triggerMsgSb.append("<br>").append("AddressList类型：").append(group.getAddressList() );
+        triggerMsgSb.append("<br>").append("RegistryList地址：").append(group.getRegistryList());
         triggerMsgSb.append("<br>").append("路由策略：").append(executorRouteStrategyEnum.getTitle());
         if (shardingParam != null) {
             triggerMsgSb.append("("+shardingParam+")");

@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,7 @@ public class JobCodeController {
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, long jobId) {
 		Job jobInfo = jobServiceReference.jobService.findByJobId(jobId);
-		List<JobScript> jobLogGlues = jobServiceReference.jobScriptService.findByJobId(jobId);
+		List<JobScript> jobLogGlues = jobServiceReference.jobService.findJobScriptByJobId(jobId);
 
 		if (jobInfo == null) {
 			throw new RuntimeException("任务未找到");
@@ -55,7 +54,7 @@ public class JobCodeController {
 			return new ReturnT<String>(500, "任务不存在");
 		}
 		
-		// update new code
+		// updateJobGroup new code
 		exists_jobInfo.setGlueSource(glueSource);
 		exists_jobInfo.setGlueRemark(glueRemark);
 		exists_jobInfo.setGlueUpdateTime(new Date());
@@ -67,10 +66,10 @@ public class JobCodeController {
 		xxlJobLogGlue.setGlueType(exists_jobInfo.getGlueType());
 		xxlJobLogGlue.setGlueSource(glueSource);
 		xxlJobLogGlue.setGlueRemark(glueRemark);
-		jobServiceReference.jobScriptService.add(xxlJobLogGlue);
+		jobServiceReference.jobService.addJobScript(xxlJobLogGlue);
 
-		// remove code backup more than 30
-		jobServiceReference.jobScriptService.removeOld(exists_jobInfo.getJobId(), 30);
+		// removeJobGroup code backup more than 30
+		jobServiceReference.jobService.removeOldLog(exists_jobInfo.getJobId(), 30);
 
 		return ReturnT.SUCCESS;
 	}

@@ -68,7 +68,7 @@
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:dict:edit')}]];
     var listFlag = [[${@permission.hasPermi('system:dict:list')}]];
-    var removeFlag = [[${@permission.hasPermi('system:dict:remove')}]];
+    var removeFlag = [[${@permission.hasPermi('system:dict:removeJobGroup')}]];
     var datas = [[${@dict.getType('sys_normal_disable')}]];
     var prefix = ctx + "system/dict";
 

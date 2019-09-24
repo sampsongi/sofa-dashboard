@@ -15,16 +15,16 @@
 								任务名称：<input type="text" name="jobName"/>
 							</li>
 							<li>
-								任务分组：<select name="jobGroup" th:with="type=${@dict.getType('sys_job_group')}">
-									<option value="">所有</option>
-									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-								</select>
+								任务执行器：<select name="jobGroup">
+								<option value="">所有</option>
+								<option th:each="g : ${groupList}" th:text="${g.appName}" th:value="${g.groupId}" th:field="*{jobGroupId}"></option>
+							</select>
 							</li>
 							<li>
-								执行状态：<select name="status" th:with="type=${@dict.getType('sys_common_status')}">
-									<option value="">所有</option>
-									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-								</select>
+								任务状态：<select name="status" th:with="type=${@dict.getType('sys_job_status')}">
+								<option value="">所有</option>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+							</select>
 							</li>
 							<li class="select-time">
 								<label>执行时间： </label>
@@ -48,9 +48,6 @@
 	            <a class="btn btn-danger" onclick="$.operate.clean()" shiro:hasPermission="monitor:job:remove">
 	                <i class="fa fa-trash"></i> 清空
 	            </a>
-	            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="monitor:job:export">
-		            <i class="fa fa-download"></i> 导出
-		        </a>
 	        </div>
 	        
 	        <div class="col-sm-12 select-table table-striped">
@@ -61,9 +58,7 @@
 	<th:block th:include="include :: footer" />
 	<script th:inline="javascript">
 		var detailFlag = [[${@permission.hasPermi('monitor:job:detail')}]];
-		var statusDatas = [[${@dict.getType('sys_common_status')}]];
-		var groupDatas = [[${@dict.getType('sys_job_group')}]];
-		var prefix = ctx + "monitor/jobLog";
+		var prefix = ctx + "monitor/djob/log";
 
 		$(function() {
 		    var options = {
@@ -86,49 +81,44 @@
 		            field: 'jobName',
 		            title: '任务名称'
 		        },
+				{
+					field: 'triggerTime',
+					title: '调度时间'
+				},
 		        {
-		            field: 'jobGroup',
-		            title: '任务分组',
-		            formatter: function(value, row, index) {
-		            	return $.table.selectDictLabel(groupDatas, value);
-		            }
+		            field: 'triggerCode',
+		            title: '调度结果'
 		        },
 		        {
-		            field: 'invokeTarget',
-		            title: '调用目标字符串',
-		            formatter: function(value, row, index) {
-                    	return $.table.tooltip(value);
-                    }
+		            field: 'handleTime',
+		            title: '执行时间'
 		        },
-		        {
-		            field: 'jobMessage',
-		            title: '日志信息'
+				{
+		            field: 'handleCode',
+		            title: '执行结果'
 		        },
-		        {
-		            field: 'status',
-		            title: '状态',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	return $.table.selectDictLabel(statusDatas, value);
-		            }
-		        },
-		        {
-		            field: 'createTime',
-		            title: '创建时间',
-		            sortable: true
-		        },
+				{
+					field: 'handleMsg',
+					title: '执行备注'
+				},
 		        {
 		            title: '操作',
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		                var actions = [];
-		                actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.jobLogId + '\')"><i class="fa fa-search"></i>详细</a>');
+		                actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.jobLogId + '\')"><i class="fa fa-search"></i>结果</a>');
+		                actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="detailCat(\'' + row.jobLogId + '\')"><i class="fa fa-search"></i>日志</a>');
 		                return actions.join('');
 		            }
 		        }]
 		    };
 		    $.table.init(options);
 		});
+
+        function detailCat(id) {
+            var url = prefix + "/detailCat?logId="+id;
+            window.parent.open(url);
+        }
 	</script>
 </body>
 </html>

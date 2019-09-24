@@ -110,7 +110,7 @@ public class ${className}Controller extends BaseController {
     /**
      * 删除${tableComment}
      */
-    @RequiresPermissions("${moduleName}:${classname}:remove")
+    @RequiresPermissions("${moduleName}:${classname}:removeJobGroup")
     @Log(title = "${tableComment}", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody

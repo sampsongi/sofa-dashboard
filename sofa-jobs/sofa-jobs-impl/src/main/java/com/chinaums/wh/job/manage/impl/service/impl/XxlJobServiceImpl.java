@@ -142,7 +142,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 			jobInfo.setChildJobId(temp);
 		}
 
-		// add in db
+		// addJobScript in db
 		xxlJobInfoService.insert(jobInfo);
 		if (jobInfo.getJobId() < 1) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "插入异常" );
@@ -358,10 +358,10 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 //				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
 //				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 //
-//				triggerDayList.add(day);
-//				triggerDayCountRunningList.add(triggerDayCountRunning);
-//				triggerDayCountSucList.add(triggerDayCountSuc);
-//				triggerDayCountFailList.add(triggerDayCountFail);
+//				triggerDayList.addJobScript(day);
+//				triggerDayCountRunningList.addJobScript(triggerDayCountRunning);
+//				triggerDayCountSucList.addJobScript(triggerDayCountSuc);
+//				triggerDayCountFailList.addJobScript(triggerDayCountFail);
 //
 //				triggerCountRunningTotal += triggerDayCountRunning;
 //				triggerCountSucTotal += triggerDayCountSuc;
@@ -369,10 +369,10 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 //			}
 //		} else {
 //            for (int i = 4; i > -1; i--) {
-//                triggerDayList.add(DateUtil.formatDate(DateUtil.addDays(new Date(), -i)));
-//				triggerDayCountRunningList.add(0);
-//                triggerDayCountSucList.add(0);
-//                triggerDayCountFailList.add(0);
+//                triggerDayList.addJobScript(DateUtil.formatDate(DateUtil.addDays(new Date(), -i)));
+//				triggerDayCountRunningList.addJobScript(0);
+//                triggerDayCountSucList.addJobScript(0);
+//                triggerDayCountFailList.addJobScript(0);
 //            }
 //		}
 

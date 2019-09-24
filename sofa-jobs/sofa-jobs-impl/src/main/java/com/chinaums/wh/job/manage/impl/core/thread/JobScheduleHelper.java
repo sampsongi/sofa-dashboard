@@ -4,12 +4,17 @@ import com.chinaums.wh.job.manage.impl.core.conf.XxlJobAdminConfig;
 import com.chinaums.wh.job.manage.impl.core.cron.CronExpression;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
+import com.chinaums.wh.job.manage.impl.service.XxlJobGroupService;
+import com.chinaums.wh.job.manage.impl.service.XxlJobInfoService;
+import com.chinaums.wh.job.manage.impl.service.XxlJobLogService;
+import com.chinaums.wh.job.manage.impl.service.XxlJobRegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,6 +34,15 @@ public class JobScheduleHelper {
     private volatile boolean ringThreadToStop = false;
     private volatile static Map<Long, List<Long>> ringData = new ConcurrentHashMap<>();
 
+    @Resource
+    private XxlJobLogService xxlJobLogService;
+    @Resource
+    private XxlJobInfoService xxlJobInfoService;
+    @Resource
+    private XxlJobRegistryService xxlJobRegistryService;
+    @Resource
+    private XxlJobGroupService xxlJobGroupService;
+
     @PostConstruct
     public void start(){
 
@@ -44,7 +58,7 @@ public class JobScheduleHelper {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>> init xxl-job admin scheduler success.");
+                logger.info("初始化调度管理器成功");
 
                 while (!scheduleThreadToStop) {
 
@@ -62,15 +76,20 @@ public class JobScheduleHelper {
                         //connAutoCommit = conn.getAutoCommit();
                         //conn.setAutoCommit(false);
 
-                        //preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for update" );
+                        //preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for updateJobGroup" );
                         //preparedStatement.execute();
 
                         // tx start
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoService().scheduleJobQuery(nowTime + PRE_READ_MS);
-                        if (scheduleList!=null && scheduleList.size()>0) {
+                        List<XxlJobInfo> scheduleList = xxlJobInfoService.scheduleJobQuery(nowTime + PRE_READ_MS);
+                        if(scheduleList == null || scheduleList.size() == 0) {
+                            logger.info("没有轮询到要执行的定时任务");
+                            preReadSuc = false;
+                        } else {
+                            logger.info("获取定时任务数量 {}", scheduleList);
+
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
@@ -97,7 +116,7 @@ public class JobScheduleHelper {
 
                                     // 1、trigger
                                     JobTriggerPoolHelper.trigger(jobInfo.getJobId(), TriggerTypeEnum.CRON, -1, null, null);
-                                    logger.debug(">>>>>>>>>>> xxl-job, shecule push trigger : jobId = " + jobInfo.getId() );
+                                    logger.debug(">>>>>>>>>>>shecule push trigger : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
@@ -150,13 +169,11 @@ public class JobScheduleHelper {
 
                             }
 
-                            // 3、update trigger info
+                            // 3、updateJobGroup trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
-                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoService().scheduleUpdate(jobInfo);
+                                xxlJobInfoService.scheduleUpdate(jobInfo);
                             }
 
-                        } else {
-                            preReadSuc = false;
                         }
 
                         // tx stop
@@ -164,7 +181,7 @@ public class JobScheduleHelper {
 
                     } catch (Exception e) {
                         if (!scheduleThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+                            logger.error(">>>>>>>>>>> 调度异常:{}", e);
                         }
                     } finally {
 
@@ -221,11 +238,11 @@ public class JobScheduleHelper {
 
                 }
 
-                logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread stop");
+                logger.info(">>>>>>>>>>>调度器停止");
             }
         });
         scheduleThread.setDaemon(true);
-        scheduleThread.setName("xxl-job, admin JobScheduleHelper#scheduleThread");
+        scheduleThread.setName("job-scheduleThread");
         scheduleThread.start();
 
 
@@ -257,7 +274,7 @@ public class JobScheduleHelper {
                         }
 
                         // ring trigger
-                        logger.debug(">>>>>>>>>>> xxl-job, time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
+                        logger.debug(">>>>>>>>>>> time-ring beat : " + nowSecond + " = " + Arrays.asList(ringItemData) );
                         if (ringItemData!=null && ringItemData.size()>0) {
                             // do trigger
                             for (long jobId: ringItemData) {
@@ -286,7 +303,7 @@ public class JobScheduleHelper {
             }
         });
         ringThread.setDaemon(true);
-        ringThread.setName("xxl-job, admin JobScheduleHelper#ringThread");
+        ringThread.setName("job-ringThread");
         ringThread.start();
     }
 
@@ -299,7 +316,7 @@ public class JobScheduleHelper {
         }
         ringItemData.add(jobId);
 
-        logger.debug(">>>>>>>>>>> xxl-job, shecule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+        logger.debug(">>>>>>>>>>>shecule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
     @PreDestroy
@@ -358,7 +375,7 @@ public class JobScheduleHelper {
             }
         }
 
-        logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper stop");
+        logger.info(">>>>>>>>>>>JobScheduleHelper stop");
     }
 
 }

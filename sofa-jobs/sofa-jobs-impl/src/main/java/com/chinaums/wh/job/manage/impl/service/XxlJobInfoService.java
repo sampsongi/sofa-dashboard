@@ -18,7 +18,7 @@ public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
     public PageModel<XxlJobInfo> pageList(PageRequest request, XxlJobInfo jobInfo);
 
     /**
-     * add job
+     * addJobScript job
      *
      * @param jobInfo
      * @return
@@ -26,7 +26,7 @@ public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
     public ReturnT<String> addJob(XxlJobInfo jobInfo);
 
     /**
-     * update job
+     * updateJobGroup job
      *
      * @param jobInfo
      * @return
@@ -34,7 +34,7 @@ public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
     public ReturnT<String> updateJob(XxlJobInfo jobInfo);
 
     /**
-     * remove job
+     * removeJobGroup job
      * 	 *
      * @param id
      * @return

@@ -6,10 +6,42 @@ spring:
   data:
     mongodb:
       uri: mongodb://172.30.251.33:27017/uis
+  output:
+    ansi:
+      enabled: ALWAYS
+  application:
+    name: job-controller
+logging:
+  path: ./logs
+  level:
+    root: INFO
+service:
+  unique:
+    id: 1
 xxl:
   job:
     accessToken:
 
 ### xxl-job, i18n (default empty as chinese, "en" as english)
     i18n:
+com:
+  alipay:
+    sofa:
+      rpc:
+        registry:
+          address: zookeeper://144.131.254.141:2181
 
+---
+spring:
+  profiles: zz
+
+  data:
+    mongodb:
+      uri: mongodb://10.10.51.212:27017/training
+
+com:
+  alipay:
+    sofa:
+      rpc:
+        registry:
+          address: zookeeper://10.10.51.212:2181

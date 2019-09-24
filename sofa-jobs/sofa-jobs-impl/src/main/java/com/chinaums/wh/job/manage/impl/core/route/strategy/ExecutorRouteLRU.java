@@ -47,7 +47,7 @@ public class ExecutorRouteLRU extends ExecutorRouter {
                 lruItem.put(address, address);
             }
         }
-        // remove old
+        // removeJobGroup old
         List<String> delKeys = new ArrayList<>();
         for (String existKey: lruItem.keySet()) {
             if (!addressList.contains(existKey)) {

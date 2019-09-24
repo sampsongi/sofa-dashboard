@@ -81,7 +81,7 @@ public class LocalCacheUtil {
     }
 
     /**
-     * remove cache
+     * removeJobGroup cache
      *
      * @param key
      * @return

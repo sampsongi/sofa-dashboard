@@ -56,7 +56,7 @@
 <th:block th:include="include :: footer"/>
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:notice:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:notice:remove')}]];
+    var removeFlag = [[${@permission.hasPermi('system:notice:removeJobGroup')}]];
     var types = [[${@dict.getType('sys_notice_type')}]];
     var datas = [[${@dict.getType('sys_notice_status')}]];
     var prefix = ctx + "system/notice";

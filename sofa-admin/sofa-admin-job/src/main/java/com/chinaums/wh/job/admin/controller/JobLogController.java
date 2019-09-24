@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +37,7 @@ public class JobLogController {
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Long jobId) {
 
 		// 执行器列表
-		List<JobGroup> jobGroupList_all =  jobServiceReference.jobGroupService.selectAll();
+		List<JobGroup> jobGroupList_all =  jobServiceReference.jobService.selectAllJobGroup();
 
 		// filter group
 		List<JobGroup> jobGroupList = jobGroupList_all;

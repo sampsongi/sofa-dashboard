@@ -8,7 +8,6 @@ import com.chinaums.wh.job.model.JobGroup;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import com.chinaums.wh.db.common.exception.BusinessException;
-import me.izhong.dashboard.manage.expection.job.TaskException;
 import com.chinaums.wh.common.util.Convert;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,17 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
-/**
- * job group controller
- * @author xuxueli 2016-10-02 20:52:56
- */
 @Controller
 @RequestMapping("/monitor/djob/group")
 public class JobGroupController {
@@ -44,8 +35,7 @@ public class JobGroupController {
 	@RequestMapping
 	public String index(Model model) {
 
-		// job group (executor)
-		List<JobGroup> list = jobServiceReference.jobGroupService.selectAll();
+		List<JobGroup> list = jobServiceReference.jobService.selectAllJobGroup();
 
 		model.addAttribute("list", list);
 		return prefix + "/group";
@@ -54,7 +44,7 @@ public class JobGroupController {
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<JobGroup> pageList(HttpServletRequest request, JobGroup ino) {
-		return jobServiceReference.jobGroupService.selectPage(PageRequestUtil.fromRequest(request),ino);
+		return jobServiceReference.jobService.selectJobGroupPage(PageRequestUtil.fromRequest(request),ino);
 	}
 
 	/**
@@ -69,23 +59,23 @@ public class JobGroupController {
 	 * 新增保存调度
 	 */
 	@Log(title = "定时任务分组", businessType = BusinessType.ADD)
-	@RequiresPermissions("monitor:job:add")
+	@RequiresPermissions("monitor:job:group:add")
 	@PostMapping("/add")
 	@AjaxWrapper
-	public JobGroup addSave(JobGroup JobGroup) throws BusinessException
+	public JobGroup addSave(JobGroup jg) throws BusinessException
 	{
-		if (JobGroup.getGroupName()==null || JobGroup.getGroupName().trim().length()==0) {
+		if (jg.getGroupName()==null || jg.getGroupName().trim().length()==0) {
 			throw BusinessException.build("GroupName不能为空");
 		}
-		if (JobGroup.getGroupName().length()<4 || JobGroup.getGroupName().length()>64) {
+		if (jg.getGroupName().length()<4 || jg.getGroupName().length()>64) {
             throw BusinessException.build("GroupName长度4-64");
 		}
 		
-//		if (JobGroup.getAddressType()!=0) {
-//			if (JobGroup.getAddressList()==null || JobGroup.getAddressList().trim().length()==0) {
+//		if (jg.getAddressType()!=0) {
+//			if (jg.getAddressList()==null || jg.getAddressList().trim().length()==0) {
 //				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
 //			}
-//			String[] addresss = JobGroup.getAddressList().split(",");
+//			String[] addresss = jg.getAddressList().split(",");
 //			for (String item: addresss) {
 //				if (item==null || item.trim().length()==0) {
 //					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
@@ -93,9 +83,9 @@ public class JobGroupController {
 //			}
 //		}
 
-		JobGroup.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
-		JobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
-		return jobServiceReference.jobGroupService.add(JobGroup);
+		jg.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
+		jg.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
+		return jobServiceReference.jobService.addJobGroup(jg);
 	}
 
 
@@ -105,7 +95,7 @@ public class JobGroupController {
 	@GetMapping("/edit/{groupId}")
 	public String edit(@PathVariable("groupId") Long groupId, ModelMap mmap)
 	{
-		mmap.put("group", jobServiceReference.jobGroupService.find(groupId));
+		mmap.put("group", jobServiceReference.jobService.findJobGroup(groupId));
 		return prefix + "/edit";
 	}
 
@@ -113,7 +103,7 @@ public class JobGroupController {
 	 * 修改保存调度
 	 */
 	@Log(title = "定时任务分组", businessType = BusinessType.UPDATE)
-	@RequiresPermissions("monitor:job:edit")
+	@RequiresPermissions("monitor:job:group:edit")
 	@PostMapping("/edit")
 	@AjaxWrapper
 	public JobGroup editSave(JobGroup JobGroup) throws BusinessException
@@ -150,7 +140,7 @@ public class JobGroupController {
 //			}
 //		}
 		JobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
-		return jobServiceReference.jobGroupService.update(JobGroup);
+		return jobServiceReference.jobService.updateJobGroup(JobGroup);
 	}
 
 //	private List<String> findRegistryByAppName(String appNameParam){
@@ -185,7 +175,7 @@ public class JobGroupController {
 //			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_0") );
 //		}
 //
-//		List<JobGroup> allList = JobGroupService.selectAll();
+//		List<JobGroup> allList = JobGroupService.selectAllJobGroup();
 //		if (allList.size() == 1) {
 //			throw BusinessException.build(I18nUtil.getString("jobgroup_del_limit_1") );
 //		}
@@ -194,13 +184,13 @@ public class JobGroupController {
 		if(idLongs.size() < 1)
 			throw BusinessException.build("删除的数量不能小于1");
 
-		return jobServiceReference.jobGroupService.remove(idLongs);
+		return jobServiceReference.jobService.removeJobGroup(idLongs);
 	}
 
 	@RequestMapping("/find")
 	@AjaxWrapper
 	public JobGroup loadById(long id){
-		return jobServiceReference.jobGroupService.find(id);
+		return jobServiceReference.jobService.findJobGroup(id);
 	}
 
 }

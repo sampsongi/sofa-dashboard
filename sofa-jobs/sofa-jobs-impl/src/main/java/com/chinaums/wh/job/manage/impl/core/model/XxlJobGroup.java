@@ -19,19 +19,10 @@ public class XxlJobGroup  extends TimedBasedEntity implements Serializable {
     @Indexed(unique = true)
     private Long groupId;
 
-    private String appName;
-    private String title;
-    private int order;
-    private int addressType;        // 执行器地址类型：0=自动注册、1=手动录入
-    private String addressList;     // 执行器地址列表，多地址逗号分隔(手动录入)
+    private String groupName;
 
-    // registry list
+    private int order;
+    private List<String> addressList;   // 执行器地址列表，多地址逗号分隔(手动录入)
     private List<String> registryList;  // 执行器地址列表(系统注册)
-    public List<String> getRegistryList() {
-        if (addressList!=null && addressList.trim().length()>0) {
-            registryList = new ArrayList<String>(Arrays.asList(addressList.split(",")));
-        }
-        return registryList;
-    }
 
 }

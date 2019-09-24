@@ -154,7 +154,8 @@
                             }
                         }
                         if (res.code == 'SUCCESS')
-                            return {rows: res.data.rows, total: res.data.count};
+                            return {rows: $.common.isEmpty(res.data)?null:res.data.rows,
+                                total: $.common.isEmpty(res.data)? null: res.data.count};
                         return {rows: res.rows, total: res.total};
                     }
                 } else {

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class JobInfoController {
 		//model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
 
 		// 执行器列表
-		List<JobGroup> jobGroupList_all =  jobServiceReference.jobGroupService.selectAll();
+		List<JobGroup> jobGroupList_all =  jobServiceReference.jobService.selectAllJobGroup();
 
 		// filter group
 		List<JobGroup> jobGroupList = jobGroupList_all;
@@ -54,14 +53,28 @@ public class JobInfoController {
 	public PageModel<Job> pageList(HttpServletRequest request, Job ino) {
 		return jobServiceReference.jobService.pageList(PageRequestUtil.fromRequest(request),ino);
 	}
-	
-	@RequestMapping("/add")
+
+	@GetMapping("/add")
+	public String add(Model model) {
+		model.addAttribute("groupList",jobServiceReference.jobService.selectAllJobGroup());
+		return prefix + "/add";
+	}
+
+	@PostMapping("/add")
 	@AjaxWrapper
 	public ReturnT<String> add(Job jobInfo) {
 		return jobServiceReference.jobService.add(jobInfo);
 	}
-	
-	@RequestMapping("/update")
+
+	@GetMapping("/edit/{jobId}")
+	public String edit(@PathVariable("jobId") Long jobId,Model model) {
+		model.addAttribute("groupList",jobServiceReference.jobService.selectAllJobGroup());
+		model.addAttribute("job",jobServiceReference.jobService.findByJobId(jobId));
+		return prefix + "/edit";
+	}
+
+
+	@PostMapping("/edit")
 	@AjaxWrapper
 	public ReturnT<String> update(Job jobInfo) {
 		return jobServiceReference.jobService.update(jobInfo);
