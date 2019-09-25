@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobServiceReference {
 
-    @SofaReference(interfaceType = IJobMngFacade.class, uniqueId = "${service.unique.id}", binding = @SofaReferenceBinding(bindingType = "bolt"))
+    @SofaReference(interfaceType = IJobMngFacade.class,
+            uniqueId = "${service.unique.id}",
+            binding = @SofaReferenceBinding(bindingType = "bolt",timeout = 20000))
     public IJobMngFacade jobService;
 
 }

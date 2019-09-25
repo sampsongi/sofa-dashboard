@@ -4,7 +4,9 @@ import com.chinaums.wh.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import com.chinaums.wh.db.common.annotation.AutoId;
 import com.chinaums.wh.db.common.annotation.PrimaryId;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
+@Document(collection = "sys_djob_group")
 public class XxlJobGroup  extends TimedBasedEntity implements Serializable {
 
     @AutoId

@@ -1,12 +1,11 @@
 package com.chinaums.wh.domain;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 
-@Data
 public class PageModel<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long count;
     private List<T> rows;
@@ -28,4 +27,19 @@ public class PageModel<T> implements Serializable {
         return new PageModel<T>(count.longValue(), rows);
     }
 
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
+    public List<T> getRows() {
+        return rows;
+    }
+
+    public void setRows(List<T> rows) {
+        this.rows = rows;
+    }
 }

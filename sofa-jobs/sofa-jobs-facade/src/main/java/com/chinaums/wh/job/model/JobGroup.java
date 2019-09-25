@@ -9,6 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 public class JobGroup implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String groupName;
     private String remark;
     private Long groupId;

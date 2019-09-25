@@ -11,10 +11,7 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								AppName：<input type="text" name="appName"/>
-							</li>
-							<li>
-								分组名称：<input type="text" name="title"/>
+								分组名称：<input type="text" name="groupName"/>
 							</li>
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -26,13 +23,13 @@
 			</div>
 			
 			<div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="monitor:job:add">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="monitor:job:group:add">
 	                <i class="fa fa-plus"></i> 新增
 	            </a>
-	            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="monitor:job:edit">
+	            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="monitor:job:group:edit">
 		            <i class="fa fa-edit"></i> 修改
 		        </a>
-				<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="monitor:job:remove">
+				<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="monitor:job:group:remove">
 		            <i class="fa fa-remove"></i> 删除
 		        </a>
 	        </div>
@@ -44,10 +41,10 @@
 	</div>
 	<th:block th:include="include :: footer" />
 	<script th:inline="javascript">
-        var detailFlag = [[${@permission.hasPermi('monitor:job:detail')}]];
-		var editFlag = [[${@permission.hasPermi('monitor:job:edit')}]];
-		var removeFlag = [[${@permission.hasPermi('monitor:job:remove')}]];
-		var statusFlag = [[${@permission.hasPermi('monitor:job:changeStatus')}]];
+        var detailFlag = [[${@permission.hasPermi('monitor:job:group:view')}]];
+		var editFlag = [[${@permission.hasPermi('monitor:job:group:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('monitor:job:group:remove')}]];
+		var statusFlag = [[${@permission.hasPermi('monitor:job:group:changeStatus')}]];
 		var regStatus = [[${@dict.getType('sys_job_address_type')}]];
 		var prefix = ctx + "monitor/djob/group";
 
