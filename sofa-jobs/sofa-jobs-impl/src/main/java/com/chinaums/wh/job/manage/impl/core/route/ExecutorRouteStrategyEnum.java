@@ -1,23 +1,19 @@
 package com.chinaums.wh.job.manage.impl.core.route;
 
 import com.chinaums.wh.job.manage.impl.core.route.strategy.*;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
 
-/**
- * Created by xuxueli on 17/3/10.
- */
 public enum ExecutorRouteStrategyEnum {
 
-    FIRST(I18nUtil.getString("jobconf_route_first"), new ExecutorRouteFirst()),
-    LAST(I18nUtil.getString("jobconf_route_last"), new ExecutorRouteLast()),
-    ROUND(I18nUtil.getString("jobconf_route_round"), new ExecutorRouteRound()),
-    RANDOM(I18nUtil.getString("jobconf_route_random"), new ExecutorRouteRandom()),
-    CONSISTENT_HASH(I18nUtil.getString("jobconf_route_consistenthash"), new ExecutorRouteConsistentHash()),
-    LEAST_FREQUENTLY_USED(I18nUtil.getString("jobconf_route_lfu"), new ExecutorRouteLFU()),
-    LEAST_RECENTLY_USED(I18nUtil.getString("jobconf_route_lru"), new ExecutorRouteLRU()),
-    FAILOVER(I18nUtil.getString("jobconf_route_failover"), new ExecutorRouteFailover()),
-    BUSYOVER(I18nUtil.getString("jobconf_route_busyover"), new ExecutorRouteBusyover()),
-    SHARDING_BROADCAST(I18nUtil.getString("jobconf_route_shard"), null);
+    FIRST("第一个", new ExecutorRouteFirst()),
+    LAST("最后一个", new ExecutorRouteLast()),
+    ROUND("轮训", new ExecutorRouteRound()),
+    RANDOM("随机", new ExecutorRouteRandom()),
+    CONSISTENT_HASH("HASH", new ExecutorRouteConsistentHash()),
+    LEAST_FREQUENTLY_USED("LFU", new ExecutorRouteLFU()),
+    LEAST_RECENTLY_USED("LRU", new ExecutorRouteLRU()),
+    FAILOVER("FAILOVER", new ExecutorRouteFailover()),
+    BUSYOVER("BUSYOVER", new ExecutorRouteBusyover()),
+    SHARDING_BROADCAST("SHARDING", null);
 
     ExecutorRouteStrategyEnum(String title, ExecutorRouter router) {
         this.title = title;

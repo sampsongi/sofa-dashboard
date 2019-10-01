@@ -18,8 +18,6 @@ public interface IJobMngFacade {
 
     Job findByJobId(Long jobId);
 
-    Job findByJobKey(String jobKey);
-
     ReturnT<String> add(Job job);
 
     ReturnT<String> remove(Long jobId);
@@ -32,7 +30,7 @@ public interface IJobMngFacade {
 
     ReturnT<String> kill(Long jobId);
 
-    ReturnT<Job> start(Long jobId);
+    ReturnT<String> start(Long jobId);
 
     /**
      *  agent注册自己的地址到调度器

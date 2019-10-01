@@ -1,7 +1,6 @@
 package com.chinaums.wh.job.manage.impl.core.route.strategy;
 
 import com.chinaums.wh.job.manage.impl.core.route.ExecutorRouter;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
 import com.chinaums.wh.job.model.TriggerParam;
 import com.chinaums.wh.model.ReturnT;
 
@@ -24,7 +23,7 @@ public class ExecutorRouteFailover extends ExecutorRouter {
                 beatResult = new ReturnT<String>(ReturnT.FAIL_CODE, ""+e );
             }
             beatResultSB.append( (beatResultSB.length()>0)?"<br><br>":"")
-                    .append(I18nUtil.getString("jobconf_beat") + "：")
+                    .append("执行"+ "：")
                     .append("<br>address：").append(address)
                     .append("<br>code：").append(beatResult.getCode())
                     .append("<br>msg：").append(beatResult.getMsg());

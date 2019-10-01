@@ -45,7 +45,7 @@ public class XxlJobTrigger {
             jobInfo.setExecutorParam(executorParam);
         }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
-        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().selectByPId(jobInfo.getJobGroup());
+        XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().selectByPId(jobInfo.getJobGroupId());
 
         // sharding param
         int[] shardingParam = null;
@@ -98,7 +98,7 @@ public class XxlJobTrigger {
 
         // 1、save log-id
         XxlJobLog jobLog = new XxlJobLog();
-        jobLog.setJobGroup(jobInfo.getJobGroup());
+        jobLog.setJobGroup(jobInfo.getJobGroupId());
         jobLog.setJobId(jobInfo.getJobId());
         jobLog.setTriggerTime(new Date());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);

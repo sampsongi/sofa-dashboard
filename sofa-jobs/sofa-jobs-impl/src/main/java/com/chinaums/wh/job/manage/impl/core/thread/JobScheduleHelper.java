@@ -104,8 +104,8 @@ public class JobScheduleHelper {
                                         jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                     } else {
                                         jobInfo.setTriggerStatus(0);
-                                        jobInfo.setTriggerLastTime(0);
-                                        jobInfo.setTriggerNextTime(0);
+                                        jobInfo.setTriggerLastTime(0L);
+                                        jobInfo.setTriggerNextTime(0L);
                                     }
 
                                 } else if (nowTime > jobInfo.getTriggerNextTime()) {
@@ -139,8 +139,8 @@ public class JobScheduleHelper {
                                             jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                         } else {
                                             jobInfo.setTriggerStatus(0);
-                                            jobInfo.setTriggerLastTime(0);
-                                            jobInfo.setTriggerNextTime(0);
+                                            jobInfo.setTriggerLastTime(0L);
+                                            jobInfo.setTriggerNextTime(0L);
                                         }
 
                                     }
@@ -161,8 +161,8 @@ public class JobScheduleHelper {
                                         jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                     } else {
                                         jobInfo.setTriggerStatus(0);
-                                        jobInfo.setTriggerLastTime(0);
-                                        jobInfo.setTriggerNextTime(0);
+                                        jobInfo.setTriggerLastTime(0L);
+                                        jobInfo.setTriggerNextTime(0L);
                                     }
 
                                 }

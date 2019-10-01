@@ -9,8 +9,8 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">执行器</label>
 				<div class="col-sm-4">
-					<select name="jobGroup" class="form-control m-b">
-						<option th:each="g : ${groupList}" th:text="${g.appName}" th:value="${g.groupId}"></option>
+					<select name="jobGroupId" class="form-control m-b">
+						<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}"></option>
 					</select>
 				</div>
 

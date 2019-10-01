@@ -882,6 +882,20 @@
                     $.operate.submit(url, "post", "json", data);
                 });
             },
+            //获取选中的列的ID
+            selectRowId: function () {
+                var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+                if(rows.length != 1) {
+                    $.modal.alertWarning("请选择一条记录");
+                    return;
+                }
+                return rows[0];
+            },
+            //获取选中的列的ID
+            selectRowIds: function () {
+                var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+                return rows;
+            },
             // 清空信息
             clean: function () {
                 $.modal.confirm("确定清空所有" + $.table._option.modalName + "吗？", function () {

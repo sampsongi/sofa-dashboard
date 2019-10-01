@@ -1,19 +1,10 @@
 package com.chinaums.wh.job.manage.impl.core.trigger;
 
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
-
-/**
- * trigger type type
- *
- * @author xuxueli 2018-09-16 04:56:41
- */
 public enum TriggerTypeEnum {
 
-    MANUAL(I18nUtil.getString("jobconf_trigger_type_manual")),
-    CRON(I18nUtil.getString("jobconf_trigger_type_cron")),
-    RETRY(I18nUtil.getString("jobconf_trigger_type_retry")),
-    PARENT(I18nUtil.getString("jobconf_trigger_type_parent")),
-    API(I18nUtil.getString("jobconf_trigger_type_api"));
+    MANUAL("手动"),
+    CRON("定时"),
+    RETRY("重试");
 
     private TriggerTypeEnum(String title){
         this.title = title;

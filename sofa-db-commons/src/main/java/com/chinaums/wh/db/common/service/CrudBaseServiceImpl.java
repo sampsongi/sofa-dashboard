@@ -235,6 +235,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
         return dr.getDeletedCount();
     }
 
+    @Transactional
     @Override
     public T insert(T target) {
         processionAnnotations(target);

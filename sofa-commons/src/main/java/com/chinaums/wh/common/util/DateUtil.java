@@ -111,6 +111,17 @@ public class DateUtil extends org.apache.commons.lang3.time.DateUtils {
     }
 
     /**
+     * long 转换为 string
+     * @param time
+     * @return
+     */
+    public static final String parseLongToFullSting(Long time) {
+        if(time == null)
+            return "";
+        return DateFormatUtils.format(new Date(time), YYYY_MM_DD_HH_MM_SS);
+    }
+
+    /**
      * 计算两个时间差
      */
     public static String getDatePoor(Date endDate, Date nowDate) {

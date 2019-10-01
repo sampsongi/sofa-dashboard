@@ -5,7 +5,6 @@ import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
-import com.chinaums.wh.job.manage.impl.core.util.I18nUtil;
 import com.chinaums.wh.model.ReturnT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class JobFailMonitorHelper {
 								// 1、fail retry monitor
 								if (log.getExecutorFailRetryCount() > 0) {
 									JobTriggerPoolHelper.trigger(log.getJobId(), TriggerTypeEnum.RETRY, (log.getExecutorFailRetryCount()-1), log.getExecutorShardingParam(), null);
-									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ I18nUtil.getString("jobconf_trigger_type_retry") +"<<<<<<<<<<< </span><br>";
+									String retryMsg = "<br><br><span style=\"color:#F39C12;\" > >>>>>>>>>>>"+ "重试" +"<<<<<<<<<<< </span><br>";
 									log.setTriggerMsg(log.getTriggerMsg() + retryMsg);
 									XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(log);
 								}
@@ -115,15 +114,14 @@ public class JobFailMonitorHelper {
 	// ---------------------- alarm ----------------------
 
 	// email alarm template
-	private static final String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
+	private static final String mailBodyTemplate = "<h5>" +"详情" + "：</span>" +
 			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
 			"      <tr>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobgroup") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobinfo_field_id") +"</td>\n" +
-			"         <td width=\"20%\" >"+ I18nUtil.getString("jobinfo_field_jobdesc") +"</td>\n" +
-			"         <td width=\"10%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_title") +"</td>\n" +
-			"         <td width=\"40%\" >"+ I18nUtil.getString("jobconf_monitor_alarm_content") +"</td>\n" +
+			"         <td width=\"20%\" >"+ "组" +"</td>\n" +
+			"         <td width=\"10%\" >"+ "ID"+"</td>\n" +
+			"         <td width=\"20%\" >"+ "描述" +"</td>\n" +
+			"         <td width=\"40%\" >"+ "内容" +"</td>\n" +
 			"      </tr>\n" +
 			"   </thead>\n" +
 			"   <tbody>\n" +
@@ -131,7 +129,6 @@ public class JobFailMonitorHelper {
 			"         <td>{0}</td>\n" +
 			"         <td>{1}</td>\n" +
 			"         <td>{2}</td>\n" +
-			"         <td>"+ I18nUtil.getString("jobconf_monitor_alarm_type") +"</td>\n" +
 			"         <td>{3}</td>\n" +
 			"      </tr>\n" +
 			"   </tbody>\n" +
@@ -158,9 +155,9 @@ public class JobFailMonitorHelper {
 			}
 
 			// email info
-			XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().selectByPId(info.getJobGroup());
-			String personal = I18nUtil.getString("admin_name_full");
-			String title = I18nUtil.getString("jobconf_monitor");
+			XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupService().selectByPId(info.getJobGroupId());
+			String personal = "名称";
+			String title = "标题";
 			String content = MessageFormat.format(mailBodyTemplate,
 					group!=null?group.getRemark():"null",
 					info.getId(),

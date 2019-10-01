@@ -1,6 +1,8 @@
 package com.chinaums.wh.job.admin.controller;
 
 import com.chinaums.wh.common.util.CronUtil;
+import com.chinaums.wh.common.util.DateUtil;
+import com.chinaums.wh.db.common.exception.BusinessException;
 import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.job.admin.service.JobServiceReference;
@@ -51,7 +53,17 @@ public class JobInfoController {
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<Job> pageList(HttpServletRequest request, Job ino) {
-		return jobServiceReference.jobService.pageList(PageRequestUtil.fromRequest(request),ino);
+		PageModel<Job>  pm = jobServiceReference.jobService.pageList(PageRequestUtil.fromRequest(request),ino);
+		if(pm != null){
+			List<Job> jobs = pm.getRows();
+			if(jobs != null) {
+				jobs.forEach(e -> {
+					e.setTriggerLastTimeString(DateUtil.parseLongToFullSting(e.getTriggerLastTime()));
+					e.setTriggerNextTimeString(DateUtil.parseLongToFullSting(e.getTriggerNextTime()));
+				});
+			}
+		}
+		return pm;
 	}
 
 	@GetMapping("/add")
@@ -62,58 +74,83 @@ public class JobInfoController {
 
 	@PostMapping("/add")
 	@AjaxWrapper
-	public ReturnT<String> add(Job jobInfo) {
-		return jobServiceReference.jobService.add(jobInfo);
+	public void add(Job jobInfo) {
+		ReturnT<String> rObj = jobServiceReference.jobService.add(jobInfo);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 	}
 
 	@GetMapping("/edit/{jobId}")
 	public String edit(@PathVariable("jobId") Long jobId,Model model) {
+		if(jobId == null){
+			throw BusinessException.build("jobId 不能为空");
+		}
 		model.addAttribute("groupList",jobServiceReference.jobService.selectAllJobGroup());
-		model.addAttribute("job",jobServiceReference.jobService.findByJobId(jobId));
+		Job job = jobServiceReference.jobService.findByJobId(jobId);
+		if(job == null) {
+			throw BusinessException.build(String.format("任务不存在%s",jobId));
+		}
+		model.addAttribute("job",job);
 		return prefix + "/edit";
 	}
 
 
 	@PostMapping("/edit")
 	@AjaxWrapper
-	public ReturnT<String> update(Job jobInfo) {
-		return jobServiceReference.jobService.update(jobInfo);
+	public void update(Job jobInfo) {
+		ReturnT<String> rObj = jobServiceReference.jobService.update(jobInfo);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 	}
 	
 	@RequestMapping("/remove")
 	@AjaxWrapper
-	public ReturnT<String> remove(Long id) {
-		return jobServiceReference.jobService.remove(id);
+	public void remove(Long jobId) {
+		ReturnT<String> rObj = jobServiceReference.jobService.remove(jobId);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 	}
 	
 	@RequestMapping("/stop")
 	@AjaxWrapper
-	public ReturnT<String> stop(Long id) {
-		return jobServiceReference.jobService.kill(id);
+	public void stop(Long jobId) {
+		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 	}
 	
 	@RequestMapping("/start")
 	@AjaxWrapper
-	public ReturnT<Job> start(Long id) {
-		return jobServiceReference.jobService.start(id);
+	public void start(Long jobId) {
+		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 	}
 	
 	@RequestMapping("/trigger")
 	@AjaxWrapper
-	public ReturnT<Job> triggerJob(Long id, String executorParam) {
+	public void triggerJob(Long jobId, String executorParam) {
 		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
 		}
-		return jobServiceReference.jobService.start(id);
+		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
+			throw BusinessException.build(rObj.getMsg());
+		}
 		//JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
 	}
 
 	@PostMapping("/checkCronExpressionIsValid")
 	@ResponseBody
-	public boolean checkCronExpressionIsValid(String CronExpression)
+	public boolean checkCronExpressionIsValid(String jobCron)
 	{
-		return CronUtil.isValid(CronExpression);
+		return CronUtil.isValid(jobCron);
 	}
 	
 }
