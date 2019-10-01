@@ -1,10 +1,10 @@
-package me.izhong.dashboard.manage.convertor;
+package com.chinaums.wh.db.common.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import com.chinaums.wh.db.common.annotation.AutoId;
 import com.chinaums.wh.db.common.annotation.CreateTimeAdvise;
 import com.chinaums.wh.db.common.annotation.UpdateTimeAdvise;
-import me.izhong.dashboard.manage.entity.SysSeqInfo;
+import com.chinaums.wh.db.common.domain.SysSeqInfo;
 import com.chinaums.wh.db.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -20,15 +20,17 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.Date;
 
-@Component
+//@Component
 @Slf4j
 public class EntitySaveEventListener extends AbstractMongoEventListener<Object> {
 
-    @Autowired
+    @Autowired(required = false)
     private MongoTemplate mongo;
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Object> event) {
+        if(mongo == null)
+            return;
         final Object source = event.getSource();
         if (source != null) {
             ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {

@@ -1,6 +1,8 @@
 package com.chinaums.wh.db.common.service;
 
 import com.chinaums.wh.common.util.Convert;
+import com.chinaums.wh.db.common.annotation.*;
+import com.chinaums.wh.db.common.domain.SysSeqInfo;
 import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.domain.PageRequest;
@@ -9,21 +11,22 @@ import com.chinaums.wh.db.common.util.CriteriaUtil;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import com.chinaums.wh.db.common.annotation.PrimaryId;
-import com.chinaums.wh.db.common.annotation.Search;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -234,11 +237,23 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
 
     @Override
     public T insert(T target) {
+        processionAnnotations(target);
+        String fieldName = doGetPrimaryId();
+        Field field = FieldUtils.getField((Class<?>) tClass,fieldName,true);
+        Object keyValue = null;
+        try {
+            keyValue = FieldUtils.readField(field,target);
+        } catch (IllegalAccessException e) {
+            log.error("",e);
+        }
+        if(keyValue == null)
+            throw BusinessException.build("主键" + fieldName + "不能为空");
         return mongoTemplate.save(target);
     }
 
     @Override
     public T update(T target) {
+
         String fieldName = doGetPrimaryId();
         Field field = FieldUtils.getField((Class<?>) tClass,fieldName,true);
         Object keyValue = null;
@@ -261,6 +276,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
             throw BusinessException.build("更新异常");
         }
 
+        processionAnnotations(target);
         return mongoTemplate.save(target);
     }
 
@@ -293,6 +309,49 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
 
         String fieldName = fields[0].getName();
         return  fieldName;
+    }
+
+    private void processionAnnotations(Object source) {
+        if(source == null)
+            return;
+        ReflectionUtils.doWithFields(source.getClass(), new ReflectionUtils.FieldCallback() {
+            @Override
+            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+                ReflectionUtils.makeAccessible(field);
+                boolean isNew = false;
+                if (field.isAnnotationPresent(AutoId.class)) {
+                    if (!field.getType().equals(Long.class)) {
+                        throw BusinessException.build("AutoId field must be Long type");
+                    }
+                    if (field.get(source) == null || ((Long) field.get(source)).longValue() == 0) {
+                        field.set(source, getNextId(source.getClass().getSimpleName() + "|" + field.getName()));
+                        isNew = true;
+                    }
+                }
+
+                if (field.isAnnotationPresent(CreateTimeAdvise.class)) {
+                    if (field.get(source) == null) {
+                        field.set(source, new Date());
+                    }
+                }
+                if (field.isAnnotationPresent(UpdateTimeAdvise.class)) {
+                    field.set(source, new Date());
+                }
+            }
+        });
+    }
+
+    private Long getNextId(String collectionName) {
+        Query query = new Query(Criteria.where("collectionName").is(collectionName));
+        Update update = new Update();
+        update.inc("seqId", 1);
+        FindAndModifyOptions options = new FindAndModifyOptions();
+        options.upsert(true);
+        options.returnNew(true);
+
+        SysSeqInfo seq = mongoTemplate.findAndModify(query, update, options, SysSeqInfo.class);
+        log.debug(collectionName + "generate id:" + seq.getSeqId());
+        return seq.getSeqId();
     }
 
 }

@@ -11,7 +11,7 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								分组名称：<input type="text" name="groupName"/>
+								执行器名称：<input type="text" name="groupName"/>
 							</li>
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -66,19 +66,8 @@
 		            title: '分组编号'
 		        },
 		        {
-		            field: 'appName',
+		            field: 'groupName',
 		            title: '执行器名称',
-		        },
-		        {
-		            field: 'title',
-		            title: '名称',
-		        },
-		        {
-		            field: 'addressType',
-		            title: '注册方式',
-                    formatter: function(value, row, index) {
-                        return $.table.selectDictLabel(regStatus, value);
-                    }
 		        },
 		        {
 		            field: 'registryList',

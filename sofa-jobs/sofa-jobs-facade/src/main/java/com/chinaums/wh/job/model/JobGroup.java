@@ -15,6 +15,7 @@ public class JobGroup implements Serializable {
     private String groupName;
     private String remark;
     private Long groupId;
+    private Long order;
     private List<String> groupUrl;
 
     private String createBy;

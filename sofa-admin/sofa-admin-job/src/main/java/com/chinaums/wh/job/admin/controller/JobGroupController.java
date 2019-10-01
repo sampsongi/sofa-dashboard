@@ -34,10 +34,10 @@ public class JobGroupController {
 
 	@RequestMapping
 	public String index(Model model) {
-
-		List<JobGroup> list = jobServiceReference.jobService.selectAllJobGroup();
-
-		model.addAttribute("list", list);
+//
+//		List<JobGroup> list = jobServiceReference.jobService.selectAllJobGroup();
+//
+//		model.addAttribute("list", list);
 		return prefix + "/group";
 	}
 
@@ -70,18 +70,7 @@ public class JobGroupController {
 		if (jg.getGroupName().length()<4 || jg.getGroupName().length()>64) {
             throw BusinessException.build("GroupName长度4-64");
 		}
-		
-//		if (jg.getAddressType()!=0) {
-//			if (jg.getAddressList()==null || jg.getAddressList().trim().length()==0) {
-//				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
-//			}
-//			String[] addresss = jg.getAddressList().split(",");
-//			for (String item: addresss) {
-//				if (item==null || item.trim().length()==0) {
-//					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
-//				}
-//			}
-//		}
+
 
 		jg.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
 		jg.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
@@ -112,33 +101,9 @@ public class JobGroupController {
 			throw BusinessException.build("GroupName不能为空");
 		}
 		if (JobGroup.getGroupName().length()<4 || JobGroup.getGroupName().length()>64) {
-			throw BusinessException.build("GroupName长度4-64");
+			throw BusinessException.build("GroupName长度需要在4-64之间");
 		}
-//		if (JobGroup.getAddressType() == 0) {
-//			// 0=自动注册
-//			List<String> registryList = findRegistryByAppName(JobGroup.getAppName());
-//			String addressListStr = null;
-//			if (registryList!=null && !registryList.isEmpty()) {
-//				Collections.sort(registryList);
-//				addressListStr = "";
-//				for (String item:registryList) {
-//					addressListStr += item + ",";
-//				}
-//				addressListStr = addressListStr.substring(0, addressListStr.length()-1);
-//			}
-//			JobGroup.setAddressList(addressListStr);
-//		} else {
-//			// 1=手动录入
-//			if (JobGroup.getAddressList()==null || JobGroup.getAddressList().trim().length()==0) {
-//				throw BusinessException.build(I18nUtil.getString("jobgroup_field_addressType_limit") );
-//			}
-//			String[] addresss = JobGroup.getAddressList().split(",");
-//			for (String item: addresss) {
-//				if (item==null || item.trim().length()==0) {
-//					throw BusinessException.build(I18nUtil.getString("jobgroup_field_registryList_unvalid") );
-//				}
-//			}
-//		}
+
 		JobGroup.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
 		return jobServiceReference.jobService.updateJobGroup(JobGroup);
 	}

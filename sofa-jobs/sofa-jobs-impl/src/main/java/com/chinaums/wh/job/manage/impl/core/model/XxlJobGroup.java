@@ -1,5 +1,6 @@
 package com.chinaums.wh.job.manage.impl.core.model;
 
+import com.chinaums.wh.db.common.annotation.Search;
 import com.chinaums.wh.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import com.chinaums.wh.db.common.annotation.AutoId;
@@ -23,9 +24,10 @@ public class XxlJobGroup  extends TimedBasedEntity implements Serializable {
     @Indexed(unique = true)
     private Long groupId;
 
+    @Search(op = Search.Op.REGEX)
     private String groupName;
 
-    private int order;
+    private Long order;
     private List<String> addressList;   // 执行器地址列表，多地址逗号分隔(手动录入)
     private List<String> registryList;  // 执行器地址列表(系统注册)
 

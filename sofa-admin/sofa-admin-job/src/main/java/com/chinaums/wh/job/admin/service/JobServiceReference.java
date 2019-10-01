@@ -10,6 +10,7 @@ public class JobServiceReference {
 
     @SofaReference(interfaceType = IJobMngFacade.class,
             uniqueId = "${service.unique.id}",
+            jvmFirst = false,
             binding = @SofaReferenceBinding(bindingType = "bolt",timeout = 20000))
     public IJobMngFacade jobService;
 

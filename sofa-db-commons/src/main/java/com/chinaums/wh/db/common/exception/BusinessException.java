@@ -20,7 +20,7 @@ public class BusinessException extends RuntimeException {
     }
 
     public static BusinessException build(String msg) {
-        return new BusinessException(ErrCode.SUCCESS_CODE, msg);
+        return new BusinessException(ErrCode.FAIL_CODE, msg);
     }
 
     public static BusinessException build(String msg, Exception e) {

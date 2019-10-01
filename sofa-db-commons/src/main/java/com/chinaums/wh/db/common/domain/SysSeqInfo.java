@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.entity;
+package com.chinaums.wh.db.common.domain;
 
 import lombok.Data;
 import lombok.Getter;
