@@ -26,24 +26,21 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/joblog")
+@RequestMapping("/monitor/djob")
 public class JobLogController {
 	private static Logger logger = LoggerFactory.getLogger(JobLogController.class);
 
 	@Autowired(required = false)
 	private JobServiceReference jobServiceReference;
 
-	@RequestMapping
+	private static String prefix = "monitor/djob";
+
+	@RequestMapping("/log")
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Long jobId) {
 
 		// 执行器列表
 		List<JobGroup> jobGroupList_all =  jobServiceReference.jobService.selectAllJobGroup();
-
-		// filter group
-		List<JobGroup> jobGroupList = jobGroupList_all;
-
-
-		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("groupList", jobGroupList_all);
 
 		// 任务
 		if (jobId > 0) {
@@ -53,14 +50,13 @@ public class JobLogController {
 			}
 
 			model.addAttribute("jobInfo", jobInfo);
-
 		}
 
-		return "joblog/joblog.index";
+		return prefix + "/jobLog";
 	}
 
 	
-	@RequestMapping("/pageList")
+	@RequestMapping("/log/list")
 	@AjaxWrapper
 	public PageModel<JobLog> pageList(HttpServletRequest request, JobLog jLog, String filterTime) {
 
@@ -82,7 +78,6 @@ public class JobLogController {
 	public String logDetailPage(long id, Model model){
 
 		// base check
-		ReturnT<String> logStatue = ReturnT.SUCCESS;
 		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(id);
 		if (jobLog == null) {
             throw new RuntimeException("日志异常");
@@ -93,7 +88,7 @@ public class JobLogController {
         model.addAttribute("executorAddress", jobLog.getExecutorAddress());
         model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
         model.addAttribute("logId", jobLog.getJobLogId());
-		return "joblog/joblog.detail";
+		return prefix +  "/jobLogDetail";
 	}
 
 	@RequestMapping("/logDetailCat")

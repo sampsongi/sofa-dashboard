@@ -117,10 +117,6 @@ public class JobMngImpl implements IJobMngFacade {
 
     }
 
-    public Job edit(Job job) {
-        return null;
-    }
-
     public void enable(String jobKey) {
 
     }
