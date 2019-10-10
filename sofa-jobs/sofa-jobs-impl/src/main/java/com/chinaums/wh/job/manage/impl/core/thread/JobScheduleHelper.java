@@ -1,5 +1,6 @@
 package com.chinaums.wh.job.manage.impl.core.thread;
 
+import com.chinaums.wh.common.util.DateUtil;
 import com.chinaums.wh.job.manage.impl.core.conf.XxlJobAdminConfig;
 import com.chinaums.wh.job.manage.impl.core.cron.CronExpression;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
@@ -8,6 +9,7 @@ import com.chinaums.wh.job.manage.impl.service.XxlJobGroupService;
 import com.chinaums.wh.job.manage.impl.service.XxlJobInfoService;
 import com.chinaums.wh.job.manage.impl.service.XxlJobLogService;
 import com.chinaums.wh.job.manage.impl.service.XxlJobRegistryService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@Slf4j
 public class JobScheduleHelper {
     private static Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
 
@@ -35,13 +38,7 @@ public class JobScheduleHelper {
     private volatile static Map<Long, List<Long>> ringData = new ConcurrentHashMap<>();
 
     @Resource
-    private XxlJobLogService xxlJobLogService;
-    @Resource
     private XxlJobInfoService xxlJobInfoService;
-    @Resource
-    private XxlJobRegistryService xxlJobRegistryService;
-    @Resource
-    private XxlJobGroupService xxlJobGroupService;
 
     @PostConstruct
     public void start(){
@@ -64,10 +61,9 @@ public class JobScheduleHelper {
 
                     // Scan Job
                     long start = System.currentTimeMillis();
-
-                    Connection conn = null;
-                    Boolean connAutoCommit = null;
-                    PreparedStatement preparedStatement = null;
+                    //Connection conn = null;
+                    //Boolean connAutoCommit = null;
+//                    PreparedStatement preparedStatement = null;
 
                     boolean preReadSuc = true;
                     try {
@@ -83,12 +79,13 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
+                        log.info("去数据库查询最近要执行的任务列表:{}",DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, new Date(nowTime + PRE_READ_MS)));
                         List<XxlJobInfo> scheduleList = xxlJobInfoService.scheduleJobQuery(nowTime + PRE_READ_MS);
                         if(scheduleList == null || scheduleList.size() == 0) {
-                            logger.info("没有轮询到要执行的定时任务");
+                            //logger.info("没有轮询到要执行的定时任务");
                             preReadSuc = false;
                         } else {
-                            logger.info("获取定时任务数量 {}", scheduleList);
+                            logger.info("获取定时任务数量 {}", scheduleList.size());
 
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
@@ -101,6 +98,9 @@ public class JobScheduleHelper {
                                     Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date());
                                     if (nextValidTime != null) {
                                         jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                                        log.info("设置任务 [{}:{}] 下次调度时间 {} -> {} ",jobInfo.getJobId(), jobInfo.getJobDesc(),
+                                                DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, new Date(jobInfo.getTriggerNextTime())),
+                                                DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, nextValidTime));
                                         jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                     } else {
                                         jobInfo.setTriggerStatus(0);
@@ -116,7 +116,7 @@ public class JobScheduleHelper {
 
                                     // 1、trigger
                                     JobTriggerPoolHelper.trigger(jobInfo.getJobId(), TriggerTypeEnum.CRON, -1, null, null);
-                                    logger.debug(">>>>>>>>>>>shecule push trigger : jobId = " + jobInfo.getId() );
+                                    logger.debug("触发任务执行 : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
                                     jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
@@ -136,6 +136,9 @@ public class JobScheduleHelper {
                                         Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(jobInfo.getTriggerNextTime()));
                                         if (nextValidTime != null) {
                                             jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
+                                            log.info("B设置任务 [{}:{}] 下次调度时间 {} -> {} ",jobInfo.getJobId(), jobInfo.getJobDesc(),
+                                                    DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, new Date(jobInfo.getTriggerNextTime())),
+                                                    DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, nextValidTime));
                                             jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                         } else {
                                             jobInfo.setTriggerStatus(0);
@@ -181,45 +184,45 @@ public class JobScheduleHelper {
 
                     } catch (Exception e) {
                         if (!scheduleThreadToStop) {
-                            logger.error(">>>>>>>>>>> 调度异常:{}", e);
+                            logger.error("调度异常:{}", e);
                         }
                     } finally {
 
                         // commit
-                        if (conn != null) {
-                            try {
-                                conn.commit();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.setAutoCommit(connAutoCommit);
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                            try {
-                                conn.close();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
+//                        if (conn != null) {
+//                            try {
+//                                conn.commit();
+//                            } catch (SQLException e) {
+//                                if (!scheduleThreadToStop) {
+//                                    logger.error(e.getMessage(), e);
+//                                }
+//                            }
+//                            try {
+//                                conn.setAutoCommit(connAutoCommit);
+//                            } catch (SQLException e) {
+//                                if (!scheduleThreadToStop) {
+//                                    logger.error(e.getMessage(), e);
+//                                }
+//                            }
+//                            try {
+//                                conn.close();
+//                            } catch (SQLException e) {
+//                                if (!scheduleThreadToStop) {
+//                                    logger.error(e.getMessage(), e);
+//                                }
+//                            }
+//                        }
 
                         // close PreparedStatement
-                        if (null != preparedStatement) {
-                            try {
-                                preparedStatement.close();
-                            } catch (SQLException ignore) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(ignore.getMessage(), ignore);
-                                }
-                            }
-                        }
+//                        if (null != preparedStatement) {
+//                            try {
+//                                preparedStatement.close();
+//                            } catch (SQLException ignore) {
+//                                if (!scheduleThreadToStop) {
+//                                    logger.error(ignore.getMessage(), ignore);
+//                                }
+//                            }
+//                        }
                     }
                     long cost = System.currentTimeMillis()-start;
 
@@ -238,7 +241,7 @@ public class JobScheduleHelper {
 
                 }
 
-                logger.info(">>>>>>>>>>>调度器停止");
+                logger.info("调度器停止");
             }
         });
         scheduleThread.setDaemon(true);
@@ -267,7 +270,8 @@ public class JobScheduleHelper {
                         List<Long> ringItemData = new ArrayList<>();
                         int nowSecond = Calendar.getInstance().get(Calendar.SECOND);   // 避免处理耗时太长，跨过刻度，向前校验一个刻度；
                         for (int i = 0; i < 2; i++) {
-                            List<Long> tmpData = ringData.remove( (nowSecond+60-i)%60 );
+                            Long ll = Long.valueOf( (nowSecond+60-i)%60 );
+                            List<Long> tmpData = ringData.remove(ll);
                             if (tmpData != null) {
                                 ringItemData.addAll(tmpData);
                             }
@@ -279,6 +283,7 @@ public class JobScheduleHelper {
                             // do trigger
                             for (long jobId: ringItemData) {
                                 // do trigger
+                                log.info("time-ring 触发任务:[{}]",jobId);
                                 JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null, null);
                             }
                             // clear
@@ -286,7 +291,7 @@ public class JobScheduleHelper {
                         }
                     } catch (Exception e) {
                         if (!ringThreadToStop) {
-                            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread error:{}", e);
+                            logger.error("JobScheduleHelper#ringThread error:{}", e);
                         }
                     }
 
@@ -299,7 +304,7 @@ public class JobScheduleHelper {
                         }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, JobScheduleHelper#ringThread stop");
+                logger.info("JobScheduleHelper#ringThread stop");
             }
         });
         ringThread.setDaemon(true);
@@ -316,7 +321,7 @@ public class JobScheduleHelper {
         }
         ringItemData.add(jobId);
 
-        logger.debug(">>>>>>>>>>>shecule push time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
+        logger.info("调度增加到 time-ring : " + ringSecond + " = " + Arrays.asList(ringItemData) );
     }
 
     @PreDestroy
@@ -375,7 +380,7 @@ public class JobScheduleHelper {
             }
         }
 
-        logger.info(">>>>>>>>>>>JobScheduleHelper stop");
+        logger.info("JobScheduleHelper stop");
     }
 
 }

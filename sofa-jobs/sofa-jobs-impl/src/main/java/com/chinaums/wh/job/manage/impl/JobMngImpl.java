@@ -7,6 +7,8 @@ import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.job.manage.IJobMngFacade;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
+import com.chinaums.wh.job.manage.impl.core.thread.JobTriggerPoolHelper;
+import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
 import com.chinaums.wh.job.manage.impl.core.util.JobGroupUtil;
 import com.chinaums.wh.job.manage.impl.core.util.JobInfoUtil;
 import com.chinaums.wh.job.manage.impl.service.*;
@@ -94,43 +96,24 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public ReturnT<String> enable(Long jobId) {
-        return null;
+        return jobInfoService.enableJob(jobId);
     }
 
     @Override
     public ReturnT<String> disable(Long jobId) {
-        return null;
+        return jobInfoService.disableJob(jobId);
     }
 
     @Override
     public ReturnT<String> kill(Long jobId) {
-        //jobInfoService.
+        log.info("kill action");
         return ReturnT.SUCCESS;
     }
 
     @Override
-    public ReturnT<String> start(Long jobId) {
+    public ReturnT<String> trigger(Long jobId) {
+        JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, null);
         return ReturnT.SUCCESS;
-    }
-
-    public void delete(Job job) {
-
-    }
-
-    public void enable(String jobKey) {
-
-    }
-
-    public void disable(String jobKey) {
-
-    }
-
-    public void pause(String jobKey) {
-
-    }
-
-    public void start(String jobKey) {
-
     }
 
     @Override

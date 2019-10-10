@@ -47,7 +47,7 @@ public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
      * @param id
      * @return
      */
-    public ReturnT<String> startJob(long id);
+    public ReturnT<String> enableJob(long id);
 
     /**
      * stop job
@@ -55,7 +55,7 @@ public interface XxlJobInfoService extends CrudBaseService<Long,XxlJobInfo> {
      * @param id
      * @return
      */
-    public ReturnT<String> stopJob(long id);
+    public ReturnT<String> disableJob(long id);
 
     /**
      * dashboard info

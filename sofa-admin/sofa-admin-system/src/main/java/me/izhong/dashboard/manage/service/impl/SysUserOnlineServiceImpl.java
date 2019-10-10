@@ -44,7 +44,7 @@ public class SysUserOnlineServiceImpl extends CrudBaseServiceImpl<String,SysUser
         if (o != null)
             online.setId(o.getId());
 
-        userOnlineDao.save(online);
+        super.insert(online);
     }
 
     @Transactional

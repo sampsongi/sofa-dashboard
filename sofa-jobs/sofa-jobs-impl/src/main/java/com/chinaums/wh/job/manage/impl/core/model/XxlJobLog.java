@@ -19,11 +19,11 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	@AutoId
 	@PrimaryId
 	@Indexed(unique = true)
-	private long jobLogId;
+	private Long jobLogId;
 	
 	// job info
-	private long jobGroup;
-	private long jobId;
+	private Long jobGroupId;
+	private Long jobId;
 
 	// execute info
 	private String executorAddress;

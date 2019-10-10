@@ -94,7 +94,7 @@ public class SysDeptServiceImpl extends CrudBaseServiceImpl<Long,SysDept> implem
     @Transactional
     public int insertDept(SysDept sysDept) {
         checkDeptNameUnique(sysDept);
-        deptDao.save(sysDept);
+        super.insert(sysDept);
         processRelations(null, sysDept);
         return 0;
     }

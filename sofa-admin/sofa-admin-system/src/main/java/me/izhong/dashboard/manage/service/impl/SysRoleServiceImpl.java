@@ -137,7 +137,7 @@ public class SysRoleServiceImpl extends CrudBaseServiceImpl<Long,SysRole> implem
     public int insertRole(SysRole sysRole) {
         //sysRole.setCreateBy(ShiroUtils.getLoginName());
         // 新增角色信息
-        roleDao.save(sysRole);
+        super.insert(sysRole);
         //ShiroUtils.clearCachedAuthorizationInfo();
         return insertRoleMenu(sysRole.getRoleId(), Arrays.asList(sysRole.getMenuIds()));
     }

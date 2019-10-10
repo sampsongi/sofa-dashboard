@@ -117,7 +117,7 @@ public class JobInfoController {
 	@RequestMapping("/stop")
 	@AjaxWrapper
 	public void stop(Long jobId) {
-		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		ReturnT<String> rObj = jobServiceReference.jobService.disable(jobId);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());
 		}
@@ -126,7 +126,7 @@ public class JobInfoController {
 	@RequestMapping("/start")
 	@AjaxWrapper
 	public void start(Long jobId) {
-		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		ReturnT<String> rObj = jobServiceReference.jobService.enable(jobId);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());
 		}
@@ -139,7 +139,7 @@ public class JobInfoController {
 		if (executorParam == null) {
 			executorParam = "";
 		}
-		ReturnT<String> rObj = jobServiceReference.jobService.kill(jobId);
+		ReturnT<String> rObj = jobServiceReference.jobService.trigger(jobId);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());
 		}

@@ -159,7 +159,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
                 throw BusinessException.build(String.format("用户名字[%s]重复", user.getLoginName()));
             }
 
-            SysUser u = userDao.save(user);
+            SysUser u = super.insert(user);
             return u;
         } catch (Exception e) {
             log.error("", e);

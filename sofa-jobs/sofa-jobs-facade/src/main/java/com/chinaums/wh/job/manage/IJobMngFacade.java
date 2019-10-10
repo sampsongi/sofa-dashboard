@@ -30,7 +30,7 @@ public interface IJobMngFacade {
 
     ReturnT<String> kill(Long jobId);
 
-    ReturnT<String> start(Long jobId);
+    ReturnT<String> trigger(Long jobId);
 
     /**
      *  agent注册自己的地址到调度器

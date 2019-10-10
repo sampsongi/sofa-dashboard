@@ -14,26 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-/**
- * xxl-job trigger
- * Created by xuxueli on 17/7/13.
- */
 public class XxlJobTrigger {
     private static Logger logger = LoggerFactory.getLogger(XxlJobTrigger.class);
 
-    /**
-     * trigger job
-     *
-     * @param jobId
-     * @param triggerType
-     * @param failRetryCount
-     * 			>=0: use this param
-     * 			<0: use param from job info config
-     * @param executorShardingParam
-     * @param executorParam
-     *          null: use job param
-     *          not null: cover job param
-     */
     public static void trigger(long jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam) {
         // load data
         XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoService().selectByPId(jobId);
@@ -81,14 +64,6 @@ public class XxlJobTrigger {
         }
     }
 
-    /**
-     * @param group                     job group, registry list may be empty
-     * @param jobInfo
-     * @param finalFailRetryCount
-     * @param triggerType
-     * @param index                     sharding index
-     * @param total                     sharding index
-     */
     private static void processTrigger(XxlJobGroup group, XxlJobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, int index, int total){
 
         // param
@@ -98,7 +73,7 @@ public class XxlJobTrigger {
 
         // 1、save log-id
         XxlJobLog jobLog = new XxlJobLog();
-        jobLog.setJobGroup(jobInfo.getJobGroupId());
+        jobLog.setJobGroupId(jobInfo.getJobGroupId());
         jobLog.setJobId(jobInfo.getJobId());
         jobLog.setTriggerTime(new Date());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);
@@ -115,7 +90,8 @@ public class XxlJobTrigger {
         triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
         triggerParam.setGlueType(jobInfo.getGlueType());
         triggerParam.setGlueSource(jobInfo.getGlueSource());
-        triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
+        if(jobInfo.getGlueUpdatetime() != null)
+            triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
         triggerParam.setBroadcastIndex(index);
         triggerParam.setBroadcastTotal(total);
 
@@ -186,7 +162,8 @@ public class XxlJobTrigger {
      * @return
      */
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
-        ReturnT<String> runResult = null;
+        ReturnT<String> runResult = ReturnT.SUCCESS;
+        logger.info("调度远程执行器执行：{} : {}",triggerParam, address);
 //        try {
 //            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
 //            runResult = executorBiz.run(triggerParam);

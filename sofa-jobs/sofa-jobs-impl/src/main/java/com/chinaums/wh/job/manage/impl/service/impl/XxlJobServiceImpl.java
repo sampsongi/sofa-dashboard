@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -47,6 +48,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		return super.selectList(query, null, null);
 	}
 
+	@Transactional
 	@Override
 	public void scheduleUpdate(XxlJobInfo jobInfo) {
 		Assert.notNull(jobInfo,"");
@@ -62,7 +64,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		update.set("triggerLastTime",jobInfo.getTriggerLastTime());
 		update.set("triggerNextTime",jobInfo.getTriggerNextTime());
 		update.set("triggerStatus",jobInfo.getTriggerStatus());
-		mongoTemplate.updateMulti(query, update, XxlJobRegistry.class);
+		mongoTemplate.updateMulti(query, update, XxlJobInfo.class);
 	}
 
 	@Override
@@ -82,12 +84,16 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		return xxlJobInfoService.selectPage(request,jobInfo);
 	}
 
+	@Transactional
 	@Override
 	public ReturnT<String> addJob(XxlJobInfo jobInfo) {
 		// valid
+		if(jobInfo.getJobGroupId() == null) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );
+		}
 		XxlJobGroup group = xxlJobGroupService.selectByPId(jobInfo.getJobGroupId());
 		if (group == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组不存在" );
 		}
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "cron必填" );
@@ -160,12 +166,20 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		}
 	}
 
+	@Transactional
 	@Override
 	public ReturnT<String> updateJob(XxlJobInfo jobInfo) {
 
 		Assert.notNull(jobInfo,"");
 		Assert.notNull(jobInfo.getJobId(),"任务ID不能为空");
 		// valid
+		if(jobInfo.getJobGroupId() == null) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );
+		}
+		XxlJobGroup group = xxlJobGroupService.selectByPId(jobInfo.getJobGroupId());
+		if (group == null) {
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组不存在" );
+		}
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "cron表达式非法");
 		}
@@ -207,12 +221,6 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 			jobInfo.setChildJobId(temp);
 		}
 
-		// group valid
-		XxlJobGroup jobGroup = xxlJobGroupService.selectByPId(jobInfo.getJobGroupId());
-		if (jobGroup == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "group非法" );
-		}
-
 		// stage job info
 		XxlJobInfo exists_jobInfo = xxlJobInfoService.selectByPId(jobInfo.getJobId());
 		if (exists_jobInfo == null) {
@@ -252,6 +260,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		return ReturnT.SUCCESS;
 	}
 
+	@Transactional
 	@Override
 	public ReturnT<String> removeJob(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
@@ -265,8 +274,9 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		return ReturnT.SUCCESS;
 	}
 
+	@Transactional
 	@Override
-	public ReturnT<String> startJob(long id) {
+	public ReturnT<String> enableJob(long id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
 		// next trigger time (5s后生效，避开预读周期)
@@ -290,8 +300,9 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		return ReturnT.SUCCESS;
 	}
 
+	@Transactional
 	@Override
-	public ReturnT<String> stopJob(long id) {
+	public ReturnT<String> disableJob(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
 		xxlJobInfo.setTriggerStatus(0);

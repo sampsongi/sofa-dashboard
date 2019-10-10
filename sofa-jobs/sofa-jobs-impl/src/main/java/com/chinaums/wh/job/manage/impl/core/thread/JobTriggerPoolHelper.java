@@ -81,7 +81,6 @@ public class JobTriggerPoolHelper {
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 } finally {
-
                     // check timeout-count-map
                     long minTim_now = System.currentTimeMillis()/60000;
                     if (minTim != minTim_now) {

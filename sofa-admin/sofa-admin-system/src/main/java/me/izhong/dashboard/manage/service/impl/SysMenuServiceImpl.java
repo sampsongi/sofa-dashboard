@@ -199,7 +199,7 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
     @Override
     public int insertMenu(SysMenu sysMenu) {
         checkMenuNameUnique(sysMenu);
-        menuDao.save(sysMenu);
+        super.insert(sysMenu);
         return 1;
     }
 
