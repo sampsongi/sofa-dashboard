@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 执行script脚本的定时任务，通过run.sh调起来
@@ -20,6 +21,7 @@ import java.util.Date;
 public class ShellCommandJob extends IJobHandler {
 
     private long jobId;
+    private long triggerId;
     private long glueUpdatetime;
     private String gluesource;
     private String glueType;
@@ -27,19 +29,18 @@ public class ShellCommandJob extends IJobHandler {
 
     private JobServiceReference jobServiceReference;
 
-    public ShellCommandJob(long jobId, long glueUpdatetime, String gluesource){
+    public ShellCommandJob(long jobId, long triggerId, String script){
         this.jobId = jobId;
-        this.glueUpdatetime = glueUpdatetime;
-        this.gluesource = gluesource;
-        this.glueType = glueType;
+        this.triggerId = triggerId;
+        this.gluesource = script;
     }
 
     public ShellCommandJob() {
     }
 
     @Override
-    public ReturnT<String> execute(String param) throws Exception {
-        log.info("shell command job run with param: {}",param);
+    public ReturnT<String> execute(Map<String,String> params) throws Exception {
+        log.info("shell command job[{}]  trigger [{}] run with param: {}",jobId,triggerId,params);
         // JobRunLog jobLog = new JobRunLog();
         // 定时任务日志通过接口送到 jobs-bootstrap
         // jobServiceReference.getJobMngFacade().uploadStatics();

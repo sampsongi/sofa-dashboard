@@ -42,4 +42,10 @@ public class Job implements Serializable {
 
     private String triggerLastTimeString;	// 上次调度时间
     private String triggerNextTimeString;	// 下次调度时间
+
+    private Date createTime;
+    private String createBy;
+    private Date updateTime;
+    private String updateBy;
+
 }

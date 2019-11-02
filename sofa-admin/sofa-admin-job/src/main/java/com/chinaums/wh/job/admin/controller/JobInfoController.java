@@ -11,6 +11,7 @@ import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.JobGroup;
 import com.chinaums.wh.job.type.GlueTypeEnum;
 import com.chinaums.wh.model.ReturnT;
+import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,6 +76,14 @@ public class JobInfoController {
 	@PostMapping("/add")
 	@AjaxWrapper
 	public void add(Job jobInfo) {
+		if(jobInfo.getExecutorFailRetryCount() == null) {
+			jobInfo.setExecutorFailRetryCount(0);
+		}
+		if(jobInfo.getExecutorTimeout() == null) {
+			jobInfo.setExecutorTimeout(30000);
+		}
+        jobInfo.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
+        jobInfo.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
 		ReturnT<String> rObj = jobServiceReference.jobService.add(jobInfo);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());

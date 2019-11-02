@@ -1,5 +1,6 @@
 package com.chinaums.wh.job.admin.controller;
 
+import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 import com.chinaums.wh.job.admin.service.JobServiceReference;
 import com.chinaums.wh.job.model.Job;
 import com.chinaums.wh.job.model.JobScript;
@@ -16,13 +17,15 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/jobcode")
+@RequestMapping("/monitor/djob")
 public class JobCodeController {
-	
+
+	private String prefix = "monitor/djob";
+
 	@Autowired(required = false)
 	private JobServiceReference jobServiceReference;
 
-	@RequestMapping
+	@RequestMapping("/code")
 	public String index(HttpServletRequest request, Model model, long jobId) {
 		Job jobInfo = jobServiceReference.jobService.findByJobId(jobId);
 		List<JobScript> jobLogGlues = jobServiceReference.jobService.findJobScriptByJobId(jobId);
@@ -36,11 +39,11 @@ public class JobCodeController {
 
 		model.addAttribute("jobInfo", jobInfo);
 		model.addAttribute("jobLogGlues", jobLogGlues);
-		return "jobcode/jobcode.index";
+		return prefix + "/jobcode";
 	}
 	
-	@RequestMapping("/save")
-	@ResponseBody
+	@RequestMapping("/code/save")
+	@AjaxWrapper
 	public ReturnT<String> save(Model model, long id, String glueSource, String glueRemark) {
 		// valid
 		if (glueRemark==null) {

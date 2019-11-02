@@ -12,6 +12,7 @@ import com.chinaums.wh.job.model.JobGroup;
 import com.chinaums.wh.job.model.JobLog;
 import com.chinaums.wh.job.model.LogResult;
 import com.chinaums.wh.model.ReturnT;
+import me.izhong.dashboard.manage.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,8 @@ public class JobLogController {
 	
 	@RequestMapping("/log/list")
 	@AjaxWrapper
-	public PageModel<JobLog> pageList(HttpServletRequest request, JobLog jLog, String filterTime) {
+	public PageModel<JobLog> pageList(HttpServletRequest request, String jobName, String jobGroup,
+									  String status, String filterTime) {
 
 		// parse param
 		Date triggerTimeStart = null;
@@ -70,6 +72,14 @@ public class JobLogController {
 //				triggerTimeEnd = DateUtil.parseDateTime(temp[1]);
 			}
 		}
+
+		JobLog jLog = new JobLog();
+		if(StringUtil.isNotBlank(jobName))
+			jLog.setJobName(jobName);
+		if(StringUtil.isNotBlank(jobGroup))
+			jLog.setJobGroup(jobGroup);
+		if(StringUtil.isNotBlank(status))
+			jLog.setStatus(status);
 		
 		return jobServiceReference.jobService.logPageList(PageRequestUtil.fromRequest(request),jLog);
 	}
@@ -148,7 +158,7 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/clearLog")
-	@ResponseBody
+	@AjaxWrapper
 	public ReturnT<String> clearLog(long jobGroup, long jobId, int type){
 
 		Date clearBeforeTime = null;

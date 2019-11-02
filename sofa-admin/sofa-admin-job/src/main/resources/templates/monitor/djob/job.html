@@ -122,11 +122,14 @@
 					title: '负责人',
 					sortable: true
 				},
-				{
-					field: 'triggerStatus',
-					title: '状态',
-					sortable: true
-				},
+                    {
+                        field: 'triggerStatus',
+                        title: '状态',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return statusTools(row);
+                        }
+                    },
 		        {
 		            title: '操作',
 		            align: 'center',
@@ -135,13 +138,38 @@
                         actions.push('<a class="btn btn-primary btn-xs" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.jobId + '\')"><i class="fa fa-edit"></i> 修改</a> ');
                         actions.push('<a class="btn btn-warning btn-xs" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.jobId + '\')"><i class="fa fa-remove"></i>删除</a> ');
                         actions.push('<a class="btn btn-warning btn-xs" href="javascript:void(0)" onclick="editCode(\'' + row.jobId + '\')"><i class="fa fa-edit"></i>脚本</a> ');
-		                actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.jobId + '\')"><i class="fa fa-search"></i>详细</a> ');
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="openlog(\'' + row.jobId + '\')"><i class="fa fa-list-ul"></i>日志</a> ');
+/*
+                        actions.push('<a class="btn btn-warning btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.jobId + '\')"><i class="fa fa-search"></i>详细</a> ');
+*/
 		                return actions.join('');
 		            }
 		        }]
 		    };
 		    $.table.init(options);
 		});
+
+        /* 状态显示 */
+        function statusTools(row) {
+            if (row.triggerStatus == 0) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="start1(\'' + row.jobId + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="stop1(\'' + row.jobId + '\')"></i> ';
+            }
+        }
+        /* 调度任务-停用 */
+        function stop1(jobId) {
+            $.modal.confirm("确认要停用任务吗？", function() {
+                $.operate.post(prefix + "/stop", { "jobId": jobId});
+            })
+        }
+
+        /* 调度任务-启用 */
+        function start1(jobId) {
+            $.modal.confirm("确认要启用任务吗？", function() {
+                $.operate.post(prefix + "/start", { "jobId": jobId});
+            })
+        }
 		
 		/* 立即执行一次 */
 		function trigger() {
@@ -171,7 +199,12 @@
             var url = prefix + "/code?jobId="+id;
             //$.modal.openTab("编辑脚本", url);
             window.parent.open(url);
+        }
 
+        /*字典列表-详细*/
+        function openlog(jobId) {
+            var url = prefix + '/log?jobId=' + jobId;
+            $.modal.openTab("任务日志", url);
         }
 
 	</script>

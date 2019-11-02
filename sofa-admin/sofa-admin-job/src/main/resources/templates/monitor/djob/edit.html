@@ -37,8 +37,18 @@
 							<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{glueType}"></option>
 						</select>
 					</div>
-					<label class="col-sm-2 control-label">JobHandler</label>
-					<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler"  th:field="*{executorHandler}" ></div>
+					<!--<label class="col-sm-2 control-label">JobHandler</label>
+					<div class="col-sm-4"><input type="text" class="form-control" name="executorHandler"
+					th:field="*{executorHandler}" ></div>
+				-->
+					<label class="col-sm-2 control-label">状态：</label>
+					<div class="col-sm-4">
+						<label class="toggle-switch switch-solid">
+							<input type="checkbox" id="triggerStatus" th:checked="${job.triggerStatus == 1 ? true : false}">
+							<span></span>
+						</label>
+					</div>
+
 				</div>
 
 				<div class="form-group">
@@ -110,10 +120,13 @@
 	        },
 	        focusCleanup: true
 		});
-		
+
 		function submitHandler() {
 	        if ($.validate.form()) {
-	        	$.operate.save(prefix + "/edit", $('#form-job-edit').serialize());
+                var data = $("#form-job-edit").serializeArray();
+                var triggerStatus = $("input[id='triggerStatus']").is(':checked') == true ? 1 : 0;
+                data.push({"name": "triggerStatus", "value": triggerStatus});
+                $.operate.save(prefix + "/edit", data);
 	        }
 	    }
 	</script>

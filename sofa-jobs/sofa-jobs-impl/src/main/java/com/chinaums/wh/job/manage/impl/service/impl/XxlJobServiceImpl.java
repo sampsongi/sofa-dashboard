@@ -110,12 +110,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞策略不能为空" );
 		}
-//		if (GlueTypeEnum.match(jobInfo.getGlueType()) == null) {
-//			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("jobinfo_field_gluetype")+I18nUtil.getString("system_unvalid")) );
-//		}
-//		if (GlueTypeEnum.BEAN==GlueTypeEnum.match(jobInfo.getGlueType()) && (jobInfo.getExecutorHandler()==null || jobInfo.getExecutorHandler().trim().length()==0) ) {
-//			return new ReturnT<String>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_input")+"JobHandler") );
-//		}
+
 
 		// fix "\r" in shell
 		if (GlueTypeEnum.GLUE_SHELL==GlueTypeEnum.match(jobInfo.getGlueType()) && jobInfo.getGlueSource()!=null) {
@@ -147,7 +142,8 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 			jobInfo.setChildJobId(temp);
 		}
 
-
+        jobInfo.setCreateTime(new Date());
+		jobInfo.setUpdateTime(new Date());
 		// addJobScript in db
 		xxlJobInfoService.insert(jobInfo);
 		if (jobInfo.getJobId() < 1) {
@@ -255,6 +251,11 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
+
+		exists_jobInfo.setGlueSource(jobInfo.getGlueSource());
+		exists_jobInfo.setGlueRemark(jobInfo.getGlueRemark());
+		exists_jobInfo.setGlueUpdatetime(jobInfo.getGlueUpdatetime());
+		exists_jobInfo.setTriggerStatus(jobInfo.getTriggerStatus());
         xxlJobInfoService.update(exists_jobInfo);
 
 		return ReturnT.SUCCESS;

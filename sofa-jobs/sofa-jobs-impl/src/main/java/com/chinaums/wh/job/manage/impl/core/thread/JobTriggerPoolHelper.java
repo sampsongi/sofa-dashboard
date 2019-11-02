@@ -11,11 +11,6 @@ import javax.annotation.PreDestroy;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * job trigger thread pool helper
- *
- * @author xuxueli 2018-07-03 21:08:07
- */
 @Component
 public class JobTriggerPoolHelper {
     private static Logger logger = LoggerFactory.getLogger(JobTriggerPoolHelper.class);
@@ -77,7 +72,7 @@ public class JobTriggerPoolHelper {
 
                 try {
                     // do trigger
-                    XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam);
+                    XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorParam);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 } finally {

@@ -2,6 +2,8 @@ package com.chinaums.wh.jobs.agent.job;
 
 import com.chinaums.wh.model.ReturnT;
 
+import java.util.Map;
+
 public abstract class IJobHandler {
 
 
@@ -26,7 +28,7 @@ public abstract class IJobHandler {
      * @return
      * @throws Exception
      */
-    public abstract ReturnT<String> execute(String param) throws Exception;
+    public abstract ReturnT<String> execute(Map<String,String> params) throws Exception;
 
 
     /**

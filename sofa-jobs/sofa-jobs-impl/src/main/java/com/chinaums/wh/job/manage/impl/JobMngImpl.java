@@ -7,10 +7,13 @@ import com.chinaums.wh.domain.PageRequest;
 import com.chinaums.wh.job.manage.IJobMngFacade;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobGroup;
 import com.chinaums.wh.job.manage.impl.core.model.XxlJobInfo;
+import com.chinaums.wh.job.manage.impl.core.model.XxlJobLog;
 import com.chinaums.wh.job.manage.impl.core.thread.JobTriggerPoolHelper;
 import com.chinaums.wh.job.manage.impl.core.trigger.TriggerTypeEnum;
+import com.chinaums.wh.job.manage.impl.core.trigger.XxlJobTrigger;
 import com.chinaums.wh.job.manage.impl.core.util.JobGroupUtil;
 import com.chinaums.wh.job.manage.impl.core.util.JobInfoUtil;
+import com.chinaums.wh.job.manage.impl.core.util.JobLogUtil;
 import com.chinaums.wh.job.manage.impl.service.*;
 import com.chinaums.wh.job.model.*;
 import com.chinaums.wh.job.type.ExecutorBlockStrategyEnum;
@@ -112,8 +115,9 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public ReturnT<String> trigger(Long jobId) {
-        JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, null);
-        return ReturnT.SUCCESS;
+        return  XxlJobTrigger.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null);
+//        JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, null);
+//        return ReturnT.SUCCESS;
     }
 
     @Override
@@ -134,6 +138,15 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public PageModel<JobLog> logPageList(PageRequest request, JobLog ino) {
+        XxlJobLog se = null;
+        if(ino != null) {
+            se = JobLogUtil.toDbBean(ino);
+        }
+        PageModel<XxlJobLog> gs = jobLogService.selectPage(request,se);
+        if(gs != null && gs.getRows().size() > 0) {
+            List<JobLog> jgs = gs.getRows().stream().map(e -> JobLogUtil.toRpcBean(e)).collect(Collectors.toList());
+            return PageModel.instance(gs.getCount(),jgs);
+        }
         return null;
     }
 
