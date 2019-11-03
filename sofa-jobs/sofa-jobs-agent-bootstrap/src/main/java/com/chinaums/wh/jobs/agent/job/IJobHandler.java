@@ -1,5 +1,6 @@
 package com.chinaums.wh.jobs.agent.job;
 
+import com.chinaums.wh.jobs.agent.bean.JobContext;
 import com.chinaums.wh.model.ReturnT;
 
 import java.util.Map;
@@ -24,11 +25,10 @@ public abstract class IJobHandler {
     /**
      * execute handler, invoked when executor receives a scheduling request
      *
-     * @param param
      * @return
      * @throws Exception
      */
-    public abstract ReturnT<String> execute(Map<String,String> params) throws Exception;
+    public abstract ReturnT<String> execute(JobContext jobContext) throws Exception;
 
 
     /**

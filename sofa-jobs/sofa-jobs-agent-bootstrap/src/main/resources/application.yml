@@ -16,6 +16,11 @@ service:
   unique:
     id: 1
 
+config:
+  script:
+    dir: /Users/jimmy/space/tianru/sofa-dashboard/sofa-jobs/sofa-jobs-agent-bootstrap/src/main/resources
+
+
 com:
   alipay:
     sofa:
