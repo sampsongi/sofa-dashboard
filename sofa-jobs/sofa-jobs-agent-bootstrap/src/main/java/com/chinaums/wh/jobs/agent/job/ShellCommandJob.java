@@ -12,12 +12,9 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,16 +29,16 @@ public class ShellCommandJob extends IJobHandler {
 
     private String SHName = "/bin/sh ";
     private String command;
-    private String script;
+    private Long jobId;
 
     private JobContext jobContext;
 
     private JobServiceReference jobServiceReference;
     private AgentLog agentLog;
 
-    public ShellCommandJob(String command, String script,AgentLog agentLog){
+    public ShellCommandJob(String command, Long jobId,AgentLog agentLog){
         this.command = command;
-        this.script = script;
+        this.jobId = jobId;
         this.agentLog = agentLog;
     }
 
@@ -51,13 +48,15 @@ public class ShellCommandJob extends IJobHandler {
     @Override
     public ReturnT<String> execute(JobContext jobContext) throws Exception {
         this.jobContext = jobContext;
+
+        String run_env = ContextUtil.getRunEnv();
         JobsConfigBean configBean = ContextUtil.getBean(JobsConfigBean.class);
         String scriptDir = configBean.getScriptPath();
         Map<String,String> params = jobContext.getParams();
 
         agentLog.info("shell command job[{}]  trigger [{}] run with param: {}",
                 jobContext.getJobId(),jobContext.getTriggerId(),params);
-        agentLog.info("script:{}",script);
+        agentLog.info("jobId:{}",jobId);
         // JobRunLog jobLog = new JobRunLog();
         // 定时任务日志通过接口送到 jobs-bootstrap
         // jobServiceReference.getJobMngFacade().uploadStatics();
@@ -76,18 +75,8 @@ public class ShellCommandJob extends IJobHandler {
             String name = "test job";
 
             String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String time = new SimpleDateFormat("HHmmss").format(new Date());
-
-//            String logFile = path + "/" + date + "/" + name + "." + time
-//                    + ".log";
-//
-//            jobLog.setJobName(ctx.getJobDetail().getKey().getName());
-//            jobLog.setJobGroup(ctx.getJobDetail().getKey().getGroup());
-//            jobLog.setDescription(ctx.getJobDetail().getDescription());
-//            jobLog.setFireInstanceId(ctx.getFireInstanceId());
-//            jobLog.setServerName(ContextUtil.getServerName());
-//            jobLog.setRunStartTime(new Date());
-//            jobLog.setLogFile(logFile);
+            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
             agentLog.info("开始任务:serverName={} command={}, paramter={}, timeout={}",
                     ContextUtil.getServerName(),command, params, timeout);
@@ -96,24 +85,9 @@ public class ShellCommandJob extends IJobHandler {
                 throw new JobExecutionException("参数错误");
             }
 
-//            File appPathFile = new File(appPath);
-//            File commandFile = new File(appPathFile, command);
-//            if (!commandFile.getParentFile().getCanonicalPath()
-//                    .startsWith(appPathFile.getCanonicalPath())) {
-//                throw new JobExecutionException("不允许执行该路径下的命令");
-//            }
-//            log.info("执行脚本文件:{}",commandFile.getAbsolutePath());
-//            if (!commandFile.exists()) {
-//                throw new JobExecutionException("命令文件不存在");
-//            }
-
-//            File logFilePath = new File(logFile);
-//            FileUtils.forceMkdir(logFilePath.getParentFile());
-
-//            fos = new FileOutputStream(logFilePath);
-
             String shellCommand = SHName + scriptDir
-                    + "/run.sh " + params;
+                    + "/run.sh " + "--run_env " + run_env
+                    + " -DisJobAgent=true -DscriptType=groovy -DsTime=" + dateTime +" -DjobId="+ jobId +" -Dparams=" + params;
             agentLog.info("shellCommand:{}",shellCommand);
 
             DefaultExecutor shellExecutor = new DefaultExecutor();
@@ -128,16 +102,8 @@ public class ShellCommandJob extends IJobHandler {
 
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
-            log.info("任务返回:  {}", exitValue);
+            log.info("run.sh任务返回:  {}", exitValue);
 
-//            jobLog.setRunEndTime(new Date());
-//            jobLog.setRunUsedTime(jobLog.getRunEndTime().getTime()
-//                    - jobLog.getRunStartTime().getTime());
-//            jobLog.setRunResultCode("" + exitValue);
-//
-//            if (!"N".equals(logging)) {
-//                jobLog = configService.saveJobRunLog(jobLog);
-//            }
         } catch (Exception e) {
             log.error("任务失败", e);
             /*jobLog.setRunEndTime(new Date());
