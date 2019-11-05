@@ -1,5 +1,6 @@
-package com.chinaums.wh.jobs.agent.bean;
+package com.chinaums.wh.jobs.agent.job.context;
 
+import com.chinaums.wh.jobs.agent.log.AgentLog;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,20 +8,21 @@ import java.util.Map;
 
 @Setter
 @Getter
-public class JobContext {
+public class ScriptRunContext {
 
     private long jobId;
     private long triggerId;
-    private String script;
     private long timeout;
+    private String script;
+    private AgentLog log;
     private Map<String,String> envs;
     private Map<String,String> params;
 
-    public JobContext(){
+    public ScriptRunContext(){
 
     }
 
-    public JobContext(long jobId, long triggerId, long timeout, Map<String,String> envs, Map<String,String> params){
+    public ScriptRunContext(long jobId, long triggerId, long timeout, Map<String,String> envs, Map<String,String> params){
         this.jobId = jobId;
         this.triggerId = triggerId;
         this.timeout = timeout;

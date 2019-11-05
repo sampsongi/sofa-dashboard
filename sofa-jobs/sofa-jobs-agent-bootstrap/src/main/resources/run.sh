@@ -49,7 +49,7 @@ elif [ -d /home/netpay/libpath ] ; then
 	export MY_LIBRARY_PATH="/home/netpay/libpath"
 fi
 
-export JAVA_OPTIONS="${USER_MEM_ARGS} $PARAMS -Djava.awt.headless=true -DSERVER_NAME=$SERVER_NAME -Drun_env=${RUN_ENV} -Dspring.profiles.active=batch,${RUN_ENV} -Dlogback.configurationFile=logback_batch.xml "
+export JAVA_OPTIONS="${USER_MEM_ARGS} $PARAMS -Djava.awt.headless=true -DSERVER_NAME=$SERVER_NAME -Drun_env=${RUN_ENV} -Dspring.profiles.active=zz,batch,${RUN_ENV} -Dlogback.configurationFile=logback_batch.xml "
 
 #java $JAVA_OPTIONS -cp $CLASSPATH com.chinaums.netpay.jobs.Main $PARAMS
 

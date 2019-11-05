@@ -1,8 +1,11 @@
 package com.chinaums.wh.jobs.agent.job;
 
+import com.chinaums.wh.jobs.agent.job.context.ScriptRunContext;
+import com.chinaums.wh.jobs.agent.log.AgentLog;
+
 import java.util.Map;
 
 public interface IBatch {
 	String scriptType();
-	int execute(String scriptName, Map<String,String> envs, Map<String,String> params) throws Exception;
+	int execute(ScriptRunContext context) throws Exception;
 }

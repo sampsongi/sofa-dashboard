@@ -40,37 +40,16 @@ public class JobsAgentApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("args:{}",args.getSourceArgs());
+
         String scriptType = System.getProperty("scriptType");
-        //String scriptType = StringUtil.firstValue(args.getOptionValues("scriptType"));
         if(StringUtils.isNotBlank(scriptType)) {
-            log.info("运行run.sh scriptType:{}",scriptType);
-            String jobId = System.getProperty("jobId");
-            Job job = jobServiceReference.getJobMngFacade().findByJobId(Long.valueOf(jobId));
-            String script = job.getGlueSource();
-
-            String envsString = System.getProperty("envs");
-            Map<String,String> envs = new HashMap<String,String>();
-            if(StringUtils.isNotBlank(envsString))
-                envs = JSON.parseObject(envsString, new TypeReference<HashMap<String,String>>(){});
-
-            String paramsString = System.getProperty("params");
-            Map<String,String> params = new HashMap<String,String>();
-            if(StringUtils.isNotBlank(paramsString))
-                params = JSON.parseObject(paramsString, new TypeReference<HashMap<String,String>>(){});
-
-            int code = 0;
-            for(IBatch b: batchs){
-                if(StringUtils.equalsIgnoreCase(scriptType,b.scriptType())){
-                    code = b.execute(script,envs,params);
-                    break;
-                }
-            }
-            log.info("run 运行结束 code:{}",code);
             return;
         }
+
+        log.info("args:{}",args.getSourceArgs());
+
         log.info("启动测试==============");
-        long jobId = 1;
+        long jobId = 3;
         long triggerId = 3;
 
 //        String classPath = this.getClass().getClassLoader().getResource("").getPath();
@@ -88,12 +67,11 @@ public class JobsAgentApplicationRunner implements ApplicationRunner {
         HashMap envs = new HashMap();
         envs.put("os","mac");
         JobContext context = new JobContext(jobId,triggerId,3000,envs,params);
-        AgentLog agentLog = new ConsoleLog();
 
-        ShellCommandJob commandJob = new ShellCommandJob("run.sh",3L,agentLog);
+        ShellCommandJob commandJob = new ShellCommandJob("run.sh");
         try {
             //后面考虑缓存 进程id
-            //commandJob.execute(context);
+            commandJob.execute(context);
         } catch (Exception e) {
             log.error("",e);
         }

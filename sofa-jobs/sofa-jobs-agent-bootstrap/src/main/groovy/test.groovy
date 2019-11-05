@@ -6,6 +6,8 @@ try {
 
     Date yesterday = DateUtils.addDays(new Date(), -1);
     println "脚本操作异常，错误信息:" + yesterday
+    log.info("log 测试");
+    log.info("log 测试2 {}",yesterday);
 
     return 0
 } catch (Exception e) {
