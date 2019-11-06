@@ -39,3 +39,11 @@ com:
       rpc:
         registry:
           address: zookeeper://10.10.51.212:2181
+
+---
+spring:
+  profiles: dev
+
+config:
+  script:
+    dir: /home/nuis/jobs/bin

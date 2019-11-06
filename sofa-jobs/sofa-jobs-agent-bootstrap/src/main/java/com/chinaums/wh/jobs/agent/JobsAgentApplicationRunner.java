@@ -19,6 +19,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 import java.io.*;
@@ -26,6 +27,7 @@ import java.util.*;
 
 @ImportResource({ "classpath*:rpc-sofa-boot-starter.xml" })
 @SpringBootApplication
+@ComponentScan(value = {"com.chinaums,me.izhong"})
 @Slf4j
 public class JobsAgentApplicationRunner implements ApplicationRunner {
     public static void main(String[] args) {

@@ -32,7 +32,15 @@ public class RemoteLog implements AgentLog {
 
     @Override
     public void info(String s, Object... args) {
-        doLog(MessageFormat.format(s, args));
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for(char c : s.toCharArray()) {
+            sb.append(c);
+            if( c == '{'){
+                sb.append(i++);
+            }
+        }
+        doLog(MessageFormat.format(sb.toString(), args));
     }
 
     @Override
@@ -45,9 +53,16 @@ public class RemoteLog implements AgentLog {
             jobMngFacade = ContextUtil.getBean(JobServiceReference.class).getJobMngFacade();
         LogStatics statics = new LogStatics();
         statics.setJobId(jobId);
-        statics.setLogId(triggerId);
+        statics.setTriggerId(triggerId);
         statics.setLogData(s);
         jobMngFacade.uploadStatics(statics);
+    }
+
+    public static void main(String[] args) {
+        String s = "测试{0}";
+        Object o1 = "s1";
+        Object o2 = "s2";
+        System.out.println(MessageFormat.format(s, o1,o2));
     }
 
 }

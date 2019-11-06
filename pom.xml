@@ -26,6 +26,7 @@
 
         <lombok.version>1.18.8</lombok.version>
         <fastjson.version>1.2.60</fastjson.version>
+        <logback-classic.version>1.2.3</logback-classic.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

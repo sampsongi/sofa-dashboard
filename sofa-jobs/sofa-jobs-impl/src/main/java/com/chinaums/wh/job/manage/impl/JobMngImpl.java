@@ -132,8 +132,24 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public ReturnT<String> uploadStatics(LogStatics logStatics) {
+        Long triggerId = logStatics.getTriggerId();
+        log.info("收到job:{} triggerId:{} 日志:{}",logStatics.getJobId(),logStatics.getTriggerId(),logStatics.getLogData());
         //收集agent的日志
-        return null;
+        XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
+        if(jobLog != null) {
+            String data = logStatics.getLogData();
+            if(StringUtils.isNotBlank(data)) {
+                data = jobLog.getHandleMsg() + data + "\n";
+                if(data.length() < 1000*1000) {
+                    jobLog.setHandleMsg(data);
+                    jobLogService.update(jobLog);
+                }
+            }
+            return ReturnT.SUCCESS;
+        } else {
+            log.error("jobLog未找到 triggerId:{}",triggerId);
+            return ReturnT.FAIL;
+        }
     }
 
     @Override

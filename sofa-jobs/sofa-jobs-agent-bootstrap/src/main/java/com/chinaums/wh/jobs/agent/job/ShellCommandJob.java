@@ -29,16 +29,12 @@ public class ShellCommandJob extends IJobHandler {
 
     private String SHName = "/bin/sh ";
     private String command;
-
-    private JobContext jobContext;
-
     public ShellCommandJob(String command) {
         this.command = command;
     }
 
     @Override
     public ReturnT<String> execute(JobContext jobContext) throws Exception {
-        this.jobContext = jobContext;
         Long jobId = jobContext.getJobId();
         Long triggerId = jobContext.getTriggerId();
 
@@ -63,7 +59,6 @@ public class ShellCommandJob extends IJobHandler {
             if (params == null)
                 params = new HashMap<>();
             long timeout = jobContext.getTimeout();
-            String name = "test job";
 
             String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -72,7 +67,7 @@ public class ShellCommandJob extends IJobHandler {
             log.info("开始任务:serverName={} command={}, paramter={}, timeout={}",
                     ContextUtil.getServerName(), command, params, timeout);
 
-            if (StringUtils.isBlank(command) || StringUtils.isBlank(name)) {
+            if (StringUtils.isBlank(command)) {
                 throw new JobExecutionException("参数错误");
             }
 
