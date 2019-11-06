@@ -91,10 +91,10 @@ public class ShellCommandJob extends IJobHandler {
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
             log.info("run.sh任务返回:  {}", exitValue);
-
+            return ReturnT.SUCCESS;
         } catch (Exception e) {
             log.error("任务失败", e);
-
+            return ReturnT.FAIL;
         } finally {
             /*if(null != fos){
                 try {
@@ -104,7 +104,6 @@ public class ShellCommandJob extends IJobHandler {
                 }
             }*/
         }
-        return ReturnT.SUCCESS;
     }
 
 }

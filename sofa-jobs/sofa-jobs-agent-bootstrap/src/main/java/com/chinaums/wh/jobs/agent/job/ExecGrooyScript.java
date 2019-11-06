@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.io.File;
 
 @Component
 @Slf4j
@@ -27,11 +27,13 @@ public class ExecGrooyScript implements IBatch {
 
 	@Override
 	public int execute(ScriptRunContext context) throws Exception {
-		if(StringUtils.isBlank(context.getScript())){
+		if(StringUtils.isBlank(context.getScript()) && context.getScriptFile() == null){
 			throw new Exception("参数错误 脚本名称不能为空");
 		}
 
 		String script = context.getScript();
+		File scriptPath = context.getScriptFile();
+
 		AgentLog logger = context.getLog();
 		log.info("envs:{} params:{}",context.getEnvs(),context.getParams());
 		Binding binding = new Binding();
@@ -43,9 +45,13 @@ public class ExecGrooyScript implements IBatch {
 		GroovyShell shell = new GroovyShell(binding);
 
 		log.info("执行Groovy脚本");
-		Object result = shell.evaluate(script);
+		Object result;
+		if(scriptPath != null) {
+			result = shell.evaluate(scriptPath);
+		} else {
+			result = shell.evaluate(script);
+		}
 		log.info("Groovy脚本返回：{}", result);
-
 		if (result instanceof Integer)
 			return (Integer) result;
 		else

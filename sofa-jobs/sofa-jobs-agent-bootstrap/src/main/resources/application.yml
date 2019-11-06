@@ -5,7 +5,7 @@ spring:
     web-application-type: none
   output:
     ansi:
-      enabled: ALWAYS
+      #enabled: ALWAYS
   application:
     name: job-agent
 logging:

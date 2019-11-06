@@ -4,6 +4,7 @@ import com.chinaums.wh.jobs.agent.log.AgentLog;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
 import java.util.Map;
 
 @Setter
@@ -14,6 +15,7 @@ public class ScriptRunContext {
     private long triggerId;
     private long timeout;
     private String script;
+    private File scriptFile;
     private AgentLog log;
     private Map<String,String> envs;
     private Map<String,String> params;
