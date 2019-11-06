@@ -9,8 +9,8 @@
 
     <beans profile="agent">
         <bean class="com.chinaums.wh.jobs.agent.service.JobAgentMngImpl"/>
-        <sofa:service ref="jobAgentMngImpl" interface="com.chinaums.wh.job.manage.IJobAgentMngFacade">
-            <sofa:binding.bolt id="${service.unique.id}"/>
+        <sofa:service ref="jobAgentMngImpl" interface="com.chinaums.wh.job.manage.IJobAgentMngFacade" unique-id="${service.unique.id}">
+            <sofa:binding.bolt/>
         </sofa:service>
     </beans>
 
