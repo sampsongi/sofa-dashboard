@@ -50,24 +50,24 @@ public class XxlJobTrigger {
         jobLog.setJobDesc(jobInfo.getJobDesc());
         jobLog.setJobId(jobInfo.getJobId());
         jobLog.setTriggerTime(new Date());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);
+        jobLog = XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);
         logger.debug(">>>>>>>>>>> xxl-job trigger start, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(jobInfo.getJobId());
+        triggerParam.setLogId(jobLog.getJobLogId());
+
         triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
-        triggerParam.setLogId(jobLog.getJobId());
         triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
         triggerParam.setGlueType(jobInfo.getGlueType());
         triggerParam.setGlueSource(jobInfo.getGlueSource());
         if(jobInfo.getGlueUpdatetime() != null)
             triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
-//        triggerParam.setBroadcastIndex(index);
-//        triggerParam.setBroadcastTotal(total);
+
 //
 //        // 3、init address
 //        String address = null;

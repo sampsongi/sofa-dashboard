@@ -2,7 +2,7 @@ server:
   port: 8801
 spring:
   main:
-    web-application-type: none
+    web-application-type: NONE
   data:
     mongodb:
       uri: mongodb://172.30.251.33:27017/uis
@@ -33,15 +33,21 @@ com:
         bolt-port: 13302
 ---
 spring:
-  profiles: zz
+  profiles: home
 
   data:
     mongodb:
       uri: mongodb://10.10.51.212:27017/training
 
+service:
+  unique:
+    id: 1
 com:
   alipay:
     sofa:
       rpc:
         registry:
           address: zookeeper://10.10.51.212:2181
+        bound-host: 10.10.51.212
+        virtual-host:
+

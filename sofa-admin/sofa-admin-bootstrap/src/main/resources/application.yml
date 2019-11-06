@@ -108,9 +108,7 @@ dashboard:
     addressEnabled: false
     userLocalDatabase: true
     filepath: /Users/jimmy/space/tianru/zdashboard/dashboard-common/src/main/resources/data/qqwry.dat
-service:
-  unique:
-    id: 1
+
 ### xxl-job, access token
 xxl:
   job:
@@ -118,6 +116,9 @@ xxl:
 
 ### xxl-job, i18n (default empty as chinese, "en" as english)
     i18n:
+service:
+  unique:
+    id: 1
 
 com:
   alipay:
@@ -130,7 +131,7 @@ com:
 
 ---
 spring:
-  profiles: zz
+  profiles: home
 
   data:
     mongodb:

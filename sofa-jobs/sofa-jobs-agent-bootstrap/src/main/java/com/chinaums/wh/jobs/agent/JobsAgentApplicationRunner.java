@@ -43,7 +43,7 @@ public class JobsAgentApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        String scriptType = System.getProperty("scriptType");
+        /*String scriptType = System.getProperty("scriptType");
         if(StringUtils.isNotBlank(scriptType)) {
             return;
         }
@@ -76,7 +76,7 @@ public class JobsAgentApplicationRunner implements ApplicationRunner {
             commandJob.execute(context);
         } catch (Exception e) {
             log.error("",e);
-        }
+        }*/
     }
 
 }

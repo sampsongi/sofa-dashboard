@@ -38,6 +38,7 @@ public class ScriptTest {
         Map<String, String> envs = new HashMap<>();
         context.setEnvs(envs);
         Map<String, String> params = new HashMap<>();
+        params.put("log","logv");
         context.setParams(params);
 
 
