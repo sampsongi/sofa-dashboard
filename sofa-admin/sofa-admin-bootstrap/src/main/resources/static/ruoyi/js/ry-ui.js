@@ -894,7 +894,7 @@
             //获取选中的列的ID
             selectRowIds: function () {
                 var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
-                return rows;
+                return rows.join();
             },
             // 清空信息
             clean: function () {

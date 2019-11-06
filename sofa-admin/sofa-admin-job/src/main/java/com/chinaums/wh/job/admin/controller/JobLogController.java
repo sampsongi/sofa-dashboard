@@ -1,9 +1,11 @@
 package com.chinaums.wh.job.admin.controller;
 
 
+import com.chinaums.wh.common.util.Convert;
 import com.chinaums.wh.common.util.DateUtil;
 import com.chinaums.wh.db.common.annotation.AjaxWrapper;
 
+import com.chinaums.wh.db.common.exception.BusinessException;
 import com.chinaums.wh.db.common.util.PageRequestUtil;
 import com.chinaums.wh.domain.PageModel;
 import com.chinaums.wh.job.admin.service.JobServiceReference;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,7 +62,7 @@ public class JobLogController {
 	
 	@RequestMapping("/log/list")
 	@AjaxWrapper
-	public PageModel<JobLog> pageList(HttpServletRequest request, String jobName, String jobGroup,
+	public PageModel<JobLog> pageList(HttpServletRequest request, String jobDesc, Long jobGroupId,
 									  String status, String filterTime) {
 
 		// parse param
@@ -74,30 +77,36 @@ public class JobLogController {
 		}
 
 		JobLog jLog = new JobLog();
-		if(StringUtil.isNotBlank(jobName))
-			jLog.setJobName(jobName);
-		if(StringUtil.isNotBlank(jobGroup))
-			jLog.setJobGroup(jobGroup);
+		if(StringUtil.isNotBlank(jobDesc))
+			jLog.setJobDesc(jobDesc);
+		if(jobGroupId != null)
+			jLog.setJobGroupId(jobGroupId);
 		if(StringUtil.isNotBlank(status))
 			jLog.setStatus(status);
 		
 		return jobServiceReference.jobService.logPageList(PageRequestUtil.fromRequest(request),jLog);
 	}
 
-	@RequestMapping("/logDetailPage")
-	public String logDetailPage(long id, Model model){
+
+	@RequestMapping("/log/detail/{jobLogId}")
+	public String logDetailPage(@PathVariable Long jobLogId, Model model){
+		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(jobLogId);
+		if (jobLog == null) {
+			throw new RuntimeException("日志异常");
+		}
+		model.addAttribute("jobLog", jobLog);
+		return prefix +  "/jobLogResult";
+	}
+
+	@RequestMapping("/log/logDetailPage")
+	public String logDetailPage(long logId, Model model){
 
 		// base check
-		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(id);
+		JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(logId);
 		if (jobLog == null) {
-            throw new RuntimeException("日志异常");
+            throw new RuntimeException("日志异常,日志未找到");
 		}
-
-        model.addAttribute("triggerCode", jobLog.getTriggerCode());
-        model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
-        model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-        model.addAttribute("logId", jobLog.getJobLogId());
+        model.addAttribute("jobLog", jobLog);
 		return prefix +  "/jobLogDetail";
 	}
 
@@ -105,9 +114,6 @@ public class JobLogController {
 	@ResponseBody
 	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long logId, int fromLineNum){
 		try {
-//			ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(executorAddress);
-//			ReturnT<LogResult> logResult = executorBiz.log(triggerTime, logId, fromLineNum);
-
 			ReturnT<LogResult> logResult = jobServiceReference.jobService.catLog(triggerTime, logId, fromLineNum);
 			// is end
             if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
@@ -157,10 +163,12 @@ public class JobLogController {
 		}
 	}
 
-	@RequestMapping("/clearLog")
-	@AjaxWrapper
-	public ReturnT<String> clearLog(long jobGroup, long jobId, int type){
 
+	@RequestMapping("/log/clearLog")
+	@AjaxWrapper
+	public ReturnT<String> clearLog(Long jobId, Integer type){
+		if(type == null)
+			throw BusinessException.build("type不能为空");
 		Date clearBeforeTime = null;
 		int clearBeforeNum = 0;
 		if (type == 1) {
@@ -185,8 +193,15 @@ public class JobLogController {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "类型异常");
 		}
 
-		jobServiceReference.jobService.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
+		jobServiceReference.jobService.clearLog(jobId, clearBeforeTime, clearBeforeNum);
 		return ReturnT.SUCCESS;
 	}
+
+    @RequestMapping("/log/clearLogByIds")
+    @AjaxWrapper
+    public ReturnT<String> clearLog(String jobLogIds){
+        jobServiceReference.jobService.clearLog(Convert.toLongArray(jobLogIds));
+        return ReturnT.SUCCESS;
+    }
 
 }

@@ -13,5 +13,7 @@ public interface XxlJobLogService extends CrudBaseService<Long,XxlJobLog> {
 
     long updateAlarmStatus(long failLogId, int oldStatus, int newStatus);
 
-    void clearLog(Long jobGroup, Long jobId, Date clearBeforeTime, int clearBeforeNum);
+    void clearLog(Long jobId, Date clearBeforeTime, Integer clearBeforeNum);
+
+    void clearLog(Long[] jobLogIds);
 }

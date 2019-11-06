@@ -152,13 +152,21 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public JobLog findJobLogByJobLogId(Long jobLogId) {
-        return null;
+        return JobLogUtil.toRpcBean(jobLogService.selectByPId(jobLogId));
     }
 
     @Override
-    public void clearLog(long jobGroup, long jobId, Date clearBeforeTime, int clearBeforeNum) {
-
+    public void clearLog(Long jobId, Date clearBeforeTime, Integer clearBeforeNum) {
+        log.info("清理日志 jobId:{} clearBeforeTime:{} clearBeforeNum:{}",jobId,clearBeforeTime,clearBeforeNum);
+        jobLogService.clearLog(jobId,clearBeforeTime,clearBeforeNum);
     }
+
+    @Override
+    public void clearLog(Long[] jobLogIds){
+        log.info("清理日志 jobLogIds:{}",jobLogIds);
+        jobLogService.clearLog(jobLogIds);
+    }
+
 
     @Override
     public ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum) {

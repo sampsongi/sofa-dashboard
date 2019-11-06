@@ -47,6 +47,7 @@ public class XxlJobTrigger {
         // 1、save log-id
         XxlJobLog jobLog = new XxlJobLog();
         jobLog.setJobGroupId(jobInfo.getJobGroupId());
+        jobLog.setJobDesc(jobInfo.getJobDesc());
         jobLog.setJobId(jobInfo.getJobId());
         jobLog.setTriggerTime(new Date());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);
@@ -114,10 +115,9 @@ public class XxlJobTrigger {
         jobLog.setExecutorAddress("");
         jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
         jobLog.setExecutorParam(jobInfo.getExecutorParam());
-//        jobLog.setExecutorShardingParam(shardingParam);
         jobLog.setExecutorParam(executorParam);
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
-        //jobLog.setTriggerTime();
+
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
@@ -135,29 +135,26 @@ public class XxlJobTrigger {
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
         ReturnT<String> runResult = ReturnT.SUCCESS;
         logger.info("调度远程执行器执行：{} : {}",triggerParam, address);
-//        try {
-//            ExecutorBiz executorBiz = XxlJobScheduler.getExecutorBiz(address);
-//            runResult = executorBiz.run(triggerParam);
-//        } catch (Exception e) {
-//            logger.error(">>>>>>>>>>> xxl-job trigger error, please check if the executor[{}] is running.", address, e);
-//            runResult = new ReturnT<String>(ReturnT.FAIL_CODE, e.toString());
-//        }
+        try {
+            IJobAgentMngFacade sr = SpringUtil.getBean(JobAgentServiceReference.class).jobAgentService;
 
-        IJobAgentMngFacade sr = SpringUtil.getBean(JobAgentServiceReference.class).jobAgentService;
+            String pa = triggerParam.getExecutorParams();
+            Map<String, String> params = new HashMap<String, String>() {{
+                put("data", pa);
+            }};
+            sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), triggerParam.getGlueSource(), params);
 
-        String pa = triggerParam.getExecutorParams();
-        Map<String,String> params = new HashMap<String,String>(){{
-            put("data",pa);
-        }};
-        sr.trigger(triggerParam.getJobId(),triggerParam.getLogId(),triggerParam.getGlueSource(),params);
+            StringBuffer runResultSB = new StringBuffer("触发调度：");
+            runResultSB.append("<br>address：").append(address);
+            runResultSB.append("<br>code：").append(runResult.getCode());
+            runResultSB.append("<br>msg：").append(runResult.getMsg());
 
-        StringBuffer runResultSB = new StringBuffer("触发调度：");
-        runResultSB.append("<br>address：").append(address);
-        runResultSB.append("<br>code：").append(runResult.getCode());
-        runResultSB.append("<br>msg：").append(runResult.getMsg());
-
-        runResult.setMsg(runResultSB.toString());
-        return runResult;
+            runResult.setMsg(runResultSB.toString());
+            return runResult;
+        } catch (Exception e) {
+            logger.error("job trigger error, please check ...", e);
+            return new ReturnT<String>(ReturnT.FAIL_CODE, e.toString());
+        }
     }
 
 }

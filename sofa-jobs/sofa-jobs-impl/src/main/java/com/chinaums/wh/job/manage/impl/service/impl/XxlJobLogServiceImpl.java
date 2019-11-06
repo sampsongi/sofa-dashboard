@@ -46,21 +46,29 @@ public class XxlJobLogServiceImpl extends CrudBaseServiceImpl<Long,XxlJobLog> im
 
         Update update = new Update();
         update.set("alarmStatus",newStatus);
-        UpdateResult ur = mongoTemplate.updateMulti(query, update, XxlJobRegistry.class);
+        UpdateResult ur = mongoTemplate.updateMulti(query, update, XxlJobLog.class);
         return ur.getModifiedCount();
     }
 
     @Override
-    public void clearLog(Long jobGroup, Long jobId, Date clearBeforeTime, int clearBeforeNum) {
+    public void clearLog(Long jobId, Date clearBeforeTime, Integer clearBeforeNum) {
         Query query = new Query();
-        if(jobGroup != null)
-            query.addCriteria(Criteria.where("jobGroup").is(jobGroup));
         if(jobId != null)
             query.addCriteria(Criteria.where("jobId").is(jobId));
         if(clearBeforeTime !=null)
             query.addCriteria(Criteria.where("createTime").lte(clearBeforeTime));
         if(clearBeforeNum > 0)
             query.addCriteria(Criteria.where("jobId").lte(clearBeforeNum));
-        mongoTemplate.remove(query, XxlJobRegistry.class);
+        mongoTemplate.remove(query, XxlJobLog.class);
+    }
+
+
+    @Override
+    public void clearLog(Long[] jobLogIds) {
+        if(jobLogIds == null || jobLogIds.length == 0)
+            return;
+        Query query = new Query();
+        query.addCriteria(Criteria.where("jobLogId").in(jobLogIds));
+        mongoTemplate.remove(query, XxlJobLog.class);
     }
 }

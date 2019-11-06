@@ -42,11 +42,11 @@
 			</div>
 			
 			<div class="btn-group-sm" id="toolbar" role="group">
-				 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="monitor:job:remove">
-	                <i class="fa fa-remove"></i> 删除
+                <a class="btn btn-danger" onclick="clearLog(null,1)" shiro:hasPermission="monitor:job:remove">
+	                <i class="fa fa-remove"></i> 清理一个月以前的日志
 	            </a>
-	            <a class="btn btn-danger" onclick="$.operate.clean()" shiro:hasPermission="monitor:job:remove">
-	                <i class="fa fa-trash"></i> 清空
+	            <a class="btn btn-danger multiple disabled" onclick="clearSelected()" shiro:hasPermission="monitor:job:remove">
+	                <i class="fa fa-trash"></i> 删除选中日志
 	            </a>
 	        </div>
 	        
@@ -78,7 +78,7 @@
 		            title: '日志编号'
 		        },
 		        {
-		            field: 'jobName',
+		            field: 'jobDesc',
 		            title: '任务名称'
 		        },
 				{
@@ -116,8 +116,23 @@
 		});
 
         function detailCat(id) {
-            var url = prefix + "/detailCat?logId="+id;
+            var url = prefix + "/logDetailPage?logId="+id;
             window.parent.open(url);
+        }
+
+        /* 清理日志 */
+        function clearLog(jobId,type) {
+            $.modal.confirm("确认要清理日志吗？", function() {
+                $.operate.post(prefix + "/clearLog", { "jobId": jobId,"type":type});
+            })
+        }
+
+        /* 清理选中 */
+        function clearSelected() {
+            var rowIds = $.operate.selectRowIds();
+            $.modal.confirm("确认要删除吗？", function() {
+                $.operate.post(prefix + "/clearLogByIds", { "jobLogIds": rowIds});
+            })
         }
 	</script>
 </body>

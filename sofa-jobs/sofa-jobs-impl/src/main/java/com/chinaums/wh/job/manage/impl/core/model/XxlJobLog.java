@@ -20,8 +20,8 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	@PrimaryId
 	@Indexed(unique = true)
 	private Long jobLogId;
-	
-	// job info
+
+	private String jobDesc;
 	private Long jobGroupId;
 	private Long jobId;
 
@@ -29,7 +29,6 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	private String executorAddress;
 	private String executorHandler;
 	private String executorParam;
-	private String executorShardingParam;
 	private int executorFailRetryCount;
 	
 	// trigger info
