@@ -252,6 +252,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
         return mongoTemplate.save(target);
     }
 
+    @Transactional
     @Override
     public T update(T target) {
 
@@ -281,6 +282,7 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
         return mongoTemplate.save(target);
     }
 
+    @Transactional
     @Override
     public long remove(K pId) {
         Assert.notNull(pId,"");

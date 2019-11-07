@@ -106,7 +106,7 @@ public class AgentScriptRunner implements ApplicationRunner {
             }
         } catch (Exception e) {
             if(agentLog != null) {
-                agentLog.info("run 异常运行结束", e);
+                agentLog.info("run 异常运行结束");
             }
             log.info("run 异常运行结束", e);
             Thread.sleep(3000);
