@@ -1,10 +1,10 @@
 package me.izhong.dashboard.manage.entity;
 
-import com.chinaums.wh.db.common.domain.TimedBasedEntity;
+import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import com.chinaums.wh.db.common.annotation.AutoId;
-import com.chinaums.wh.db.common.annotation.Search;
+import me.izhong.db.common.annotation.AutoId;
+import me.izhong.db.common.annotation.Search;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.Email;

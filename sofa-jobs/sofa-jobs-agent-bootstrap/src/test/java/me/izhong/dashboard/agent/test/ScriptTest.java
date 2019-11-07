@@ -1,9 +1,9 @@
 package me.izhong.dashboard.agent.test;
 
 
-import com.chinaums.wh.jobs.agent.job.ExecGrooyScript;
-import com.chinaums.wh.jobs.agent.job.context.ScriptRunContext;
-import com.chinaums.wh.jobs.agent.log.ConsoleLog;
+import me.izhong.jobs.agent.job.ExecGrooyScript;
+import me.izhong.jobs.agent.job.context.ScriptRunContext;
+import me.izhong.jobs.agent.log.ConsoleLog;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

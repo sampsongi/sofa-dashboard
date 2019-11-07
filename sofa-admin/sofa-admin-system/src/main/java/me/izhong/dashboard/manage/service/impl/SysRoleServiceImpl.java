@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.service.impl;
 
-import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
+import me.izhong.db.common.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.RoleDao;
 import me.izhong.dashboard.manage.dao.RoleDeptDao;
 import me.izhong.dashboard.manage.dao.RoleMenuDao;
@@ -9,10 +9,10 @@ import me.izhong.dashboard.manage.entity.SysRole;
 import me.izhong.dashboard.manage.entity.SysRoleDept;
 import me.izhong.dashboard.manage.entity.SysRoleMenu;
 import me.izhong.dashboard.manage.entity.SysUserRole;
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysRoleService;
-import com.chinaums.wh.common.util.Convert;
-import com.chinaums.wh.db.common.util.CriteriaUtil;
+import me.izhong.common.util.Convert;
+import me.izhong.db.common.util.CriteriaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;

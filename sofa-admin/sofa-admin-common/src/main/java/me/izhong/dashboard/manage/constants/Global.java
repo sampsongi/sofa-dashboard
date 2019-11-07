@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.constants;
 
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.util.SpringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

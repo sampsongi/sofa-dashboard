@@ -1,6 +1,6 @@
 package me.izhong.dashboard.web.bean;
 
-import com.chinaums.wh.db.common.constant.ErrCode;
+import me.izhong.db.common.constant.ErrCode;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package me.izhong.dashboard.manage.service;
 
-import com.chinaums.wh.domain.PageRequest;
-import com.chinaums.wh.db.common.service.CrudBaseService;
+import me.izhong.domain.PageRequest;
+import me.izhong.db.common.service.CrudBaseService;
 import me.izhong.dashboard.manage.domain.Ztree;
 import me.izhong.dashboard.manage.entity.SysDictType;
 

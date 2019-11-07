@@ -1,7 +1,7 @@
 package me.izhong.dashboard.web.demo.domain;
 
 
-import com.chinaums.wh.db.common.domain.TimedBasedEntity;
+import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 
 import java.util.Date;

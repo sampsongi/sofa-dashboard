@@ -1,14 +1,14 @@
 package me.izhong.dashboard.manage.service.impl;
 
-import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
+import me.izhong.db.common.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.PostDao;
 import me.izhong.dashboard.manage.entity.SysPost;
 import me.izhong.dashboard.manage.entity.SysUser;
 import me.izhong.dashboard.manage.entity.SysUserPost;
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysPostService;
-import com.chinaums.wh.common.util.Convert;
-import com.chinaums.wh.db.common.util.CriteriaUtil;
+import me.izhong.common.util.Convert;
+import me.izhong.db.common.util.CriteriaUtil;
 import me.izhong.dashboard.manage.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

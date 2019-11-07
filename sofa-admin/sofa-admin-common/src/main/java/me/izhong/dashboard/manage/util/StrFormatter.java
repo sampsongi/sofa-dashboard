@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.util;
 
-import com.chinaums.wh.common.util.Convert;
+import me.izhong.common.util.Convert;
 import org.apache.commons.lang3.StringUtils;
 
 /**

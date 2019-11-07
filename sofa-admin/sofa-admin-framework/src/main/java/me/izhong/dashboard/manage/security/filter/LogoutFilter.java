@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.security.filter;
 
-import com.chinaums.wh.model.UserInfo;
+import me.izhong.model.UserInfo;
 import me.izhong.dashboard.manage.constants.ShiroConstants;
 import me.izhong.dashboard.manage.constants.SystemConstants;
 import me.izhong.dashboard.manage.factory.AsyncManager;

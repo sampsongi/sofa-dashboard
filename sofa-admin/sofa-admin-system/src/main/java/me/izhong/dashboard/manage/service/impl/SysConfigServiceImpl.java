@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.service.impl;
 
-import com.chinaums.wh.db.common.service.CrudBaseServiceImpl;
+import me.izhong.db.common.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.ConfigDao;
 import me.izhong.dashboard.manage.entity.SysConfig;
 import me.izhong.dashboard.manage.service.SysConfigService;

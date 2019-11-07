@@ -1,12 +1,12 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import lombok.extern.slf4j.Slf4j;
-import com.chinaums.wh.db.common.annotation.AjaxWrapper;
+import me.izhong.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.entity.SysMenu;
 import me.izhong.dashboard.manage.entity.SysRole;
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.service.SysMenuService;
 import me.izhong.dashboard.manage.domain.Ztree;

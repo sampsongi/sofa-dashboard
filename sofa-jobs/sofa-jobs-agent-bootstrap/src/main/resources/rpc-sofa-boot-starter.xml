@@ -7,9 +7,9 @@
             http://sofastack.io/schema/sofaboot   http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
 
-    <beans profile="agent">
-        <bean class="com.chinaums.wh.jobs.agent.service.JobAgentMngImpl"/>
-        <sofa:service ref="jobAgentMngImpl" interface="com.chinaums.wh.job.manage.IJobAgentMngFacade" unique-id="${service.unique.id}">
+    <beans profile="!batch">
+        <bean class="me.izhong.jobs.agent.service.JobAgentMngImpl"/>
+        <sofa:service ref="jobAgentMngImpl" interface="me.izhong.jobs.manage.IJobAgentMngFacade" unique-id="${service.unique.id}">
             <sofa:binding.bolt/>
         </sofa:service>
     </beans>

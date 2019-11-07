@@ -1,10 +1,10 @@
 package me.izhong.dashboard.manage.util;
 
-import com.chinaums.wh.common.util.Convert;
-import com.chinaums.wh.db.common.annotation.Excel;
-import com.chinaums.wh.db.common.annotation.Excels;
+import me.izhong.common.util.Convert;
+import me.izhong.db.common.annotation.Excel;
+import me.izhong.db.common.annotation.Excels;
 import me.izhong.dashboard.manage.constants.Global;
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.*;
@@ -187,7 +187,7 @@ public class ExcelUtil<T> {
                         val = Convert.toBigDecimal(val);
                     } else if (Date.class == fieldType) {
                         if (val instanceof String) {
-                            val = com.chinaums.wh.common.util.DateUtil.parseDate(val);
+                            val = me.izhong.common.util.DateUtil.parseDate(val);
                         } else if (val instanceof Double) {
                             val = org.apache.poi.ss.usermodel.DateUtil.getJavaDate((Double) val);
                         }
@@ -439,7 +439,7 @@ public class ExcelUtil<T> {
                 String readConverterExp = attr.readConverterExp();
                 if (StringUtils.isNotEmpty(dateFormat) && value != null)
                 {
-                    cell.setCellValue(com.chinaums.wh.common.util.DateUtil.parseDateToStr(dateFormat, (Date) value));
+                    cell.setCellValue(me.izhong.common.util.DateUtil.parseDateToStr(dateFormat, (Date) value));
                 }
                 else if (StringUtils.isNotEmpty(readConverterExp) &&  value != null)
                 {

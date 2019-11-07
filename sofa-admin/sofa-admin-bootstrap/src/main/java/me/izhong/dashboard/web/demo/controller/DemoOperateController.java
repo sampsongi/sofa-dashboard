@@ -1,11 +1,11 @@
 package me.izhong.dashboard.web.demo.controller;
 
-import com.chinaums.wh.db.common.annotation.AjaxWrapper;
-import com.chinaums.wh.db.common.util.PageRequestUtil;
-import com.chinaums.wh.domain.PageModel;
-import com.chinaums.wh.domain.PageRequest;
-import com.chinaums.wh.db.common.exception.BusinessException;
-import com.chinaums.wh.common.util.Convert;
+import me.izhong.db.common.annotation.AjaxWrapper;
+import me.izhong.db.common.util.PageRequestUtil;
+import me.izhong.domain.PageModel;
+import me.izhong.domain.PageRequest;
+import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.util.Convert;
 import me.izhong.dashboard.web.demo.domain.UserOperateModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

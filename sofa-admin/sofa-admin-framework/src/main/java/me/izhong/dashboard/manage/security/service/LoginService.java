@@ -12,7 +12,7 @@ import me.izhong.dashboard.manage.expection.user.UserPasswordNotMatchException;
 import me.izhong.dashboard.manage.service.SysUserService;
 import me.izhong.dashboard.manage.factory.AsyncManager;
 import me.izhong.dashboard.manage.factory.AsyncFactory;
-import com.chinaums.wh.common.util.DateUtil;
+import me.izhong.common.util.DateUtil;
 import me.izhong.dashboard.manage.util.MessageUtil;
 import me.izhong.dashboard.manage.util.ServletUtil;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;

@@ -1,6 +1,6 @@
 package me.izhong.dashboard.manage.expection.user;
 
-import com.chinaums.wh.db.common.exception.BusinessException;
+import me.izhong.db.common.exception.BusinessException;
 
 public class UserBlockedException extends BusinessException {
 
