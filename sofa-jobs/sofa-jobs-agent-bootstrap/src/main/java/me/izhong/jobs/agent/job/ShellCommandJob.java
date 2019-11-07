@@ -1,5 +1,6 @@
 package me.izhong.jobs.agent.job;
 
+import lombok.Cleanup;
 import me.izhong.jobs.agent.bean.JobContext;
 import me.izhong.jobs.agent.bean.JobsConfigBean;
 import me.izhong.jobs.agent.exp.JobExecutionException;
@@ -10,9 +11,12 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,14 +56,10 @@ public class ShellCommandJob extends IJobHandler {
         // 定时任务日志通过接口送到 jobs-bootstrap
         // jobServiceReference.getJobMngFacade().uploadStatics();
         try {
-            FileOutputStream fos = null;
-
             if (params == null)
                 params = new HashMap<>();
             long timeout = jobContext.getTimeout();
 
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
             String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
             log.info("开始任务:serverName={} command={}, paramter={}, timeout={}",
@@ -70,11 +70,12 @@ public class ShellCommandJob extends IJobHandler {
             }
 
             String shellCommand = SHName + scriptDir
-                    + "/run.sh " + "--run_env " + run_env
+                    + "/"+ command + "--run_env " + run_env
                     + " -DisJobAgent=true -DscriptType=groovy -DsTime=" + dateTime
                     + " -DjobId=" + jobId + " -DtriggerId=" + triggerId
                     + " -Denvs=" + envs + " -Dparams=" + params;
             log.info("shellCommand:{}", shellCommand);
+
 
             DefaultExecutor shellExecutor = new DefaultExecutor();
 
@@ -83,24 +84,34 @@ public class ShellCommandJob extends IJobHandler {
 
             shellExecutor.setExitValue(0);
 
+            File logFile = new File(configBean.getLogDir());
+            if(!logFile.exists()) {
+                throw new JobExecutionException("日志文件路径不存在:"+configBean.getLogDir());
+            }
+            String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            logFile = new File(configBean.getLogDir() + File.separator + dateString + File.separator + +jobId + "_" + triggerId + ".txt");
+            if(!logFile.exists()) {
+                log.info("文件不存在 {} 创建",logFile.getAbsolutePath());
+                boolean isSc = logFile.createNewFile();
+                if(!isSc){
+                    log.info("文件创建失败");
+                }
+            }
+            @Cleanup
+            FileOutputStream fos = new FileOutputStream(logFile);
             PumpStreamHandler streamHandler = new PumpStreamHandler(fos);
             shellExecutor.setStreamHandler(streamHandler);
 
+            log.info("run.sh任务开始执行");
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
             log.info("run.sh任务返回:  {}", exitValue);
             return ReturnT.SUCCESS;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error("任务失败", e);
             return ReturnT.FAIL;
         } finally {
-            /*if(null != fos){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(),e);
-                }
-            }*/
+
         }
     }
 

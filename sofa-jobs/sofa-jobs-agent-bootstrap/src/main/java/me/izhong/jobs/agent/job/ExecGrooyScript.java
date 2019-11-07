@@ -28,6 +28,7 @@ public class ExecGrooyScript implements IBatch {
 	@Override
 	public int execute(ScriptRunContext context) throws Exception {
 		if(StringUtils.isBlank(context.getScript()) && context.getScriptFile() == null){
+			log.info("script:",context.getScript());
 			throw new Exception("参数错误 脚本名称不能为空");
 		}
 

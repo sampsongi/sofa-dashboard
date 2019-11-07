@@ -50,7 +50,7 @@ elif [ -d /home/netpay/libpath ] ; then
 fi
 
 #  -Dlogging.config=classpath:logback_batch.xml
-export JAVA_OPTIONS="${USER_MEM_ARGS} $PARAMS -Djava.awt.headless=true -DSERVER_NAME=$SERVER_NAME -Drun_env=${RUN_ENV} -Dspring.profiles.active=zz,batch,${RUN_ENV} "
+export JAVA_OPTIONS="${USER_MEM_ARGS} $PARAMS -Djava.awt.headless=true -DSERVER_NAME=$SERVER_NAME -Drun_env=${RUN_ENV} -Dspring.profiles.active=zz,batch,${RUN_ENV} -Dspring.main.web-application-type=none "
 
 #java $JAVA_OPTIONS -cp $CLASSPATH Main $PARAMS
 

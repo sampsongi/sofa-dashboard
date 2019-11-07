@@ -11,4 +11,7 @@ public class JobsConfigBean {
 
     @Value("${config.script.dir}")
     private String scriptPath;
+
+    @Value("${config.log.dir}")
+    private String logDir;
 }

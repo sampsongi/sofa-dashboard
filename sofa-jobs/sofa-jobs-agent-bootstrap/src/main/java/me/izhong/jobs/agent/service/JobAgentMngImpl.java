@@ -29,13 +29,13 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
         envs.put("os","mac");
 
 
-        JobContext context = new JobContext(jobId,triggerId,3000,envs,params);
+        JobContext context = new JobContext(jobId,triggerId,300000,envs,params);
         context.setJobId(jobId);
         context.setTriggerId(triggerId);
         context.setScript(script);
         AgentLog agentLog = new RemoteLog(context);
 
-        ShellCommandJob commandJob = new ShellCommandJob("/bin/sh run.sh");
+        ShellCommandJob commandJob = new ShellCommandJob("run.sh");
         try {
             //后面考虑缓存 进程id
             commandJob.execute(context);

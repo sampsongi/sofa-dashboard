@@ -33,6 +33,7 @@ public class AgentScriptRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         AgentLog agentLog = null;
         try {
+            //只有run.sh 才会调度到这里
             String scriptType = System.getProperty("scriptType");
             //String scriptType = StringUtil.firstValue(args.getOptionValues("scriptType"));
             if (StringUtils.isNotBlank(scriptType)) {
@@ -74,7 +75,7 @@ public class AgentScriptRunner implements ApplicationRunner {
                 Map<String, String> params = StringUtil.parseParams(paramsString);
                 //log.info("params2:{}",params);
 
-                //初始化运行环境
+                //====初始化运行环境===
                 ScriptRunContext context = new ScriptRunContext();
                 context.setJobId(jobId);
                 context.setScript(script);
@@ -86,7 +87,6 @@ public class AgentScriptRunner implements ApplicationRunner {
                 context.setLog(agentLog);
                 context.setEnvs(envs);
                 context.setParams(params);
-
 
                 int code = 0;
                 boolean find = false;
@@ -101,12 +101,17 @@ public class AgentScriptRunner implements ApplicationRunner {
                     agentLog.info("没有找到对应的脚本类型");
                 }
                 agentLog.info("run 运行结束 code:{}", code);
+                Thread.sleep(3000);
+                //System.exit(code);
             }
         } catch (Exception e) {
             if(agentLog != null) {
                 agentLog.info("run 异常运行结束", e);
             }
             log.info("run 异常运行结束", e);
+            Thread.sleep(3000);
+            //System.exit(255);
         }
+        log.info("run 执行到最后结束");
     }
 }
