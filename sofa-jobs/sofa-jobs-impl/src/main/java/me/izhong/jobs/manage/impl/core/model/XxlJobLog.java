@@ -33,12 +33,12 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	
 	// trigger info
 	private Date triggerTime;
-	private int triggerCode;
+	private Integer triggerCode;
 	private String triggerMsg;
 	
 	// handle info
 	private Date handleTime;
-	private int handleCode;
+	private Integer handleCode;
 	private String handleMsg;
 
 	// alarm info

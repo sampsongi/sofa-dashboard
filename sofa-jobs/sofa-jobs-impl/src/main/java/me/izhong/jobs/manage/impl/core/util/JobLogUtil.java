@@ -2,7 +2,6 @@ package me.izhong.jobs.manage.impl.core.util;
 
 import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
 import me.izhong.jobs.model.JobLog;
-import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
 import org.springframework.beans.BeanUtils;
 
 public class JobLogUtil {

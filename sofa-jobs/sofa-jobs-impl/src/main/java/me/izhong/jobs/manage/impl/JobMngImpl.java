@@ -183,7 +183,29 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum) {
-        return null;
+        XxlJobLog jobLog = jobLogService.selectByPId(logId);
+        if(jobLog == null) {
+            log.info("日志不存在:logId {}",logId);
+        }
+        //运行结束了
+        boolean isDone = ( jobLog.getTriggerCode() != null && jobLog.getTriggerCode().intValue() > 0 )
+                || (jobLog.getHandleCode() != null);
+        String logContent = jobLog.getHandleMsg();
+        if(StringUtils.isBlank(logContent)) {
+            return new ReturnT(new LogResult(0,0,"",isDone));
+        }
+        String[] arr = logContent.split("<br/>");
+        int max = 100;
+        StringBuilder sb = new StringBuilder();
+        if(arr.length > fromLineNum) {
+            int i = fromLineNum;
+            while (i ++ < max && arr.length < fromLineNum + max ){
+                sb.append(arr[i]).append("<br/>");
+            }
+            return new ReturnT(new LogResult(0,i - 1,sb.toString(),isDone));
+        } else {
+            return new ReturnT(new LogResult(0,0,"",isDone));
+        }
     }
 
     @Override
