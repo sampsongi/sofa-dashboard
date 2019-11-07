@@ -136,7 +136,11 @@ public class JobMngImpl implements IJobMngFacade {
         if(jobLog != null) {
             String data = logStatics.getLogData();
             if(StringUtils.isNotBlank(data)) {
-                data = jobLog.getHandleMsg() + data + "<br/>";
+                String oi = jobLog.getHandleMsg();
+                if(oi == null){
+                    oi = "";
+                }
+                data = oi + data + "<br/>";
                 if(data.length() < 1000*1000) {
                     jobLog.setHandleMsg(data);
                     jobLogService.update(jobLog);
@@ -197,8 +201,8 @@ public class JobMngImpl implements IJobMngFacade {
         String[] arr = logContent.split("<br/>");
         int max = 100;
         StringBuilder sb = new StringBuilder();
-        if(arr.length > fromLineNum) {
-            int i = fromLineNum;
+        if(arr.length >= fromLineNum) {
+            int i = fromLineNum - 1;
             while (i ++ < max && arr.length < fromLineNum + max ){
                 sb.append(arr[i]).append("<br/>");
             }
