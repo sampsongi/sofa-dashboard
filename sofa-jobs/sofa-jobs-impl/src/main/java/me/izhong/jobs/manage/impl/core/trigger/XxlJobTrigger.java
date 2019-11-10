@@ -97,7 +97,8 @@ public class XxlJobTrigger {
             jobLog.setExecutorParam(jobInfo.getExecutorParam());
         jobLog.setExecutorFailRetryCount(finalFailRetryCount);
 
-        jobLog.setTriggerCode(triggerResult.getCode());
+        //触发结果
+        jobLog.setTriggerCode( ReturnT.SUCCESS_CODE == triggerResult.getCode() ? 0 : triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         logger.info("保存jobLog triggerMsgSb:{}",triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
