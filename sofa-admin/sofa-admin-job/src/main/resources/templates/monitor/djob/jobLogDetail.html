@@ -81,7 +81,7 @@
     $(function() {
 
         // trigger fail, end
-        if ( !(triggerCode == 200 || handleCode != 0) ) {
+        if (triggerCode != 0) {
             $('#logConsoleRunning').hide();
             $('#logConsole').append('<span style="color: red;">'+ '触发失败' +'</span>');
             return;
