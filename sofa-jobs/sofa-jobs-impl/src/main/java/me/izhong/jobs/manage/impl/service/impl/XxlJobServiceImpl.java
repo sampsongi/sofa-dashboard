@@ -172,7 +172,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 
 		Assert.notNull(jobInfo,"");
 		Assert.notNull(jobInfo.getJobId(),"任务ID不能为空");
-		log.info("update jobInfo getJobDesc{}",jobInfo.getJobDesc());
+		log.info("update jobInfo JobDesc{}",jobInfo.getJobDesc());
 		// valid
 		if(jobInfo.getJobGroupId() == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );
@@ -261,6 +261,8 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		exists_jobInfo.setGlueRemark(jobInfo.getGlueRemark());
 		exists_jobInfo.setGlueUpdatetime(jobInfo.getGlueUpdatetime());
 		exists_jobInfo.setTriggerStatus(jobInfo.getTriggerStatus());
+		exists_jobInfo.setRemark(jobInfo.getRemark());
+
         xxlJobInfoService.update(exists_jobInfo);
 
 		return ReturnT.SUCCESS;
@@ -298,7 +300,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "表达式非法"+ e.getMessage());
 		}
 
-		xxlJobInfo.setTriggerStatus(1);
+		xxlJobInfo.setTriggerStatus(1L);
 		xxlJobInfo.setTriggerLastTime(0L);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
@@ -311,7 +313,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 	public ReturnT<String> disableJob(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
-		xxlJobInfo.setTriggerStatus(0);
+		xxlJobInfo.setTriggerStatus(0L);
 		xxlJobInfo.setTriggerLastTime(0L);
 		xxlJobInfo.setTriggerNextTime(0L);
 

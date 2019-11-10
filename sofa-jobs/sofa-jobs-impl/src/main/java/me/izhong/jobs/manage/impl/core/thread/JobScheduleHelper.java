@@ -96,7 +96,7 @@ public class JobScheduleHelper {
                                                 DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, nextValidTime));
                                         jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                     } else {
-                                        jobInfo.setTriggerStatus(0);
+                                        jobInfo.setTriggerStatus(0L);
                                         jobInfo.setTriggerLastTime(0L);
                                         jobInfo.setTriggerNextTime(0L);
                                     }
@@ -134,7 +134,7 @@ public class JobScheduleHelper {
                                                     DateUtil.parseDateToStr(DateUtil.YYYY_MM_DD_HH_MM_SS, nextValidTime));
                                             jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                         } else {
-                                            jobInfo.setTriggerStatus(0);
+                                            jobInfo.setTriggerStatus(0L);
                                             jobInfo.setTriggerLastTime(0L);
                                             jobInfo.setTriggerNextTime(0L);
                                         }
@@ -156,7 +156,7 @@ public class JobScheduleHelper {
                                         jobInfo.setTriggerLastTime(jobInfo.getTriggerNextTime());
                                         jobInfo.setTriggerNextTime(nextValidTime.getTime());
                                     } else {
-                                        jobInfo.setTriggerStatus(0);
+                                        jobInfo.setTriggerStatus(0L);
                                         jobInfo.setTriggerLastTime(0L);
                                         jobInfo.setTriggerNextTime(0L);
                                     }

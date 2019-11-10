@@ -9,8 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class Job implements Serializable {
-    private String jobName;
-    private String jobKey;
+
     private Long jobId;
     private Long jobGroupId;
     private String jobGroup;
@@ -26,8 +25,8 @@ public class Job implements Serializable {
     private String executorHandler;		    // 执行器，任务Handler名称
     private String executorParam;		    // 执行器，任务参数
     private String executorBlockStrategy;	// 阻塞处理策略
-    private Integer executorTimeout;     		// 任务执行超时时间，单位秒
-    private Integer executorFailRetryCount;		// 失败重试次数
+    private Long executorTimeout;     		// 任务执行超时时间，单位秒
+    private Long executorFailRetryCount;		// 失败重试次数
 
     private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
     private String glueSource;		// GLUE源代码
@@ -36,7 +35,7 @@ public class Job implements Serializable {
 
     private String childJobId;		// 子任务ID，多个逗号分隔
 
-    private Integer triggerStatus;		// 调度状态：0-停止，1-运行
+    private Long triggerStatus;		// 调度状态：0-停止，1-运行
     private Long triggerLastTime;	// 上次调度时间
     private Long triggerNextTime;	// 下次调度时间
 

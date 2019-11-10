@@ -79,10 +79,10 @@ public class JobInfoController {
 	@AjaxWrapper
 	public void add(Job jobInfo) {
 		if(jobInfo.getExecutorFailRetryCount() == null) {
-			jobInfo.setExecutorFailRetryCount(0);
+			jobInfo.setExecutorFailRetryCount(0L);
 		}
 		if(jobInfo.getExecutorTimeout() == null) {
-			jobInfo.setExecutorTimeout(30000);
+			jobInfo.setExecutorTimeout(30000L);
 		}
         jobInfo.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
         jobInfo.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
@@ -129,6 +129,7 @@ public class JobInfoController {
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
 		exists_jobInfo.setTriggerStatus(jobInfo.getTriggerStatus());
+		exists_jobInfo.setRemark(jobInfo.getRemark());
 
 		ReturnT<String> rObj = jobServiceReference.jobService.update(exists_jobInfo);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){

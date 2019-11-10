@@ -5,6 +5,7 @@ import me.izhong.domain.PageRequest;
 import me.izhong.jobs.model.*;
 import me.izhong.model.ReturnT;
 
+import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,9 @@ public interface IJobMngFacade {
      * @param
      * @return
      */
-    ReturnT<String> uploadStatics(LogStatics logStatics);
+    void uploadStatics(LogStatics logStatics);
+    void uploadJobStartStatics(Long triggerId, Date startTime);
+    void uploadJobEndStatics(Long triggerId, Date endTime, Integer resultStatus, String message);
 
     /**
      * 日志相关
@@ -59,7 +62,7 @@ public interface IJobMngFacade {
     void clearLog(Long jobId, Date clearBeforeTime, Integer clearBeforeNum);
     void clearLog(Long[] jobLogIds);
 
-    ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum);
+    LogResult catLog(long triggerTime,Long jobId, Long logId, int fromLineNum);
 
     void update(JobLog jobLog);
 
@@ -92,4 +95,5 @@ public interface IJobMngFacade {
     JobGroup updateJobGroup(JobGroup group);
 
     long removeJobGroup(List<Long> groupId);
+
 }

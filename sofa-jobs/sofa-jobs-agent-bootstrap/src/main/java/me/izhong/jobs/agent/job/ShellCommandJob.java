@@ -4,7 +4,9 @@ import lombok.Cleanup;
 import me.izhong.jobs.agent.bean.JobContext;
 import me.izhong.jobs.agent.bean.JobsConfigBean;
 import me.izhong.jobs.agent.exp.JobExecutionException;
+import me.izhong.jobs.agent.service.JobServiceReference;
 import me.izhong.jobs.agent.util.ContextUtil;
+import me.izhong.jobs.manage.IJobMngFacade;
 import me.izhong.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
@@ -42,6 +44,9 @@ public class ShellCommandJob extends IJobHandler {
 
         String run_env = ContextUtil.getRunEnv();
         JobsConfigBean configBean = ContextUtil.getBean(JobsConfigBean.class);
+        JobServiceReference facade = ContextUtil.getBean(JobServiceReference.class);
+        IJobMngFacade jobMng = facade.getJobMngFacade();
+
         String scriptDir = configBean.getScriptPath();
 
         Map<String, String> envs = new HashMap<>();
@@ -81,6 +86,7 @@ public class ShellCommandJob extends IJobHandler {
             ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
             shellExecutor.setWatchdog(watchdog);
 
+            //正常退出状态码
             shellExecutor.setExitValue(0);
 
             File logFile = new File(configBean.getLogDir());
@@ -101,18 +107,26 @@ public class ShellCommandJob extends IJobHandler {
                     log.info("文件创建失败");
                 }
             }
+
             @Cleanup
             FileOutputStream fos = new FileOutputStream(logFile);
             PumpStreamHandler streamHandler = new PumpStreamHandler(fos);
             shellExecutor.setStreamHandler(streamHandler);
 
             log.info("run.sh任务开始执行");
+
+            jobMng.uploadJobStartStatics(triggerId,new Date());
+
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
             log.info("run.sh任务返回了:  {}", exitValue);
+            //记录执行状态信息
+            jobMng.uploadJobEndStatics(triggerId,new Date(), exitValue, "执行成功");
+
             return ReturnT.SUCCESS;
         } catch (Throwable e) {
             log.error("任务失败", e);
+            jobMng.uploadJobEndStatics(triggerId,new Date(), 255, "执行失败:" + e.getMessage());
             return ReturnT.FAIL;
         } finally {
 

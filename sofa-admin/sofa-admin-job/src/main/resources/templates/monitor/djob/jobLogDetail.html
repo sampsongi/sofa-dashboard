@@ -6,7 +6,7 @@
 	<style type="text/css">
 		html,body{height:100%}
 		.layout-boxed html,.layout-boxed body{height:100%}
-		body{font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:400;overflow-x:hidden;overflow-y:auto}
+		body{font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:400;}
 		.wrapper{height:100%;position:relative;overflow-x:hidden;overflow-y:auto}
 		.main-header .navbar{background-color:#c2e4b5;}
 		.main-header .navbar-custom-menu,.main-header .navbar-right{float:right;}
@@ -15,7 +15,6 @@
 		.main-header{position:relative;max-height:100px;z-index:1030}
 		.fixed .content-wrapper,.fixed .right-side{padding-top:50px}
 		.fixed.layout-boxed .wrapper{max-width:100%}
-		.fixed .wrapper{overflow:hidden;}
 
 		.layout-top-nav .content-wrapper,.layout-top-nav .main-footer{margin-left:0;}
 
@@ -77,6 +76,7 @@
     var executorAddress = '[[${jobLog.executorAddress}]]';
     var triggerTime = '[[${jobLog.triggerTime.getTime()}]]';
     var logId = '[[${jobLog.jobLogId}]]';
+    var jobId = '[[${jobLog.jobId}]]';
 
     $(function() {
 
@@ -108,6 +108,7 @@
                 data : {
                     "executorAddress":executorAddress,
                     "triggerTime":triggerTime,
+                    "jobId":jobId,
                     "jobLogId":logId,
                     "fromLineNum":fromLineNum
                 },
@@ -134,7 +135,6 @@
                                 logRunStop('<br><span style="color: green;">[日志加载结束]</span>');
                                 return;
                             }
-
                             return;
                         }
 

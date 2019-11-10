@@ -36,6 +36,8 @@ public class JobLog implements Serializable {
 
     // handle info
     private Date handleTime;
+    private Date finishHandleTime;
+    private String costHandleTime;
     private Integer handleCode;
     private String handleMsg;
 

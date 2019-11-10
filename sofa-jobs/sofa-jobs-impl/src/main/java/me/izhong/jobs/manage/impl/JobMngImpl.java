@@ -18,11 +18,14 @@ import me.izhong.jobs.manage.impl.core.util.JobLogUtil;
 import me.izhong.jobs.manage.impl.service.*;
 import me.izhong.jobs.model.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +49,9 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Autowired
     private XxlJobLogGlueService jobLogGlueService;
+
+    @Autowired
+    private JobAgentServiceReference jobAgentServiceReference;
 
     @Override
     public PageModel<Job> pageList(PageRequest request, Job ino) {
@@ -126,11 +132,11 @@ public class JobMngImpl implements IJobMngFacade {
     }
 
     @Override
-    public ReturnT<String> uploadStatics(LogStatics logStatics) {
+    public void uploadStatics(LogStatics logStatics) {
         Long triggerId = logStatics.getTriggerId();
         log.info("收到日志job:{} triggerId:{} 内容:{}",logStatics.getJobId(),logStatics.getTriggerId(),logStatics.getLogData());
         //收集agent的日志
-        XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
+        /*XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
             String data = logStatics.getLogData();
             if(StringUtils.isNotBlank(data)) {
@@ -144,10 +150,39 @@ public class JobMngImpl implements IJobMngFacade {
                     jobLogService.update(jobLog);
                 }
             }
-            return ReturnT.SUCCESS;
         } else {
             log.error("jobLog未找到 triggerId:{}",triggerId);
-            return ReturnT.FAIL;
+        }*/
+    }
+
+    @Override
+    public void uploadJobStartStatics(Long triggerId, Date startTime) {
+        log.info("收到Job执行开始信息:{} triggerId:{}",triggerId);
+        //收集agent的日志
+        XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
+        if(jobLog != null) {
+            jobLog.setHandleTime(startTime);
+            jobLogService.update(jobLog);
+        }
+    }
+
+    @Override
+    public void uploadJobEndStatics(Long triggerId, Date endTime, Integer resultStatus, String message) {
+        log.info("收到Job执行结束信息:{} triggerId:{} resultStatus:{}  message:{}",triggerId,resultStatus,message);
+        //收集agent的日志
+        XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
+        if(jobLog != null) {
+            jobLog.setFinishHandleTime(endTime);
+            Date startTime = jobLog.getHandleTime();
+            if(startTime != null){
+                long second1 = DateUtils.getFragmentInMilliseconds(startTime,Calendar.YEAR);
+                long second2 = DateUtils.getFragmentInMilliseconds(endTime,Calendar.YEAR);
+                String dur = DurationFormatUtils.formatPeriod(second1,second2,"yyyy-MM-dd HH:mm:ss");
+                jobLog.setCostHandleTime(dur);
+            }
+            jobLog.setHandleCode(resultStatus);
+            jobLog.setHandleMsg(message + jobLog.getHandleMsg());
+            jobLogService.update(jobLog);
         }
     }
 
@@ -182,32 +217,9 @@ public class JobMngImpl implements IJobMngFacade {
         jobLogService.clearLog(jobLogIds);
     }
 
-
     @Override
-    public ReturnT<LogResult> catLog(long triggerTime, long logId, int fromLineNum) {
-        XxlJobLog jobLog = jobLogService.selectByPId(logId);
-        if(jobLog == null) {
-            log.info("日志不存在:logId {}",logId);
-        }
-        //运行结束了
-        boolean isDone = ( jobLog.getTriggerCode() != null && jobLog.getTriggerCode().intValue() > 0 )
-                || (jobLog.getHandleCode() != null);
-        String logContent = jobLog.getHandleMsg();
-        if(StringUtils.isBlank(logContent)) {
-            return new ReturnT(new LogResult(0,0,"",isDone));
-        }
-        String[] arr = logContent.split("<br/>");
-        int max = 100;
-        StringBuilder sb = new StringBuilder();
-        if(arr.length >= fromLineNum) {
-            int i = fromLineNum - 1;
-            while (i ++ < max && arr.length < fromLineNum + max ){
-                sb.append(arr[i]).append("<br/>");
-            }
-            return new ReturnT(new LogResult(0,i - 1,sb.toString(),isDone));
-        } else {
-            return new ReturnT(new LogResult(0,0,"",isDone));
-        }
+    public LogResult catLog(long triggerTime, Long jobId, Long logId, int fromLineNum) {
+        return jobAgentServiceReference.jobAgentService.catLog(triggerTime,jobId,logId,fromLineNum);
     }
 
     @Override

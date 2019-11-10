@@ -36,10 +36,12 @@ public class ExecGrooyScript implements IBatch {
 		File scriptPath = context.getScriptFile();
 
 		AgentLog logger = context.getLog();
+
 		log.info("envs:{} params:{}",context.getEnvs(),context.getParams());
 		Binding binding = new Binding();
 		binding.setProperty("ac", ContextUtil.getApplicationContext());
-		binding.setProperty("log", logger);
+		binding.setProperty("remoteLog", logger);
+		binding.setProperty("log", log);
 		binding.setProperty("envs", context.getEnvs());
 		binding.setProperty("params", context.getParams());
 

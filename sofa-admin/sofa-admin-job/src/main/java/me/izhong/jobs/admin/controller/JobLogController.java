@@ -112,22 +112,22 @@ public class JobLogController {
 	}
 
 	@RequestMapping("/log/logDetailCat")
-	@ResponseBody
-	public ReturnT<LogResult> logDetailCat(String executorAddress, long triggerTime, long jobLogId, int fromLineNum){
+	@AjaxWrapper
+	public LogResult logDetailCat(String executorAddress, long triggerTime, long jobId, long jobLogId, int fromLineNum){
 		try {
-			ReturnT<LogResult> logResult = jobServiceReference.jobService.catLog(triggerTime, jobLogId, fromLineNum);
+			LogResult logResult = jobServiceReference.jobService.catLog(triggerTime, jobId, jobLogId, fromLineNum);
 			// is end
-            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
-                JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(jobLogId);
-                if (jobLog.getHandleCode() > 0) {
-                    logResult.getContent().setEnd(true);
-                }
-            }
+//            if (logResult.getContent()!=null && logResult.getContent().getFromLineNum() > logResult.getContent().getToLineNum()) {
+//                JobLog jobLog = jobServiceReference.jobService.findJobLogByJobLogId(jobLogId);
+//                if (jobLog.getHandleCode() > 0) {
+//                    logResult.getContent().setEnd(true);
+//                }
+//            }
 
 			return logResult;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return new ReturnT<LogResult>(ReturnT.FAIL_CODE, e.getMessage());
+			throw BusinessException.build(e.getMessage());
 		}
 	}
 
