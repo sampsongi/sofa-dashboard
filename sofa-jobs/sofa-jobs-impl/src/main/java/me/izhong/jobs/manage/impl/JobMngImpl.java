@@ -181,7 +181,7 @@ public class JobMngImpl implements IJobMngFacade {
                 jobLog.setCostHandleTime(dur);
             }
             jobLog.setHandleCode(resultStatus);
-            jobLog.setHandleMsg(message + jobLog.getHandleMsg());
+            jobLog.setHandleMsg(message + jobLog.getHandleMsg() == null ? "" : jobLog.getHandleMsg());
             jobLogService.update(jobLog);
         }
     }
