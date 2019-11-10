@@ -1,16 +1,19 @@
 package me.izhong.jobs.manage.impl.core.model;
 
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import me.izhong.db.common.annotation.AutoId;
 import me.izhong.db.common.annotation.PrimaryId;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Slf4j
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "sys_djob_info")
@@ -32,7 +35,7 @@ public class XxlJobInfo  extends TimedBasedEntity implements Serializable {
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
 	private String executorBlockStrategy;	// 阻塞处理策略
-	private Integer executorTimeout;     		// 任务执行超时时间，单位秒
+	private Long executorTimeout;     		// 任务执行超时时间，单位秒
 	private Integer executorFailRetryCount;		// 失败重试次数
 	
 	private String glueType;		// GLUE类型	#com.xxl.job.core.glue.GlueTypeEnum
@@ -45,5 +48,4 @@ public class XxlJobInfo  extends TimedBasedEntity implements Serializable {
 	private Integer triggerStatus;		// 调度状态：0-停止，1-运行
 	private Long triggerLastTime;	// 上次调度时间
 	private Long triggerNextTime;	// 下次调度时间
-
 }

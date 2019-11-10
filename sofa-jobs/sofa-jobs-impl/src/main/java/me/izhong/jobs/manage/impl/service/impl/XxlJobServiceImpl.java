@@ -1,5 +1,6 @@
 package me.izhong.jobs.manage.impl.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.service.CrudBaseServiceImpl;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
@@ -29,6 +30,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
 
+@Slf4j
 @Service
 public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> implements XxlJobInfoService {
 	private static Logger logger = LoggerFactory.getLogger(XxlJobServiceImpl.class);
@@ -170,6 +172,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 
 		Assert.notNull(jobInfo,"");
 		Assert.notNull(jobInfo.getJobId(),"任务ID不能为空");
+		log.info("update jobInfo getJobDesc{}",jobInfo.getJobDesc());
 		// valid
 		if(jobInfo.getJobGroupId() == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组必填" );

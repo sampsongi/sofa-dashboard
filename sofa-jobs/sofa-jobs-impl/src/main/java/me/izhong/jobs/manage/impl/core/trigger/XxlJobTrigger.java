@@ -68,8 +68,11 @@ public class XxlJobTrigger {
         triggerParam.setGlueSource(jobInfo.getGlueSource());
         if(jobInfo.getGlueUpdatetime() != null)
             triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
+        XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
 
         ReturnT<String>  triggerResult = runExecutor(triggerParam, null);
+
+        jobLog = XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().selectByPId(jobLog.getJobLogId());
 
         // 5、collection trigger info
         StringBuffer triggerMsgSb = new StringBuffer();
@@ -109,20 +112,24 @@ public class XxlJobTrigger {
      * @param address
      * @return
      */
-    public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address){
+    public static ReturnT<String> runExecutor(final TriggerParam triggerParam, String address){
         ReturnT<String> runResult;
         logger.info("调度远程执行器执行：{} : {}",triggerParam, address);
         try {
             IJobAgentMngFacade sr = SpringUtil.getBean(JobAgentServiceReference.class).jobAgentService;
 
             String pa = triggerParam.getExecutorParams();
+            Map<String, String> envs = new HashMap<String, String>();
+            if(triggerParam.getExecutorTimeout() != null) {
+                envs.put("timeout", triggerParam.getExecutorTimeout().toString());
+            }
             Map<String, String> params = new HashMap<String, String>() {{
                 put("data", pa);
             }};
-            logger.info("远程调用 jobId:{}",triggerParam.getJobId());
+            logger.info("rpc 远程调用 jobId:{}",triggerParam.getJobId());
             //dubbo 远程调用
-            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), triggerParam.getGlueSource(), params);
-            logger.info("远程调用应答:{}",runResult);
+            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), triggerParam.getGlueSource(),envs, params);
+            logger.info("rpc 远程调用应答:{}",runResult);
             if(runResult == null) {
                 runResult = ReturnT.FAIL;
             }

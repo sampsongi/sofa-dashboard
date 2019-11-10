@@ -110,7 +110,27 @@ public class JobInfoController {
 	@PostMapping("/edit")
 	@AjaxWrapper
 	public void update(Job jobInfo) {
-		ReturnT<String> rObj = jobServiceReference.jobService.update(jobInfo);
+		Job exists_jobInfo = jobServiceReference.jobService.findByJobId(jobInfo.getJobId());
+		if (exists_jobInfo == null) {
+			throw BusinessException.build("任务不存在");
+		}
+
+		//只修改想修改的内容
+		exists_jobInfo.setJobGroupId(jobInfo.getJobGroupId());
+		exists_jobInfo.setJobCron(jobInfo.getJobCron());
+		exists_jobInfo.setJobDesc(jobInfo.getJobDesc());
+		exists_jobInfo.setAuthor(jobInfo.getAuthor());
+		exists_jobInfo.setAlarmEmail(jobInfo.getAlarmEmail());
+		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
+		exists_jobInfo.setExecutorHandler(jobInfo.getExecutorHandler());
+		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
+		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
+		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
+		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
+		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+		exists_jobInfo.setTriggerStatus(jobInfo.getTriggerStatus());
+
+		ReturnT<String> rObj = jobServiceReference.jobService.update(exists_jobInfo);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());
 		}

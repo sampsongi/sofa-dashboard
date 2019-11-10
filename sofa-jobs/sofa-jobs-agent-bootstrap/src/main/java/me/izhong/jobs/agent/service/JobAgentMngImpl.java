@@ -23,17 +23,18 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
     }
 
     @Override
-    public ReturnT<String> trigger(Long jobId, Long triggerId, String script, Map<String, String> params) {
+    public ReturnT<String> trigger(Long jobId, Long triggerId, String script,Map<String, String> envs, Map<String, String> params) {
 
-        HashMap envs = new HashMap();
-        envs.put("os","mac");
+        if(envs == null)
+            envs = new HashMap();
+
+        long timeout = params.get("timeout") == null ? 10 * 60 * 1000 : Long.valueOf(params.get("timeout")).longValue();
 
 
-        JobContext context = new JobContext(jobId,triggerId,300000,envs,params);
+        JobContext context = new JobContext(jobId,triggerId,timeout,envs,params);
         context.setJobId(jobId);
         context.setTriggerId(triggerId);
         context.setScript(script);
-        AgentLog agentLog = new RemoteLog(context);
 
         ShellCommandJob commandJob = new ShellCommandJob("run.sh");
         try {

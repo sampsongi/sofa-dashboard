@@ -13,7 +13,7 @@ public class TriggerParam implements Serializable{
     private String executorHandler;
     private String executorParams;
     private String executorBlockStrategy;
-    private int executorTimeout;
+    private Long executorTimeout;
 
     private long logId;
     private long logDateTim;

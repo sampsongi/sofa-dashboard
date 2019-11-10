@@ -113,8 +113,6 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public ReturnT<String> trigger(Long jobId) {
         return  XxlJobTrigger.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null);
-//        JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, null);
-//        return ReturnT.SUCCESS;
     }
 
     @Override
@@ -130,7 +128,7 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public ReturnT<String> uploadStatics(LogStatics logStatics) {
         Long triggerId = logStatics.getTriggerId();
-        log.info("收到job:{} triggerId:{} 日志:{}",logStatics.getJobId(),logStatics.getTriggerId(),logStatics.getLogData());
+        log.info("收到日志job:{} triggerId:{} 内容:{}",logStatics.getJobId(),logStatics.getTriggerId(),logStatics.getLogData());
         //收集agent的日志
         XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {

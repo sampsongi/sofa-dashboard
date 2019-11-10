@@ -49,9 +49,8 @@ public class ShellCommandJob extends IJobHandler {
 
         Map<String, String> params = jobContext.getParams();
 
-        log.info("shell command job[{}]  trigger [{}] run with param: {}",
-                jobContext.getJobId(), jobContext.getTriggerId(), params);
-        log.info("jobId:{}  trigger:{}", jobId);
+        log.info("shell command job[{}]  trigger [{}] timeout:{}  envs:{} param: {}",
+                jobId, jobContext.getTriggerId(),jobContext.getTimeout(), envs, params);
         // JobRunLog jobLog = new JobRunLog();
         // 定时任务日志通过接口送到 jobs-bootstrap
         // jobServiceReference.getJobMngFacade().uploadStatics();
@@ -70,7 +69,7 @@ public class ShellCommandJob extends IJobHandler {
             }
 
             String shellCommand = SHName + scriptDir
-                    + "/"+ command + "--run_env " + run_env
+                    + "/"+ command + " --run_env " + run_env
                     + " -DisJobAgent=true -DscriptType=groovy -DsTime=" + dateTime
                     + " -DjobId=" + jobId + " -DtriggerId=" + triggerId
                     + " -Denvs=" + envs + " -Dparams=" + params;
@@ -90,6 +89,11 @@ public class ShellCommandJob extends IJobHandler {
             }
             String dateString = new SimpleDateFormat("yyyyMMdd").format(new Date());
             logFile = new File(configBean.getLogDir() + File.separator + dateString + File.separator + +jobId + "_" + triggerId + ".txt");
+
+            File parentDir = logFile.getParentFile();
+            if(!parentDir.exists()){
+                parentDir.mkdirs();
+            }
             if(!logFile.exists()) {
                 log.info("文件不存在 {} 创建",logFile.getAbsolutePath());
                 boolean isSc = logFile.createNewFile();
@@ -105,7 +109,7 @@ public class ShellCommandJob extends IJobHandler {
             log.info("run.sh任务开始执行");
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
-            log.info("run.sh任务返回:  {}", exitValue);
+            log.info("run.sh任务返回了:  {}", exitValue);
             return ReturnT.SUCCESS;
         } catch (Throwable e) {
             log.error("任务失败", e);

@@ -1,16 +1,19 @@
 package me.izhong.jobs.manage.impl.core.model;
 
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import me.izhong.db.common.annotation.AutoId;
 import me.izhong.db.common.annotation.PrimaryId;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Slf4j
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "sys_djob_log")
@@ -44,4 +47,14 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	// alarm info
 	private int alarmStatus;
 
+    public String getHandleMsg() {
+        return handleMsg;
+    }
+
+    public void setHandleMsg(String handleMsg) {
+        if(StringUtils.isBlank(handleMsg)){
+            log.error("设置handleMsg为空");
+        }
+        this.handleMsg = handleMsg;
+    }
 }

@@ -33,15 +33,25 @@ com:
         bolt-port: 13302
 ---
 spring:
+  profiles: zz
+  data:
+    mongodb:
+      uri: mongodb://10.10.51.212:27017/training
+com:
+  alipay:
+    sofa:
+      rpc:
+        registry:
+          address: zookeeper://10.10.51.212:2181
+
+---
+spring:
   profiles: home
 
   data:
     mongodb:
       uri: mongodb://10.10.51.212:27017/training
 
-service:
-  unique:
-    id: 1
 com:
   alipay:
     sofa:

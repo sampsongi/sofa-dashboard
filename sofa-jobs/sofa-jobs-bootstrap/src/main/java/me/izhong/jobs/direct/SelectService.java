@@ -18,6 +18,8 @@ public class SelectService {
         while (true) {
             System.out.println(helloService.trigger(1L, 2L, "script",
                     new HashMap<String, String>() {{
+                    }},
+                    new HashMap<String, String>() {{
                     }}));
             try {
                 Thread.sleep(2000);
