@@ -172,7 +172,7 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public void uploadJobEndStatics(Long triggerId, Date endTime, Integer resultStatus, String message) {
-        log.info("收到Job执行结束信息:{} triggerId:{} resultStatus:{}  message:{}",triggerId,resultStatus,message);
+        log.info("收到Job执行结束信息 triggerId:{} resultStatus:{}  message:{}",triggerId,resultStatus,message);
         //收集agent的日志
         XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
