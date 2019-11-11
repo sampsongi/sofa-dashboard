@@ -2,6 +2,7 @@ package me.izhong.jobs.manage.impl;
 
 import com.alipay.sofa.runtime.api.annotation.SofaService;
 import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
 import me.izhong.model.ReturnT;
@@ -157,7 +158,10 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public void uploadJobStartStatics(Long triggerId, Date startTime) {
-        log.info("收到Job执行开始信息:{} triggerId:{}",triggerId);
+        log.info("收到Job执行开始信息 triggerId:{}",triggerId);
+        if(triggerId == null) {
+            throw BusinessException.build("上送执行信息的triggerId为空");
+        }
         //收集agent的日志
         XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {

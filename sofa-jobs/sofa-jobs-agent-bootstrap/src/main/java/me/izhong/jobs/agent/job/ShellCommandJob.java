@@ -116,7 +116,7 @@ public class ShellCommandJob extends IJobHandler {
             shellExecutor.setStreamHandler(streamHandler);
 
             Date startTime = new Date();
-            log.info("run.sh任务开始执行, 上送执行时间:triggerId{} {}",triggerId,DateUtil.dateTime(startTime));
+            log.info("run.sh任务开始执行, 上送执行时间:triggerId:{} startTime:{}",triggerId,DateUtil.dateTime(startTime));
 
             jobMng.uploadJobStartStatics(triggerId,startTime);
 

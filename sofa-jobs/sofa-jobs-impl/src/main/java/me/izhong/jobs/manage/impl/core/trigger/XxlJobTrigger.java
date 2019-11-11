@@ -87,7 +87,7 @@ public class XxlJobTrigger {
         //触发结果
         Integer triggerCode =  ReturnT.SUCCESS_CODE == triggerResult.getCode() ? 0 : triggerResult.getCode();
         String triggerMsg = triggerMsgSb.toString();
-        logger.info("保存jobLog triggerMsgSb:{}",triggerMsgSb.toString());
+        logger.info("保存jobLog triggerCode:{} triggerMsgSb:{}",triggerCode, triggerMsgSb.toString());
 
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService()
                 .updateTriggerDoneMessage(jobLog.getJobLogId(),
