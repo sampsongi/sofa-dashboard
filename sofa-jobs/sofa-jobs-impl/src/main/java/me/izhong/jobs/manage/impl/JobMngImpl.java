@@ -177,7 +177,7 @@ public class JobMngImpl implements IJobMngFacade {
             if(startTime != null){
                 long second1 = DateUtils.getFragmentInMilliseconds(startTime,Calendar.YEAR);
                 long second2 = DateUtils.getFragmentInMilliseconds(endTime,Calendar.YEAR);
-                String dur = DurationFormatUtils.formatPeriod(second1,second2,"yyyy-MM-dd HH:mm:ss");
+                String dur = DurationFormatUtils.formatPeriod(second1,second2,"HH:mm:ss");
                 jobLog.setCostHandleTime(dur);
             }
             jobLog.setHandleCode(resultStatus);

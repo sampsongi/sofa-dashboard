@@ -127,6 +127,7 @@
         function clearLog(jobId,type) {
             $.modal.confirm("确认要清理日志吗？", function() {
                 $.operate.post(prefix + "/clearLog", { "jobId": jobId,"type":type});
+                $.table.refresh();
             })
         }
 
@@ -135,6 +136,7 @@
             var rowIds = $.operate.selectRowIds();
             $.modal.confirm("确认要删除吗？", function() {
                 $.operate.post(prefix + "/clearLogByIds", { "jobLogIds": rowIds});
+                $.table.refresh();
             })
         }
 	</script>

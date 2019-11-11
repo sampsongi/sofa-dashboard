@@ -48,13 +48,11 @@ public class XxlJobTrigger {
         ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
 
         // 1、save log-id
-        XxlJobLog jobLog = new XxlJobLog();
-        jobLog.setJobGroupId(jobInfo.getJobGroupId());
-        jobLog.setJobDesc(jobInfo.getJobDesc());
-        jobLog.setJobId(jobInfo.getJobId());
-        jobLog.setTriggerTime(new Date());
-        jobLog = XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().insert(jobLog);
-        logger.debug("job trigger start, jobId:{}", jobLog.getId());
+
+        XxlJobLog jobLog = XxlJobAdminConfig.getAdminConfig().getXxlJobLogService()
+                .insertTriggerBeginMessage(jobInfo.getJobId(),jobInfo.getJobGroupId(),jobInfo.getJobDesc(),new Date(),jobInfo.getExecutorFailRetryCount());
+
+        logger.debug("job trigger start,job log saved, jobId:{}", jobLog.getId());
 
         // 2、init trigger-param
         TriggerParam triggerParam = new TriggerParam();
@@ -65,8 +63,6 @@ public class XxlJobTrigger {
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
-
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
 
         ReturnT<String>  triggerResult = runExecutor(triggerParam, null);
 
@@ -87,19 +83,16 @@ public class XxlJobTrigger {
                 .append(triggerResult.getMsg()!=null?triggerResult.getMsg():"");
 
         // 6、save log trigger-info
-        jobLog.setExecutorAddress("");
-        jobLog.setExecutorHandler(jobInfo.getExecutorHandler());
-        if(StringUtils.isNotBlank(executorParam))
-            jobLog.setExecutorParam(executorParam);
-        else
-            jobLog.setExecutorParam(jobInfo.getExecutorParam());
-        jobLog.setExecutorFailRetryCount(finalFailRetryCount);
-
+        String exeP = StringUtils.isBlank(executorParam)?jobInfo.getExecutorParam(): executorParam;
         //触发结果
-        jobLog.setTriggerCode( ReturnT.SUCCESS_CODE == triggerResult.getCode() ? 0 : triggerResult.getCode());
-        jobLog.setTriggerMsg(triggerMsgSb.toString());
+        Integer triggerCode =  ReturnT.SUCCESS_CODE == triggerResult.getCode() ? 0 : triggerResult.getCode();
+        String triggerMsg = triggerMsgSb.toString();
         logger.info("保存jobLog triggerMsgSb:{}",triggerMsgSb.toString());
-        XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
+
+        XxlJobAdminConfig.getAdminConfig().getXxlJobLogService()
+                .updateTriggerDoneMessage(jobLog.getJobLogId(),
+                        "",jobInfo.getExecutorHandler(),
+                        exeP, triggerCode,triggerMsg);
 
         logger.debug("job trigger end, jobId:{}", jobLog.getId());
         return triggerResult;

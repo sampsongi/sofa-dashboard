@@ -5,10 +5,13 @@ import com.mongodb.client.result.UpdateResult;
 import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
 import me.izhong.jobs.manage.impl.core.model.XxlJobRegistry;
 import me.izhong.jobs.manage.impl.service.XxlJobLogService;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +39,37 @@ public class XxlJobLogServiceImpl extends CrudBaseServiceImpl<Long,XxlJobLog> im
             return new ArrayList<>();
         return ls.stream().map(e->e.getJobId()).collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    @Override
+    public XxlJobLog insertTriggerBeginMessage(Long jobId, Long jobGroupId, String jobDesc, Date triggerTime, Integer finalFailRetryCount) {
+        XxlJobLog jobLog = new XxlJobLog();
+        jobLog.setJobId(jobId);
+        jobLog.setJobGroupId(jobGroupId);
+        jobLog.setJobDesc(jobDesc);
+        jobLog.setTriggerTime(triggerTime);
+        jobLog.setExecutorFailRetryCount(finalFailRetryCount);
+        return super.insert(jobLog);
+    }
+
+    @Transactional
+    @Override
+    public void updateTriggerDoneMessage(Long jobLogId, String executorAddress, String executorHandler, 
+                                         String executorParam, Integer triggerCode, String triggerMsg) {
+        Assert.notNull(jobLogId,"");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("jobLogId").is(jobLogId));
+
+        FindAndModifyOptions options = new FindAndModifyOptions();
+        options.upsert(true);
+        Update update = new Update();
+        update.set("executorAddress",executorAddress);
+        update.set("executorHandler",executorHandler);
+        update.set("executorParam",executorParam);
+        update.set("triggerCode",triggerCode);
+        update.set("triggerMsg",triggerMsg);
+        XxlJobLog ur = mongoTemplate.findAndModify(query, update, options, XxlJobLog.class);
     }
 
     @Override
