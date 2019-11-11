@@ -1,32 +1,18 @@
 package me.izhong.db.common.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "sys_lock")
+@Getter
+@Setter
 public class MongoLock {
 
+    @Id
     private String key;
-      private double value;
-      private long expire;
+    private long value;
+    private long expire;
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public long getExpire() {
-        return expire;
-    }
-
-    public void setExpire(long expire) {
-        this.expire = expire;
-    }
 }

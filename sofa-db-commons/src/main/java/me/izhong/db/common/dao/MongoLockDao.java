@@ -26,10 +26,14 @@ public class MongoLockDao {
      * @param key
      * @return
      */
-    public List<MongoLock> getByKey(String key) {
+    public MongoLock getByKey(String key) {
         Query query = new Query();
         query.addCriteria(Criteria.where("key").is(key));
-        return (List<MongoLock>) mongoTemplate.find(query, MongoLock.class);
+        List<MongoLock> ll= mongoTemplate.find(query, MongoLock.class);
+        if(ll != null && ll.size() > 0){
+            return ll.get(0);
+        }
+        return null;
     }
 
 
@@ -57,10 +61,11 @@ public class MongoLockDao {
         //返回更新后的值
         options.returnNew(true);
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("value", Double.valueOf(((MongoLock)
-                mongoTemplate.findAndModify(query, update, options, MongoLock.class)).getValue()).intValue());
-        resultMap.put("expire", Long.valueOf(((MongoLock)
-                mongoTemplate.findAndModify(query, update, options, MongoLock.class)).getExpire()).longValue());
+        MongoLock ml =  mongoTemplate.findAndModify(query, update, options, MongoLock.class);
+        resultMap.put("value", ml.getValue());
+        resultMap.put("expire", ml.getExpire());
+//        resultMap.put("expire", Long.valueOf(((MongoLock)
+//                mongoTemplate.findAndModify(query, update, options, MongoLock.class)).getExpire()).longValue());
         return resultMap;
     }
 

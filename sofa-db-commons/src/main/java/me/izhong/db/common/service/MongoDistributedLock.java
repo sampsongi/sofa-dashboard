@@ -29,22 +29,22 @@ public class MongoDistributedLock {
      * @return
      */
     public boolean getLock(String key, long expire) {
-        List<MongoLock> mongoLocks = mongoLockDao.getByKey(key);
+        MongoLock mongoLocks = mongoLockDao.getByKey(key);
         //判断该锁是否被获得,锁已经被其他请求获得，直接返回
-        if (mongoLocks.size() > 0 && mongoLocks.get(0).getExpire() >= System.currentTimeMillis()) {
+        if (mongoLocks != null && mongoLocks.getExpire() >= System.currentTimeMillis()) {
             return false;
         }
         //释放过期的锁
-        if (mongoLocks.size() > 0 && mongoLocks.get(0).getExpire() < System.currentTimeMillis()) {
+        if (mongoLocks  != null && mongoLocks.getExpire() < System.currentTimeMillis()) {
             releaseLockExpire(key, System.currentTimeMillis());
         }
         //！！(在高并发前提下)在当前请求已经获得锁的前提下，还可能有其他请求尝试去获得锁，此时会导致当前锁的过期时间被延长，由于延长时间在毫秒级，可以忽略。
         Map<String, Object> mapResult = mongoLockDao.incrByWithExpire(key, 1, System.currentTimeMillis() + expire);
         //如果结果是1，代表当前请求获得锁
-        if ((Integer) mapResult.get("value") == 1) {
+        if ( (long) mapResult.get("value") == 1) {
             return true;
             //如果结果>1，表示当前请求在获取锁的过程中，锁已被其他请求获得。
-        } else if ((Integer) mapResult.get("value") > 1) {
+        } else if ((long) mapResult.get("value") > 1) {
             return false;
         }
         return false;

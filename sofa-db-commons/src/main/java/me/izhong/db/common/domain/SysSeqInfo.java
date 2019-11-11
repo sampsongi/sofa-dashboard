@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 
 @Data
-@Document(collection = "sequence")
+@Document(collection = "sys_sequence")
 public class SysSeqInfo {
 
     @Id

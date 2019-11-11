@@ -103,7 +103,7 @@ public class JobTriggerPoolHelper {
         //triggerPool.shutdown();
         fastTriggerPool.shutdownNow();
         slowTriggerPool.shutdownNow();
-        logger.info(">>>>>>>>> xxl-job trigger thread pool shutdown success.");
+        logger.info("job trigger thread pool shutdown success.");
     }
 
     // ---------------------- helper ----------------------

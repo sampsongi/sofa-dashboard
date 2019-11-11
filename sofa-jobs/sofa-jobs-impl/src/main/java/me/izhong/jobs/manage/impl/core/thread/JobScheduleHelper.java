@@ -2,12 +2,14 @@ package me.izhong.jobs.manage.impl.core.thread;
 
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.common.util.DateUtil;
+import me.izhong.db.common.service.MongoDistributedLock;
 import me.izhong.jobs.manage.impl.core.cron.CronExpression;
 import me.izhong.jobs.manage.impl.core.model.XxlJobInfo;
 import me.izhong.jobs.manage.impl.core.trigger.TriggerTypeEnum;
 import me.izhong.jobs.manage.impl.service.XxlJobInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +25,7 @@ public class JobScheduleHelper {
     private static Logger logger = LoggerFactory.getLogger(JobScheduleHelper.class);
 
     public static final long PRE_READ_MS = 5000;    // pre read
+    public static final String LOCK_KEY = "job_scheduler";
 
     private Thread scheduleThread;
     private Thread ringThread;
@@ -32,6 +35,9 @@ public class JobScheduleHelper {
 
     @Resource
     private XxlJobInfoService xxlJobInfoService;
+
+    @Autowired
+    private MongoDistributedLock dLock;
 
     @PostConstruct
     public void start(){
@@ -59,16 +65,17 @@ public class JobScheduleHelper {
 //                    PreparedStatement preparedStatement = null;
 
                     boolean preReadSuc = true;
+                    boolean lock = false;
                     try {
 
-                        //conn = XxlJobAdminConfig.getAdminConfig().getDataSource().getConnection();
-                        //connAutoCommit = conn.getAutoCommit();
-                        //conn.setAutoCommit(false);
+                        lock = dLock.getLock(LOCK_KEY, 8000);
 
-                        //preparedStatement = conn.prepareStatement(  "select * from xxl_job_lock where lock_name = 'schedule_lock' for updateJobGroup" );
-                        //preparedStatement.execute();
-
-                        // tx start
+                        if(!lock){
+                            log.info("没有获取到锁:{}",LOCK_KEY);
+                            TimeUnit.MILLISECONDS.sleep(500);
+                            continue;
+                        }
+                        //TimeUnit.SECONDS.sleep(20);
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
@@ -180,45 +187,10 @@ public class JobScheduleHelper {
                             logger.error("调度异常:{}", e);
                         }
                     } finally {
-
-                        // commit
-//                        if (conn != null) {
-//                            try {
-//                                conn.commit();
-//                            } catch (SQLException e) {
-//                                if (!scheduleThreadToStop) {
-//                                    logger.error(e.getMessage(), e);
-//                                }
-//                            }
-//                            try {
-//                                conn.setAutoCommit(connAutoCommit);
-//                            } catch (SQLException e) {
-//                                if (!scheduleThreadToStop) {
-//                                    logger.error(e.getMessage(), e);
-//                                }
-//                            }
-//                            try {
-//                                conn.close();
-//                            } catch (SQLException e) {
-//                                if (!scheduleThreadToStop) {
-//                                    logger.error(e.getMessage(), e);
-//                                }
-//                            }
-//                        }
-
-                        // close PreparedStatement
-//                        if (null != preparedStatement) {
-//                            try {
-//                                preparedStatement.close();
-//                            } catch (SQLException ignore) {
-//                                if (!scheduleThreadToStop) {
-//                                    logger.error(ignore.getMessage(), ignore);
-//                                }
-//                            }
-//                        }
+                        if(lock)
+                            dLock.releaseLock(LOCK_KEY);
                     }
                     long cost = System.currentTimeMillis()-start;
-
 
                     // Wait seconds, align second
                     if (cost < 1000) {  // scan-overtime, not wait

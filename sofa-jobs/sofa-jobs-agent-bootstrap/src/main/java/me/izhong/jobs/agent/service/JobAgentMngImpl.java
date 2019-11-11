@@ -44,8 +44,8 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
         context.setTriggerId(triggerId);
         context.setScript(script);
 
-        ShellCommandJob commandJob = new ShellCommandJob("run.sh");
         try {
+            ShellCommandJob commandJob = new ShellCommandJob("run.sh");
             //后面考虑缓存 进程id
             commandJob.execute(context);
         } catch (Exception e) {
