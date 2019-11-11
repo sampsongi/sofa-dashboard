@@ -9,7 +9,7 @@ public abstract class IJobHandler {
     /**
      * success
      */
-    public static final ReturnT<String> SUCCESS = new ReturnT<String>(200, null);
+    public static final ReturnT<String> SUCCESS = new ReturnT<String>(0, null);
     /**
      * fail
      */

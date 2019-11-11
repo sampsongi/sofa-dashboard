@@ -14,16 +14,7 @@ public class TriggerParam implements Serializable{
     private String executorParams;
     private String executorBlockStrategy;
     private Long executorTimeout;
-
     private long logId;
-    private long logDateTim;
-
-    private String glueType;
-    private String glueSource;
-    private long glueUpdatetime;
-
-    private int broadcastIndex;
-    private int broadcastTotal;
 
     @Override
     public String toString() {
@@ -34,12 +25,6 @@ public class TriggerParam implements Serializable{
                 ", executorBlockStrategy='" + executorBlockStrategy + '\'' +
                 ", executorTimeout=" + executorTimeout +
                 ", logId=" + logId +
-                ", logDateTim=" + logDateTim +
-                ", glueType='" + glueType + '\'' +
-                ", glueSource='" + glueSource + '\'' +
-                ", glueUpdatetime=" + glueUpdatetime +
-                ", broadcastIndex=" + broadcastIndex +
-                ", broadcastTotal=" + broadcastTotal +
                 '}';
     }
 

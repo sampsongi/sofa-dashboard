@@ -39,7 +39,9 @@ public class XxlJobTrigger {
         return processTrigger(group, jobInfo, finalFailRetryCount, triggerType, executorParam);
     }
 
-    private static ReturnT<String> processTrigger(XxlJobGroup group, XxlJobInfo jobInfo, int finalFailRetryCount, TriggerTypeEnum triggerType, String executorParam){
+    private static ReturnT<String> processTrigger(XxlJobGroup group, XxlJobInfo jobInfo,
+                                                  int finalFailRetryCount, TriggerTypeEnum triggerType,
+                                                  String executorParam){
 
         // param
         ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
@@ -63,11 +65,7 @@ public class XxlJobTrigger {
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
         triggerParam.setExecutorTimeout(jobInfo.getExecutorTimeout());
-        triggerParam.setLogDateTim(jobLog.getTriggerTime().getTime());
-        triggerParam.setGlueType(jobInfo.getGlueType());
-        triggerParam.setGlueSource(jobInfo.getGlueSource());
-        if(jobInfo.getGlueUpdatetime() != null)
-            triggerParam.setGlueUpdatetime(jobInfo.getGlueUpdatetime().getTime());
+
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
 
         ReturnT<String>  triggerResult = runExecutor(triggerParam, null);
@@ -103,7 +101,7 @@ public class XxlJobTrigger {
         logger.info("保存jobLog triggerMsgSb:{}",triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService().update(jobLog);
 
-        logger.debug(">>>>>>>>>>> xxl-job trigger end, jobId:{}", jobLog.getId());
+        logger.debug("job trigger end, jobId:{}", jobLog.getId());
         return triggerResult;
     }
 
@@ -129,7 +127,7 @@ public class XxlJobTrigger {
             }};
             logger.info("rpc 远程调用 jobId:{}",triggerParam.getJobId());
             //dubbo 远程调用
-            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), triggerParam.getGlueSource(),envs, params);
+            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), envs, params);
             logger.info("rpc 远程调用应答:{}",runResult);
             if(runResult == null) {
                 runResult = ReturnT.FAIL;

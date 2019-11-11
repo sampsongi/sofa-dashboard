@@ -33,6 +33,7 @@ public class ShellCommandJob extends IJobHandler {
 
     private String SHName = "/bin/sh ";
     private String command;
+
     public ShellCommandJob(String command) {
         this.command = command;
     }

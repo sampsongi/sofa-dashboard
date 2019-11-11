@@ -31,27 +31,30 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
     }
 
     @Override
-    public ReturnT<String> trigger(Long jobId, Long triggerId, String script,Map<String, String> envs, Map<String, String> params) {
+    public ReturnT<String> trigger(Long jobId, Long triggerId, Map<String, String> envs, Map<String, String> params) {
 
-        if(envs == null)
+        if (envs == null)
             envs = new HashMap();
 
         long timeout = params.get("timeout") == null ? 10 * 60 * 1000 : Long.valueOf(params.get("timeout")).longValue();
 
 
-        JobContext context = new JobContext(jobId,triggerId,timeout,envs,params);
+        JobContext context = new JobContext(jobId, triggerId, timeout, envs, params);
         context.setJobId(jobId);
         context.setTriggerId(triggerId);
-        context.setScript(script);
-
-        try {
-            ShellCommandJob commandJob = new ShellCommandJob("run.sh");
-            //后面考虑缓存 进程id
-            commandJob.execute(context);
-        } catch (Exception e) {
-            log.error("",e);
-            return ReturnT.FAIL;
-        }
+        log.info("收到远程任务请求 jobId:{} triggerId:{}",jobId,triggerId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ShellCommandJob commandJob = new ShellCommandJob("run.sh");
+                    //后面考虑缓存 进程id
+                    commandJob.execute(context);
+                } catch (Exception e) {
+                    log.error("", e);
+                }
+            }
+        }).start();
         return ReturnT.SUCCESS;
     }
 
@@ -60,7 +63,7 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
 
         String dir = jobsConfigBean.getLogDir();
         // filePath/yyyy-MM-dd
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");	// avoid concurrent problem, can not be static
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");    // avoid concurrent problem, can not be static
         File logFilePath = new File(dir, sdf.format(triggerTime));
 
         // filePath/yyyyMMdd/3_9999.log
@@ -72,7 +75,7 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
                 .concat(".txt");
 
         // valid log file
-        if (logFileName==null || logFileName.trim().length()==0) {
+        if (logFileName == null || logFileName.trim().length() == 0) {
             return new LogResult(fromLineNum, 0, "readLog fail, logFile not found", true);
         }
         File logFile = new File(logFileName);
@@ -90,8 +93,8 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
             reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), "utf-8"));
             String line = null;
 
-            while ((line = reader.readLine())!=null) {
-                toLineNum = reader.getLineNumber();		// [from, to], start as 1
+            while ((line = reader.readLine()) != null) {
+                toLineNum = reader.getLineNumber();        // [from, to], start as 1
                 if (toLineNum >= fromLineNum) {
                     logContentBuffer.append(line).append("\n");
                 }
