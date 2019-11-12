@@ -5,8 +5,9 @@ import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
 import me.izhong.db.common.exception.BusinessException;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
+import me.izhong.jobs.manage.impl.core.model.ZJobStats;
 import me.izhong.jobs.manage.impl.core.thread.JobTriggerPoolHelper;
-import me.izhong.jobs.manage.impl.core.util.SpringUtil;
+import me.izhong.jobs.manage.impl.core.util.*;
 import me.izhong.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.jobs.manage.IJobMngFacade;
@@ -15,9 +16,6 @@ import me.izhong.jobs.manage.impl.core.model.XxlJobInfo;
 import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
 import me.izhong.jobs.manage.impl.core.trigger.TriggerTypeEnum;
 import me.izhong.jobs.manage.impl.core.trigger.XxlJobTrigger;
-import me.izhong.jobs.manage.impl.core.util.JobGroupUtil;
-import me.izhong.jobs.manage.impl.core.util.JobInfoUtil;
-import me.izhong.jobs.manage.impl.core.util.JobLogUtil;
 import me.izhong.jobs.manage.impl.service.*;
 import me.izhong.jobs.model.*;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +51,9 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Autowired
     private XxlJobLogGlueService jobLogGlueService;
+
+    @Autowired
+    private ZJobStatsService jobStatsService;
 
     @Autowired
     private JobAgentServiceReference jobAgentServiceReference;
@@ -306,4 +308,57 @@ public class JobMngImpl implements IJobMngFacade {
         }
         return c;
     }
+
+    @Override
+    public PageModel<JobStats> selectJobStatsPage(PageRequest request, JobStats stats) {
+        ZJobStats se = null;
+        if(stats !=null) {
+            se = JobStatsUtil.toDbBean(stats);
+        }
+        PageModel<ZJobStats> gs = jobStatsService.selectPage(request,se);
+        if(gs != null && gs.getRows().size() > 0) {
+            List<JobStats> jgs = gs.getRows().stream().map(e -> {
+                return JobStatsUtil.toRpcBean(e);
+            }).collect(Collectors.toList());
+            return PageModel.instance(gs.getCount(),jgs);
+        }
+        return null;
+    }
+
+    @Override
+    public JobStats findJobStatsByKey(String key) {
+        Assert.notNull(key,"");
+        ZJobStats zs = jobStatsService.findByKey(key);
+        return JobStatsUtil.toRpcBean(zs);
+    }
+
+    @Override
+    public List<JobStats> findByType(String type) {
+        Assert.notNull(type,"");
+        List<ZJobStats> zs = jobStatsService.findByType(type);
+        if(zs == null || zs.size() == 0)
+            return null;
+        List<JobStats> jgs = zs.stream().map(e -> JobStatsUtil.toRpcBean(e)).collect(Collectors.toList());
+        return jgs;
+    }
+
+    @Override
+    public JobStats insertOrUpdateJobStats(JobStats stats) {
+        Assert.notNull(stats,"");
+        ZJobStats zJobStats = JobStatsUtil.toDbBean(stats);
+        zJobStats = jobStatsService.insert(zJobStats);
+        return JobStatsUtil.toRpcBean(zJobStats);
+    }
+
+    @Override
+    public boolean deleteJobStats(String key) {
+        ZJobStats s = jobStatsService.findByKey(key);
+        if(s != null) {
+            long count = jobStatsService.remove(s.getStatsId());
+            return count > 0;
+        }
+        return false;
+    }
+
+
 }

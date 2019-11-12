@@ -7,7 +7,6 @@ import me.izhong.jobs.manage.impl.service.XxlJobInfoService;
 import me.izhong.jobs.manage.impl.service.XxlJobLogService;
 import me.izhong.jobs.manage.impl.service.XxlJobRegistryService;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,19 +24,6 @@ public class XxlJobAdminConfig implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         adminConfig = this;
     }
-
-    // conf
-    @Value("${xxl.job.i18n}")
-    private String i18n;
-
-    @Value("${xxl.job.accessToken}")
-    private String accessToken;
-
-    //@Value("${spring.mail.username}")
-    //private String emailUserName;
-
-    // dao, service
-
     @Resource
     private XxlJobLogService xxlJobLogService;
     @Resource
@@ -46,11 +32,5 @@ public class XxlJobAdminConfig implements InitializingBean {
     private XxlJobRegistryService xxlJobRegistryService;
     @Resource
     private XxlJobGroupService xxlJobGroupService;
-//    @Resource
-//    private AdminBiz adminBiz;
-    //@Resource
-    //private JavaMailSender mailSender;
-    //@Resource
-    //private DataSource dataSource;
 
 }

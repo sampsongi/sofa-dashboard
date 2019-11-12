@@ -86,7 +86,7 @@ public interface IJobMngFacade {
      */
     List<JobGroup> selectAllJobGroup();
 
-    PageModel<JobGroup> selectJobGroupPage(PageRequest request, JobGroup ino);
+    PageModel<JobGroup> selectJobGroupPage(PageRequest request, JobGroup group);
 
     JobGroup findJobGroup(Long groupId);
 
@@ -96,4 +96,10 @@ public interface IJobMngFacade {
 
     long removeJobGroup(List<Long> groupId);
 
+    //处理任务相关的记录信息，比如执行耗时，是否处理过
+    PageModel<JobStats> selectJobStatsPage(PageRequest request, JobStats stats);
+    JobStats findJobStatsByKey(String key);
+    List<JobStats> findByType(String type);
+    JobStats insertOrUpdateJobStats(JobStats stats);
+    boolean deleteJobStats(String key);
 }

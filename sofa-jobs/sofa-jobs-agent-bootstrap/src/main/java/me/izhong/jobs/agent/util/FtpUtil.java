@@ -79,6 +79,15 @@ public class FtpUtil {
 		}
 	}
 
+	public static void deleteFileFromFtp(String host, String user, String pass,
+									String destDir, String destFile) throws Exception {
+		if (host.startsWith("sftp")) {
+			deleteSftp(host, user, pass, destDir, destFile);
+		} else if (host.startsWith("ftp")) {
+			deleteFtp(host, user, pass, destDir, destFile);
+		}
+	}
+
 	private static void getFtp(String host, String user, String pass,
 			String srcDir, String srcFile, File destFile) throws Exception {
 		String s1[] = host.split("://");
@@ -321,6 +330,73 @@ public class FtpUtil {
 		session.disconnect();
 
 		return list;
+	}
+
+	private static void deleteFtp(String host, String user, String pass,
+							   String destDir, String destFile) throws Exception {
+		String s1[] = host.split("://");
+		String s2[] = s1[1].split(":");
+
+		log.info("connect {}:{}", s2[0], Integer.parseInt(s2[1]));
+		FTPClient ftp = new FTPClient();
+		ftp.connect(s2[0], Integer.parseInt(s2[1]));
+
+		int reply = ftp.getReplyCode();
+		if (!FTPReply.isPositiveCompletion(reply)) {
+			throw new Exception("FTP server refused connection.");
+		}
+
+		log.info("login");
+		if (!ftp.login(user, pass)) {
+			throw new Exception("FTP login fail.");
+		}
+
+		ftp.setFileType(FTP.BINARY_FILE_TYPE);
+		log.info("cd:{}",destDir);
+		ftp.changeWorkingDirectory(destDir);
+
+		// 设置被动模式
+		ftp.enterLocalPassiveMode();
+
+		log.info("delete:{}",destFile);
+		boolean result = ftp.deleteFile(destFile);
+
+		log.info("disconnect");
+		ftp.disconnect();
+
+		if (result == false)
+			throw new Exception("Cannot get remote file");
+	}
+
+	private static void deleteSftp(String host, String user, String pass,
+								String destDir, String destFile) throws Exception {
+		String s1[] = host.split("://");
+		String s2[] = s1[1].split(":");
+
+		JSch jsch = new JSch();
+
+		Session session = jsch.getSession(user, s2[0], Integer.parseInt(s2[1]));
+
+		session.setPassword(pass);
+		Properties sshConfig = new Properties();
+		sshConfig.put("StrictHostKeyChecking", "no");
+		session.setConfig(sshConfig);
+
+		log.info("connect {}:{}", s2[0], Integer.parseInt(s2[1]));
+		session.connect();
+
+		Channel channel = session.openChannel("sftp");
+		channel.connect();
+		ChannelSftp c = (ChannelSftp) channel;
+
+		log.info("cd:{}",destDir);
+		c.cd(destDir);
+		log.info("delete :{}",destFile);
+		c.rm(destFile);
+
+		log.info("disconnect");
+		c.disconnect();
+		session.disconnect();
 	}
 
 	static public void main(String args[]) throws Exception {

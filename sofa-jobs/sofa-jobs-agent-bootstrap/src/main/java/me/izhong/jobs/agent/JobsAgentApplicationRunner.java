@@ -1,6 +1,9 @@
 package me.izhong.jobs.agent;
 
+import me.izhong.jobs.agent.job.ExecGrooyScript;
 import me.izhong.jobs.agent.job.IBatch;
+import me.izhong.jobs.agent.job.context.ScriptRunContext;
+import me.izhong.jobs.agent.log.ConsoleLog;
 import me.izhong.jobs.agent.service.JobServiceReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
+import java.io.File;
 import java.util.*;
 
 @ImportResource({ "classpath*:rpc-sofa-boot-starter.xml" })
@@ -38,7 +42,6 @@ public class JobsAgentApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
         /*String scriptType = System.getProperty("scriptType");
         if(StringUtils.isNotBlank(scriptType)) {
             return;

@@ -10,13 +10,16 @@ import groovy.lang.GroovyShell;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@DependsOn("contextUtil")
 @Component
 @Slf4j
 public class ExecGrooyScript implements IBatch {
+
 	@Autowired
 	private JobsConfigBean configBean;
 
