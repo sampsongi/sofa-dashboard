@@ -3,6 +3,7 @@ package me.izhong.jobs.manage.impl;
 import com.alipay.sofa.runtime.api.annotation.SofaService;
 import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
 import me.izhong.db.common.exception.BusinessException;
+import me.izhong.db.common.service.MongoDistributedLock;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
 import me.izhong.jobs.manage.impl.core.model.ZJobStats;
@@ -54,9 +55,12 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Autowired
     private ZJobStatsService jobStatsService;
+    @Autowired
+    private MongoDistributedLock mongoDistributedLock;
 
     @Autowired
     private JobAgentServiceReference jobAgentServiceReference;
+
 
     @Override
     public PageModel<Job> pageList(PageRequest request, Job ino) {
@@ -345,20 +349,31 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public JobStats insertOrUpdateJobStats(JobStats stats) {
         Assert.notNull(stats,"");
+        log.info("1 class {}", stats.getClass());
         ZJobStats zJobStats = JobStatsUtil.toDbBean(stats);
-        zJobStats = jobStatsService.insert(zJobStats);
-        return JobStatsUtil.toRpcBean(zJobStats);
+        ZJobStats db = jobStatsService.insertOrUpdate(zJobStats);
+        log.info("2 class {}",db.getClass());
+
+        JobStats rpc =  JobStatsUtil.toRpcBean(db);
+
+        log.info("3 class {}",rpc.getClass());
+
+        return rpc;
     }
 
     @Override
     public boolean deleteJobStats(String key) {
-        ZJobStats s = jobStatsService.findByKey(key);
-        if(s != null) {
-            long count = jobStatsService.remove(s.getStatsId());
-            return count > 0;
-        }
-        return false;
+        return jobStatsService.removeStats(key);
     }
 
+    @Override
+    public boolean lockKey(String key, long milliseconds) {
+        return mongoDistributedLock.getLock(key,milliseconds);
+    }
+
+    @Override
+    public void releaseKey(String key) {
+        mongoDistributedLock.releaseLock(key);
+    }
 
 }

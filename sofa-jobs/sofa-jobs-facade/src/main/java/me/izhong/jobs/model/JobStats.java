@@ -1,11 +1,13 @@
 package me.izhong.jobs.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 public class JobStats implements Serializable {
 	private Long statsId;
 	private String key;

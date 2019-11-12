@@ -46,6 +46,8 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	private Date handleTime;
 	private Date finishHandleTime;
 	private String costHandleTime;
+	
+	@Search
 	private Integer handleCode;
 	private String handleMsg;
 

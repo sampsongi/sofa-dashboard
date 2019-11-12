@@ -3,6 +3,7 @@ server:
 spring:
   main:
     web-application-type: SERVLET
+    banner-mode: "off"
   output:
     ansi:
       #enabled: ALWAYS

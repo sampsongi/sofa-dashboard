@@ -102,4 +102,10 @@ public interface IJobMngFacade {
     List<JobStats> findByType(String type);
     JobStats insertOrUpdateJobStats(JobStats stats);
     boolean deleteJobStats(String key);
+
+
+    boolean lockKey(String key, long milliseconds);
+    void releaseKey(String key);
+
+
 }

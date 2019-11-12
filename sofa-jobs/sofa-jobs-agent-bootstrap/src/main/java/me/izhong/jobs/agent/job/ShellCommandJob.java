@@ -123,14 +123,14 @@ public class ShellCommandJob extends IJobHandler {
 
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
-            log.info("run.sh任务返回了:  exitValue:{}", exitValue);
+            log.info("run.sh任务结束了: triggerId:{} exitValue:{} 上送结果信息",triggerId,exitValue);
             //记录执行状态信息
-            jobMng.uploadJobEndStatics(triggerId,new Date(), exitValue, "执行成功");
+            jobMng.uploadJobEndStatics(triggerId,new Date(), exitValue, exitValue == 0 ? "执行成功":"执行失败");
 
             return ReturnT.SUCCESS;
         } catch (Throwable e) {
-            log.error("任务失败", e);
-            jobMng.uploadJobEndStatics(triggerId,new Date(), 255, "执行失败:" + e.getMessage());
+            log.error("任务失败 triggerId:{}",triggerId, e);
+            jobMng.uploadJobEndStatics(triggerId,new Date(), 254, "执行异常:" + e.getMessage());
             return ReturnT.FAIL;
         } finally {
 

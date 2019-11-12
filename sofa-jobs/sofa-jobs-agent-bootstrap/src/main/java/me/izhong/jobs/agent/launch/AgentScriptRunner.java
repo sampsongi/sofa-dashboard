@@ -130,7 +130,7 @@ public class AgentScriptRunner implements ApplicationRunner {
                 }
                 agentLog.info("run 运行结束 code:{}", code);
                 Thread.sleep(3000);
-                //System.exit(code);
+                System.exit(code);
             }
         } catch (Exception e) {
             if(agentLog != null) {
@@ -138,7 +138,7 @@ public class AgentScriptRunner implements ApplicationRunner {
             }
             log.info("run 异常运行结束", e);
             Thread.sleep(3000);
-            //System.exit(255);
+            System.exit(255);
         }
         log.info("run 执行到最后结束");
     }

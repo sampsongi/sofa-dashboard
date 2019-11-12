@@ -92,8 +92,8 @@
         var pullFailCount = 0;
         var isStop = false;
         function pullLog() {
-            // pullFailCount, max=20
-            if (pullFailCount++ > 20) {
+            // pullFailCount, max=50
+            if (pullFailCount++ > 50) {
                 logRunStop('<span style="color: red;">'+ '加载日志失败' +'</span>');
                 return;
             }
@@ -158,10 +158,10 @@
         //pullLog();
 
         // handler already callback, end
-        if (handleCode > 0) {
-            logRunStop('<br><span style="color: green;">[无日志]</span>');
-            return;
-        }
+        //if (handleCode > 0) {
+         //   logRunStop('<br><span style="color: green;">[无日志]</span>');
+         //   return;
+        //}
 
         pullLog()
         // round until end

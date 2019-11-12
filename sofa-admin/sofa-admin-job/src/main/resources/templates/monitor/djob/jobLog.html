@@ -20,6 +20,12 @@
 								<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}"></option>
 							</select>
 							</li>
+                            <li>
+                                执行结果：<select name="handleCode" th:with="type=${@dict.getType('sys_job_handel_status')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                            </li>
 							<li class="select-time">
 								<label>执行时间： </label>
 								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="startTime"/>

@@ -1,4 +1,4 @@
-import me.izhong.jobs.agent.util.JobStatsUtils
+import me.izhong.jobs.agent.util.JobStatsUtil
 
 try {
 
@@ -7,15 +7,19 @@ try {
 
     String key ="xxx.so"
 
-    boolean exist = JobStatsUtils.checkExist(key);
+    boolean exist = JobStatsUtil.checkExist(key);
     println("exist:${exist}")
 
-    String value1 = JobStatsUtils.getValue1(key)
+    String value1 = JobStatsUtil.getValue1(key)
     println("value1:${value1}")
 
-    JobStatsUtils.insertOrUpdate(key,"ty","耗时2");
+    JobStatsUtil.insertOrUpdate(key,"ty","耗时2");
 
-    value1 = JobStatsUtils.getValue1(key)
+    value1 = JobStatsUtil.getValue1(key)
+    println("update value1:${value1}")
+
+    JobStatsUtil.remove(key)
+    value1 = JobStatsUtil.getValue1(key)
     println("update value1:${value1}")
 
 

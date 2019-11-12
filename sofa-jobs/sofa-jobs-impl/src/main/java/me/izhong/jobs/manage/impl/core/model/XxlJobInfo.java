@@ -1,6 +1,7 @@
 package me.izhong.jobs.manage.impl.core.model;
 
 import lombok.extern.slf4j.Slf4j;
+import me.izhong.db.common.annotation.Search;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import me.izhong.db.common.annotation.AutoId;
@@ -23,9 +24,12 @@ public class XxlJobInfo  extends TimedBasedEntity implements Serializable {
 	@PrimaryId
 	@Indexed(unique = true)
 	private Long jobId;				// 主键ID
-	
+
+	@Search
 	private Long jobGroupId;		// 执行器主键ID
 	private String jobCron;		// 任务执行CRON表达式
+
+	@Search(op = Search.Op.REGEX)
 	private String jobDesc;
 
 	private String author;		// 负责人
@@ -45,6 +49,7 @@ public class XxlJobInfo  extends TimedBasedEntity implements Serializable {
 
 	private String childJobId;		// 子任务ID，多个逗号分隔
 
+	@Search
 	private Long triggerStatus;		// 调度状态：0-停止，1-运行
 	private Long triggerLastTime;	// 上次调度时间
 	private Long triggerNextTime;	// 下次调度时间

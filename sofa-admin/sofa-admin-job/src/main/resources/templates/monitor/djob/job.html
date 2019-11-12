@@ -11,12 +11,12 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								任务名称：<input type="text" name="jobName"/>
+								任务名称：<input type="text" name="jobDesc"/>
 							</li>
 							<li>
-								任务执行器：<select name="jobGroup">
+								任务组：<select name="jobGroupId">
 									<option value="">所有</option>
-									<option th:each="g : ${groupList}" th:text="${g.appName}" th:value="${g.groupId}" th:field="*{jobGroupId}"></option>
+									<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}" th:field="*{g.groupId}"></option>
 								</select>
 							</li>
 							<li>
