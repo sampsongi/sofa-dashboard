@@ -15,10 +15,12 @@ public interface XxlJobLogService extends CrudBaseService<Long,XxlJobLog> {
 
     void updateTriggerDoneMessage(Long jobLogId, String executorAddress, String executorHandler,String executorParam,
                                   Integer triggerCode,String triggerMsg);
+    void updateHandleStartMessage(Long triggerId, Date startTime);
 
     long updateAlarmStatus(long failLogId, int oldStatus, int newStatus);
 
     void clearLog(Long jobId, Date clearBeforeTime, Integer clearBeforeNum);
 
     void clearLog(Long[] jobLogIds);
+
 }

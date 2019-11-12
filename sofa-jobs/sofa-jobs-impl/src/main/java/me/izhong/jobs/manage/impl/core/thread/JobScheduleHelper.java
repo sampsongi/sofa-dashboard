@@ -115,7 +115,7 @@ public class JobScheduleHelper {
                                     long nextTime = cronExpression.getNextValidTimeAfter(new Date()).getTime();
 
                                     // 1、trigger
-                                    JobTriggerPoolHelper.trigger(jobInfo.getJobId(), TriggerTypeEnum.CRON, -1, null, null);
+                                    JobTriggerPoolHelper.trigger(jobInfo.getJobId(), TriggerTypeEnum.CRON, -1,  null);
                                     logger.debug("触发任务执行 : jobId = " + jobInfo.getId() );
 
                                     // 2、fresh next
@@ -249,7 +249,7 @@ public class JobScheduleHelper {
                             for (long jobId: ringItemData) {
                                 // do trigger
                                 log.info("time-ring 触发任务:[{}]",jobId);
-                                JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1, null, null);
+                                JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.CRON, -1,  null);
                             }
                             // clear
                             ringItemData.clear();

@@ -28,8 +28,8 @@ public class StringUtil {
         log.info("list2:{}",list);
         String[] kvs = list.split(",");
         for(String kv :kvs){
-            if(kv.indexOf("=") > 0) {
-                String[] tmp = kv.split("=");
+            if(kv.indexOf(":") > 0) {
+                String[] tmp = kv.split(":");
                 if(tmp.length > 1) {
                     String k = tmp[0];
                     String v = tmp[1];

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 try {
 
     HashMap<String,String> params = params;
-    log.info("参数是:{} {}",params,params.get("log"));
+    log.info("参数是:{} {}",params,params.get("xx"));
 
     Date yesterday = DateUtils.addDays(new Date(), -1);
     println "脚本操作异常，错误信息:" + yesterday

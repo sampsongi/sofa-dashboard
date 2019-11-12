@@ -5,6 +5,8 @@ import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
 import me.izhong.db.common.exception.BusinessException;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
+import me.izhong.jobs.manage.impl.core.thread.JobTriggerPoolHelper;
+import me.izhong.jobs.manage.impl.core.util.SpringUtil;
 import me.izhong.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.jobs.manage.IJobMngFacade;
@@ -119,7 +121,8 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public ReturnT<String> trigger(Long jobId) {
-        return  XxlJobTrigger.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null);
+        JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null);
+        return ReturnT.SUCCESS;
     }
 
     @Override
@@ -162,12 +165,7 @@ public class JobMngImpl implements IJobMngFacade {
         if(triggerId == null) {
             throw BusinessException.build("上送执行信息的triggerId为空");
         }
-        //收集agent的日志
-        XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
-        if(jobLog != null) {
-            jobLog.setHandleTime(startTime);
-            jobLogService.update(jobLog);
-        }
+        jobLogService.updateHandleStartMessage(triggerId,startTime);
     }
 
     @Override

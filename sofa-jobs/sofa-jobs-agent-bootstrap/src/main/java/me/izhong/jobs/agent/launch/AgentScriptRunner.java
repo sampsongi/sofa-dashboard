@@ -1,5 +1,7 @@
 package me.izhong.jobs.agent.launch;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import me.izhong.jobs.manage.IJobMngFacade;
 import me.izhong.jobs.model.Job;
 import me.izhong.jobs.agent.job.IBatch;
@@ -16,6 +18,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +47,7 @@ public class AgentScriptRunner implements ApplicationRunner {
                 }
                 Long triggerId = Long.valueOf(System.getProperty("triggerId"));
                 if (triggerId == null) {
-                    //throw new RuntimeException("triggerId不能为空");
+                    throw new RuntimeException("triggerId不能为空");
                 }
                 IJobMngFacade facade = jobServiceReference.getJobMngFacade();
                 if(facade == null) {
@@ -59,7 +62,6 @@ public class AgentScriptRunner implements ApplicationRunner {
 
                 Job job = facade.findByJobId(jobId);
                 if(job == null) {
-                    agentLog.info("job未找到 jobId:{} ",jobId );
                     log.info("job未找到 jobId:{} ",jobId );
                     return;
                 }
@@ -67,12 +69,38 @@ public class AgentScriptRunner implements ApplicationRunner {
                 log.info("脚本内容:{}", script);
 
                 String envsString = System.getProperty("envs");
-                agentLog.info("envs:{}", envsString);
-                Map<String, String> envs = StringUtil.parseParams(envsString);
+                log.info("envs:{}", envsString);
+                Map<String, String> envs ;
+                if(StringUtils.isNotBlank(envsString)) {
+                    if(envsString.startsWith("{\"")) {
+                        envs = JSONObject.parseObject(envsString, new TypeReference<Map<String, String>>() {
+                        });
+                    } else if(envsString.startsWith("{")) {
+                        envs = StringUtil.parseParams(envsString);
+                    } else {
+                        log.info("无法解析参数");
+                        return;
+                    }
+                } else {
+                    envs = new HashMap<>();
+                }
 
                 String paramsString = System.getProperty("params");
-                agentLog.info("params:{}", paramsString);
-                Map<String, String> params = StringUtil.parseParams(paramsString);
+                log.info("params:{}", paramsString);
+                Map<String, String> params;
+                if(StringUtils.isNotBlank(paramsString)) {
+                    if(paramsString.startsWith("{\"")) {
+                        params = JSONObject.parseObject(paramsString, new TypeReference<Map<String, String>>() {
+                        });
+                    } else if(paramsString.startsWith("{")) {
+                        params = StringUtil.parseParams(paramsString);
+                    } else {
+                        log.info("无法解析参数");
+                        return;
+                    }
+                } else {
+                    params = new HashMap<>();
+                }
                 //log.info("params2:{}",params);
 
                 //====初始化运行环境===

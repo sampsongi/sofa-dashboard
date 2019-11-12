@@ -1,5 +1,6 @@
 package me.izhong.jobs.agent.job;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Cleanup;
 import me.izhong.common.util.DateUtil;
 import me.izhong.jobs.agent.bean.JobContext;
@@ -67,9 +68,10 @@ public class ShellCommandJob extends IJobHandler {
             long timeout = jobContext.getTimeout();
 
             String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
-            log.info("开始任务:serverName={} command={}, paramter={}, timeout={}",
-                    ContextUtil.getServerName(), command, params, timeout);
+            String envParams = JSON.toJSONString(envs);
+            String execParams = JSON.toJSONString(params);
+            log.info("开始任务:serverName={} command={},envParams={}, execParams={}, timeout={}",
+                    ContextUtil.getServerName(), command, envParams, execParams, timeout);
 
             if (StringUtils.isBlank(command)) {
                 throw new JobExecutionException("参数错误");
@@ -79,9 +81,8 @@ public class ShellCommandJob extends IJobHandler {
                     + "/"+ command + " --run_env " + run_env
                     + " -DisJobAgent=true -DscriptType=groovy -DsTime=" + dateTime
                     + " -DjobId=" + jobId + " -DtriggerId=" + triggerId
-                    + " -Denvs=" + envs + " -Dparams=" + params;
+                    + " -Denvs=" + envParams + " -Dparams=" + execParams;
             log.info("shellCommand:{}", shellCommand);
-
 
             DefaultExecutor shellExecutor = new DefaultExecutor();
 

@@ -1,5 +1,6 @@
 package me.izhong.jobs.manage.impl.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.service.CrudBaseServiceImpl;
 import com.mongodb.client.result.UpdateResult;
 import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class XxlJobLogServiceImpl extends CrudBaseServiceImpl<Long,XxlJobLog> implements XxlJobLogService {
     @Override
@@ -63,6 +65,7 @@ public class XxlJobLogServiceImpl extends CrudBaseServiceImpl<Long,XxlJobLog> im
 
         FindAndModifyOptions options = new FindAndModifyOptions();
         options.upsert(true);
+        options.returnNew(true);
         Update update = new Update();
         update.set("executorAddress",executorAddress);
         update.set("executorHandler",executorHandler);
@@ -70,6 +73,18 @@ public class XxlJobLogServiceImpl extends CrudBaseServiceImpl<Long,XxlJobLog> im
         update.set("triggerCode",triggerCode);
         update.set("triggerMsg",triggerMsg);
         XxlJobLog ur = mongoTemplate.findAndModify(query, update, options, XxlJobLog.class);
+        log.info("返回新值:{},{}",ur.getTriggerCode(),ur.getTriggerMsg());
+    }
+
+    @Override
+    public void updateHandleStartMessage(Long jobLogId, Date startTime) {
+        Assert.notNull(jobLogId,"");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("jobLogId").is(jobLogId));
+
+        Update update = new Update();
+        update.set("handleTime",startTime);
+        mongoTemplate.findAndModify(query, update, XxlJobLog.class);
     }
 
     @Override

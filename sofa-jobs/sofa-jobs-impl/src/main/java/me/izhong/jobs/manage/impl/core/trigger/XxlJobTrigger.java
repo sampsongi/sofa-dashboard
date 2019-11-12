@@ -1,5 +1,8 @@
 package me.izhong.jobs.manage.impl.core.trigger;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import me.izhong.common.util.IpUtil;
 import me.izhong.jobs.manage.IJobAgentMngFacade;
 import me.izhong.jobs.manage.impl.JobAgentServiceReference;
@@ -87,7 +90,7 @@ public class XxlJobTrigger {
         //触发结果
         Integer triggerCode =  ReturnT.SUCCESS_CODE == triggerResult.getCode() ? 0 : triggerResult.getCode();
         String triggerMsg = triggerMsgSb.toString();
-        logger.info("保存jobLog jobLog.getJobLogId:{} triggerCode:{} triggerMsgSb:{}",jobLog.getJobLogId(),triggerCode, triggerMsgSb.toString());
+        logger.info("保存jobLog jobLog.getJobLogId:{} triggerCode:{} triggerMsg:{}",jobLog.getJobLogId(),triggerCode, triggerMsg);
 
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogService()
                 .updateTriggerDoneMessage(jobLog.getJobLogId(),
@@ -110,14 +113,26 @@ public class XxlJobTrigger {
         try {
             IJobAgentMngFacade sr = SpringUtil.getBean(JobAgentServiceReference.class).jobAgentService;
 
-            String pa = triggerParam.getExecutorParams();
+            String executorParams = triggerParam.getExecutorParams();
             Map<String, String> envs = new HashMap<String, String>();
             if(triggerParam.getExecutorTimeout() != null) {
                 envs.put("timeout", triggerParam.getExecutorTimeout().toString());
             }
-            Map<String, String> params = new HashMap<String, String>() {{
-                put("data", pa);
-            }};
+            Map<String, String> params = new HashMap<String, String>();
+            if(StringUtils.isNotBlank(executorParams)) {
+                if(executorParams.startsWith("{")){
+                    params = JSONObject.parseObject(executorParams,new TypeReference<Map<String,String>>(){});
+                } else if(executorParams.indexOf(",") > 0){
+                    String[] xx = executorParams.split(",");
+                    for(String x : xx ){
+                        String[] kv = x.split("=");
+                        if(kv.length == 2)
+                            params.put(kv[0],kv[1]);
+                    }
+                } else {
+                    params.put("data",executorParams);
+                }
+            }
             logger.info("rpc 远程调用 jobId:{}",triggerParam.getJobId());
             //dubbo 远程调用
             runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), envs, params);
