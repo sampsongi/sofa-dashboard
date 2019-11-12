@@ -2,6 +2,7 @@ package me.izhong.jobs.manage.impl;
 
 import com.alipay.sofa.runtime.api.annotation.SofaService;
 import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
+import me.izhong.db.common.exception.BusinessException;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
 import me.izhong.model.ReturnT;
@@ -157,7 +158,10 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public void uploadJobStartStatics(Long triggerId, Date startTime) {
-        log.info("收到Job执行开始信息:{} triggerId:{}",triggerId);
+        log.info("收到Job执行开始信息 triggerId:{}",triggerId);
+        if(triggerId == null) {
+            throw BusinessException.build("上送执行信息的triggerId为空");
+        }
         //收集agent的日志
         XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
@@ -168,7 +172,7 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public void uploadJobEndStatics(Long triggerId, Date endTime, Integer resultStatus, String message) {
-        log.info("收到Job执行结束信息:{} triggerId:{} resultStatus:{}  message:{}",triggerId,resultStatus,message);
+        log.info("收到Job执行结束信息 triggerId:{} resultStatus:{}  message:{}",triggerId,resultStatus,message);
         //收集agent的日志
         XxlJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
@@ -177,7 +181,7 @@ public class JobMngImpl implements IJobMngFacade {
             if(startTime != null){
                 long second1 = DateUtils.getFragmentInMilliseconds(startTime,Calendar.YEAR);
                 long second2 = DateUtils.getFragmentInMilliseconds(endTime,Calendar.YEAR);
-                String dur = DurationFormatUtils.formatPeriod(second1,second2,"yyyy-MM-dd HH:mm:ss");
+                String dur = DurationFormatUtils.formatPeriod(second1,second2,"HH:mm:ss");
                 jobLog.setCostHandleTime(dur);
             }
             jobLog.setHandleCode(resultStatus);

@@ -16,7 +16,7 @@ public class SelectService {
         //consumerConfig.getProviderInfoListener().
         IJobAgentMngFacade helloService = consumerConfig.refer();
         while (true) {
-            System.out.println(helloService.trigger(1L, 2L, "script",
+            System.out.println(helloService.trigger(1L, 2L,
                     new HashMap<String, String>() {{
                     }},
                     new HashMap<String, String>() {{

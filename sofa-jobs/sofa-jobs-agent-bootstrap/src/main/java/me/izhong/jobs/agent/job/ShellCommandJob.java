@@ -1,6 +1,7 @@
 package me.izhong.jobs.agent.job;
 
 import lombok.Cleanup;
+import me.izhong.common.util.DateUtil;
 import me.izhong.jobs.agent.bean.JobContext;
 import me.izhong.jobs.agent.bean.JobsConfigBean;
 import me.izhong.jobs.agent.exp.JobExecutionException;
@@ -33,6 +34,7 @@ public class ShellCommandJob extends IJobHandler {
 
     private String SHName = "/bin/sh ";
     private String command;
+
     public ShellCommandJob(String command) {
         this.command = command;
     }
@@ -113,13 +115,14 @@ public class ShellCommandJob extends IJobHandler {
             PumpStreamHandler streamHandler = new PumpStreamHandler(fos);
             shellExecutor.setStreamHandler(streamHandler);
 
-            log.info("run.sh任务开始执行");
+            Date startTime = new Date();
+            log.info("run.sh任务开始执行, 上送执行时间:triggerId:{} startTime:{}",triggerId,DateUtil.dateTime(startTime));
 
-            jobMng.uploadJobStartStatics(triggerId,new Date());
+            jobMng.uploadJobStartStatics(triggerId,startTime);
 
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
-            log.info("run.sh任务返回了:  {}", exitValue);
+            log.info("run.sh任务返回了:  exitValue:{}", exitValue);
             //记录执行状态信息
             jobMng.uploadJobEndStatics(triggerId,new Date(), exitValue, "执行成功");
 

@@ -39,6 +39,9 @@
                 <a class="btn btn-danger" onclick="clearLog(null,1)" shiro:hasPermission="monitor:job:remove">
 	                <i class="fa fa-remove"></i> 清理一个月以前的日志
 	            </a>
+				<a class="btn btn-danger" onclick="clearLog(null,9)" shiro:hasPermission="monitor:job:remove">
+					<i class="fa fa-remove"></i> 清理所有日志
+				</a>
 	            <a class="btn btn-danger multiple disabled" onclick="clearSelected()" shiro:hasPermission="monitor:job:remove">
 	                <i class="fa fa-trash"></i> 删除选中日志
 	            </a>
@@ -118,6 +121,7 @@
         function clearLog(jobId,type) {
             $.modal.confirm("确认要清理日志吗？", function() {
                 $.operate.post(prefix + "/clearLog", { "jobId": jobId,"type":type});
+                $.table.refresh();
             })
         }
 
@@ -126,6 +130,7 @@
             var rowIds = $.operate.selectRowIds();
             $.modal.confirm("确认要删除吗？", function() {
                 $.operate.post(prefix + "/clearLogByIds", { "jobLogIds": rowIds});
+                $.table.refresh();
             })
         }
 	</script>

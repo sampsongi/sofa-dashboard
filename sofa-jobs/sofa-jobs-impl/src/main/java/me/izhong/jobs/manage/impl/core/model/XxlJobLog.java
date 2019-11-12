@@ -35,7 +35,7 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	private String executorAddress;
 	private String executorHandler;
 	private String executorParam;
-	private int executorFailRetryCount;
+	private Integer executorFailRetryCount;
 	
 	// trigger info
 	private Date triggerTime;
