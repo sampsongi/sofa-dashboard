@@ -1,6 +1,7 @@
 package me.izhong.jobs.manage.impl.core.model;
 
 import lombok.extern.slf4j.Slf4j;
+import me.izhong.db.common.annotation.Search;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import me.izhong.db.common.annotation.AutoId;
@@ -24,7 +25,9 @@ public class XxlJobLog  extends TimedBasedEntity implements Serializable {
 	@Indexed(unique = true)
 	private Long jobLogId;
 
+	@Search(op = Search.Op.REGEX)
 	private String jobDesc;
+	@Search
 	private Long jobGroupId;
 	private Long jobId;
 

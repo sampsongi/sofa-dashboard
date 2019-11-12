@@ -29,7 +29,7 @@ import java.util.Arrays;
         DataSourceAutoConfiguration.class})
 //,MongoAutoConfiguration.class
 @EnableCaching
-@ComponentScan(value = {"com.chinaums,me.izhong"})
+@ComponentScan(value = {"com.nuis,me.izhong"})
 @EnableConfigurationProperties(ApplicationProperties.class)
 @Slf4j
 public class DashboardMainApplication {
