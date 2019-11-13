@@ -28,7 +28,7 @@ public class JobsAgentApplicationRunnerTest {
         System.setProperty("spring.main.web-application-type","NONE");
         SpringApplication.run(JobsAgentApplicationRunnerTest.class, args);
 
-        String file = "/Users/jimmy/space/tianru/sofa-dashboard/sofa-jobs/sofa-jobs-agent-bootstrap/src/main/groovy/jobstats.groovy";
+        String file = "D:\\space\\ums\\sofa-dashboard\\sofa-jobs\\sofa-jobs-agent-bootstrap\\src\\main\\groovy\\ttable-sync.groovy";
 
         //初始化运行环境
         ScriptRunContext context = new ScriptRunContext();
@@ -54,6 +54,7 @@ public class JobsAgentApplicationRunnerTest {
         } catch (Exception e) {
             log.error("",e);
         }
+        System.exit(0);
     }
 
 }

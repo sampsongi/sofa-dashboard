@@ -30,6 +30,8 @@ public class ZJobStatsServiceImpl extends CrudBaseServiceImpl<Long, ZJobStats>
 
         //更新
         Update update = new Update();
+        if (StringUtils.isNotBlank(stats.getType()))
+            update.set("type", stats.getType());
         if (StringUtils.isNotBlank(stats.getValue1()))
             update.set("value1", stats.getValue1());
         if (StringUtils.isNotBlank(stats.getValue2()))
