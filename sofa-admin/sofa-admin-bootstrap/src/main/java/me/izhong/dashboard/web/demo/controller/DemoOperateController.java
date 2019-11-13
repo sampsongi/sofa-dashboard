@@ -1,5 +1,6 @@
 package me.izhong.dashboard.web.demo.controller;
 
+import me.izhong.dashboard.manage.util.StringUtil;
 import me.izhong.db.common.annotation.AjaxWrapper;
 import me.izhong.db.common.util.PageRequestUtil;
 import me.izhong.domain.PageModel;
@@ -88,6 +89,17 @@ public class DemoOperateController {
             userList.clear();
             for (Map.Entry<Integer, UserOperateModel> entry : users.entrySet()) {
                 if (entry.getValue().getUserName().equals(userModel.getSearchValue())) {
+                    userList.add(entry.getValue());
+                }
+            }
+        }
+        else if (StringUtil.isNotEmpty(userModel.getUserName()))
+        {
+            userList.clear();
+            for (Map.Entry<Integer, UserOperateModel> entry : users.entrySet())
+            {
+                if (entry.getValue().getUserName().equals(userModel.getUserName()))
+                {
                     userList.add(entry.getValue());
                 }
             }

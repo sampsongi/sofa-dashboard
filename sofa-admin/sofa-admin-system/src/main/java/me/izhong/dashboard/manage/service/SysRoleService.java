@@ -129,4 +129,6 @@ public interface SysRoleService extends CrudBaseService<Long,SysRole> {
      * @return 结果
      */
     public int insertAuthUsers(Long roleId, String userIds);
+
+    void checkRoleAllowed(SysRole sysRole);
 }

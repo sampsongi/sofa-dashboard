@@ -50,7 +50,7 @@ public class XxlJobInfo  extends TimedBasedEntity implements Serializable {
 	private String childJobId;		// 子任务ID，多个逗号分隔
 
 	@Search
-	private Long triggerStatus;		// 调度状态：0-停止，1-运行
+	private Long triggerStatus;		// 调度状态：1-停止，0-运行
 	private Long triggerLastTime;	// 上次调度时间
 	private Long triggerNextTime;	// 下次调度时间
 }

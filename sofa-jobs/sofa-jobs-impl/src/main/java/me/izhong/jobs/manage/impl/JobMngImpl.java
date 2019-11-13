@@ -2,24 +2,25 @@ package me.izhong.jobs.manage.impl;
 
 import com.alipay.sofa.runtime.api.annotation.SofaService;
 import com.alipay.sofa.runtime.api.annotation.SofaServiceBinding;
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.exception.BusinessException;
 import me.izhong.db.common.service.MongoDistributedLock;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
-import me.izhong.jobs.manage.impl.core.model.ZJobStats;
-import me.izhong.jobs.manage.impl.core.thread.JobTriggerPoolHelper;
-import me.izhong.jobs.manage.impl.core.util.*;
-import me.izhong.model.ReturnT;
-import lombok.extern.slf4j.Slf4j;
 import me.izhong.jobs.manage.IJobMngFacade;
 import me.izhong.jobs.manage.impl.core.model.XxlJobGroup;
 import me.izhong.jobs.manage.impl.core.model.XxlJobInfo;
 import me.izhong.jobs.manage.impl.core.model.XxlJobLog;
+import me.izhong.jobs.manage.impl.core.model.ZJobStats;
+import me.izhong.jobs.manage.impl.core.thread.JobTriggerPoolHelper;
 import me.izhong.jobs.manage.impl.core.trigger.TriggerTypeEnum;
-import me.izhong.jobs.manage.impl.core.trigger.XxlJobTrigger;
+import me.izhong.jobs.manage.impl.core.util.JobGroupUtil;
+import me.izhong.jobs.manage.impl.core.util.JobInfoUtil;
+import me.izhong.jobs.manage.impl.core.util.JobLogUtil;
+import me.izhong.jobs.manage.impl.core.util.JobStatsUtil;
 import me.izhong.jobs.manage.impl.service.*;
 import me.izhong.jobs.model.*;
-import org.apache.commons.lang3.StringUtils;
+import me.izhong.model.ReturnT;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.BeanUtils;
@@ -351,15 +352,9 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public JobStats insertOrUpdateJobStats(JobStats stats) {
         Assert.notNull(stats,"");
-        log.info("1 class {}", stats.getClass());
         ZJobStats zJobStats = JobStatsUtil.toDbBean(stats);
         ZJobStats db = jobStatsService.insertOrUpdate(zJobStats);
-        log.info("2 class {}",db.getClass());
-
         JobStats rpc =  JobStatsUtil.toRpcBean(db);
-
-        log.info("3 class {}",rpc.getClass());
-
         return rpc;
     }
 

@@ -53,4 +53,6 @@ public interface SysUserService {
     String selectUserPostGroup(Long userId);
 
     String importUser(List<SysUser> userList, boolean updateSupport, String operName);
+
+    void checkUserAllowed(SysUser user);
 }

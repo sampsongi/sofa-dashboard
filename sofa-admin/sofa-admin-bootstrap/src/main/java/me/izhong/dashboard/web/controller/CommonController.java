@@ -1,5 +1,7 @@
 package me.izhong.dashboard.web.controller;
 
+import me.izhong.dashboard.manage.constants.SystemConstants;
+import me.izhong.dashboard.manage.util.StringUtil;
 import me.izhong.db.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.config.ServerConfig;
 import me.izhong.dashboard.manage.constants.Global;
@@ -79,5 +81,25 @@ public class CommonController {
         ajax.put("url", url);
         return ajax;
 
+    }
+
+    /**
+     * 本地资源通用下载
+     */
+    @GetMapping("/common/download/resource")
+    public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
+            throws Exception
+    {
+        // 本地资源路径
+        String localPath = Global.getProfile();
+        // 数据库资源地址
+        String downloadPath = localPath + StringUtil.substringAfter(resource, SystemConstants.RESOURCE_PREFIX);
+        // 下载名称
+        String downloadName = StringUtil.substringAfterLast(downloadPath, "/");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition",
+                "attachment;fileName=" + FileUtil.setFileDownloadHeader(request, downloadName));
+        FileUtil.writeBytes(downloadPath, response.getOutputStream());
     }
 }

@@ -48,7 +48,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 	public List<XxlJobInfo> scheduleJobQuery(long maxNextTime) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("triggerNextTime").lte(maxNextTime));
-		query.addCriteria(Criteria.where("triggerStatus").is(1));
+		query.addCriteria(Criteria.where("triggerStatus").is(0));
 		return super.selectList(query, null, null);
 	}
 
@@ -97,20 +97,20 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		}
 		XxlJobGroup group = xxlJobGroupService.selectByPId(jobInfo.getJobGroupId());
 		if (group == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "任务组不存在" );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "分组不存在");
 		}
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "cron必填" );
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "Cron表达式必填" );
 		}
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "描述必填" );
 		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "author必填");
+			return new ReturnT<String>(ReturnT.FAIL_CODE, "作者必填");
 		}
-		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略必填" );
-		}
+//		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
+//			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略必填" );
+//		}
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞策略不能为空" );
 		}
@@ -190,9 +190,9 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "作者不能为空");
 		}
-		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略不能为空" );
-		}
+//		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
+//			return new ReturnT<String>(ReturnT.FAIL_CODE, "路由策略不能为空" );
+//		}
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "阻塞策略不能为空" );
 		}
@@ -300,7 +300,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 			return new ReturnT<String>(ReturnT.FAIL_CODE, "表达式非法"+ e.getMessage());
 		}
 
-		xxlJobInfo.setTriggerStatus(1L);
+		xxlJobInfo.setTriggerStatus(0L);
 		xxlJobInfo.setTriggerLastTime(0L);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
 
@@ -313,7 +313,7 @@ public class XxlJobServiceImpl extends CrudBaseServiceImpl<Long,XxlJobInfo> impl
 	public ReturnT<String> disableJob(long id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoService.selectByPId(id);
 
-		xxlJobInfo.setTriggerStatus(0L);
+		xxlJobInfo.setTriggerStatus(1L);
 		xxlJobInfo.setTriggerLastTime(0L);
 		xxlJobInfo.setTriggerNextTime(0L);
 

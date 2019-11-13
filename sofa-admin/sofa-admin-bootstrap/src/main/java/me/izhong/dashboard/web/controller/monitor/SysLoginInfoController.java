@@ -1,5 +1,6 @@
 package me.izhong.dashboard.web.controller.monitor;
 
+import me.izhong.dashboard.manage.security.service.PasswordService;
 import me.izhong.db.common.annotation.AjaxWrapper;
 import me.izhong.db.common.util.PageRequestUtil;
 import me.izhong.domain.PageModel;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -27,6 +29,9 @@ public class SysLoginInfoController {
 
     @Autowired
     private SysLoginInfoService sysLoginInfoService;
+
+    @Autowired
+    private PasswordService passwordService;
 
     @RequiresPermissions(PermissionConstants.LoginInfo.VIEW)
     @GetMapping()
@@ -65,5 +70,14 @@ public class SysLoginInfoController {
     @AjaxWrapper
     public long clean() {
         return sysLoginInfoService.clearAll();
+    }
+
+    @RequiresPermissions(PermissionConstants.LoginInfo.UNLOCK)
+    @Log(title = "账户解锁", businessType = BusinessType.OTHER)
+    @PostMapping("/unlock")
+    @AjaxWrapper
+    public void unlock(String loginName)
+    {
+        passwordService.unlock(loginName);
     }
 }

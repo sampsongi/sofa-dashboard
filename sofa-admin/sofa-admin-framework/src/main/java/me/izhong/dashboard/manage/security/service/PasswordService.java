@@ -59,6 +59,7 @@ public class PasswordService {
     }
 
 
+
     public boolean matches(SysUser user, String rawPassword) {
         return user.getPassword().equals(encryptPassword(rawPassword, user.getSalt()));
     }
@@ -73,5 +74,10 @@ public class PasswordService {
 
     public void clearLoginRecordCache(String username) {
         loginRecordCache.remove(username);
+    }
+
+
+    public void unlock(String loginName){
+        loginRecordCache.remove(loginName);
     }
 }

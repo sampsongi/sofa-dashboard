@@ -9,6 +9,8 @@ public interface SysDictDataService extends CrudBaseService<Long,SysDictData> {
 
     List<SysDictData> selectDictDataByType(String dictType);
 
+    List<SysDictData> selectNormalDictDataByType(String dictType);
+
     String selectDictLabel(String dictType, String dictValue);
 
 }

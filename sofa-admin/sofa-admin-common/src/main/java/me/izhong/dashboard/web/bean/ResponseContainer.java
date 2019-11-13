@@ -29,10 +29,6 @@ public class ResponseContainer<T> implements Serializable {
         this.data = data;
     }
 
-    public boolean isSuccess() {
-        return SUCCESS_CODE.equals(code);
-    }
-
     public static <T> ResponseContainer<T> successContainer(T data) {
         return container(SUCCESS_CODE, "成功", data);
     }

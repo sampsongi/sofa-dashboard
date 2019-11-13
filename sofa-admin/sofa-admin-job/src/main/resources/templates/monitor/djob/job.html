@@ -151,10 +151,10 @@
 
         /* 状态显示 */
         function statusTools(row) {
-            if (row.triggerStatus == 0) {
-                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="start1(\'' + row.jobId + '\')"></i> ';
+            if (row.triggerStatus == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="stop1(\'' + row.jobId + '\')"></i> ';
             } else {
-                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="stop1(\'' + row.jobId + '\')"></i> ';
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="start1(\'' + row.jobId + '\')"></i> ';
             }
         }
         /* 调度任务-停用 */

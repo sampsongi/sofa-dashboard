@@ -24,6 +24,11 @@ public class SysDictDataServiceImpl extends CrudBaseServiceImpl<Long,SysDictData
     }
 
     @Override
+    public List<SysDictData> selectNormalDictDataByType(String dictType) {
+        return dictDataDao.findAllByDictTypeAndStatusOrderByDictSortAsc(dictType,"0");
+    }
+
+    @Override
     public String selectDictLabel(String dictType, String dictValue) {
         SysDictData sysDictData = dictDataDao.findByDictTypeAndDictValue(dictType, dictValue);
         if (sysDictData != null) {

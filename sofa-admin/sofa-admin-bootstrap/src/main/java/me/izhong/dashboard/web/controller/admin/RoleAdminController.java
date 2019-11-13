@@ -104,6 +104,7 @@ public class RoleAdminController {
     @PostMapping("/edit")
     @AjaxWrapper
     public int editSave(SysRole sysRole) {
+        sysRoleService.checkRoleAllowed(sysRole);
         SysRole dbSysRole = sysRoleService.selectByPId(sysRole.getRoleId());
         dbSysRole.setStatus(sysRole.getStatus());
         dbSysRole.setRoleName(sysRole.getRoleName());
@@ -140,6 +141,7 @@ public class RoleAdminController {
     @PostMapping("/authDataScope")
     @AjaxWrapper
     public int authDataScopeSave(SysRole sysRole) {
+        sysRoleService.checkRoleAllowed(sysRole);
         return sysRoleService.authDataScope(sysRole);
     }
 
@@ -177,6 +179,7 @@ public class RoleAdminController {
     @PostMapping("/changeStatus")
     @AjaxWrapper
     public int changeStatus(SysRole sysRole) {
+        sysRoleService.checkRoleAllowed(sysRole);
         return sysRoleService.changeStatus(sysRole);
     }
 

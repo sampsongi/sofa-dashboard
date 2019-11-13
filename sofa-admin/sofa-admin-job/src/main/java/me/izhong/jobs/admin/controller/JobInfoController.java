@@ -84,6 +84,9 @@ public class JobInfoController {
 		if(jobInfo.getExecutorTimeout() == null) {
 			jobInfo.setExecutorTimeout(30000L);
 		}
+		if(jobInfo.getTriggerStatus() == null) {
+			jobInfo.setTriggerStatus(1L);
+		}
         jobInfo.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
         jobInfo.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
 		ReturnT<String> rObj = jobServiceReference.jobService.add(jobInfo);
