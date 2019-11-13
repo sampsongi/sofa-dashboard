@@ -20,13 +20,15 @@ try {
     };
 
     //下载文件演示
-    File tmpFile = File.createTempFile("you",".zip",new File("D:/temp"));
+    File tmpFile = File.createTempFile("you",".zip");
+    tmpFile.deleteOnExit()
     FtpUtil.getFileFromFtp(host,user,pass,"battest/68Temp/",fn,tmpFile);
     println(">>> tmpFile path:${tmpFile.getAbsolutePath()}")
 
     //上传文件演示
     FtpUtil.putFileToFtp(host,user,pass,"battest/68Temp/", "destFileNametxt", tmpFile)
 
+    Thread.sleep(60*1000)
     //删除演示
     FtpUtil.deleteFileFromFtp(host,user,pass,"battest/68Temp/", "destFileNametxt")
     return 0

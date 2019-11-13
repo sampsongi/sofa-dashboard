@@ -42,6 +42,7 @@ server:
 upload:
   filepath: /Users/jimmy/tmp/
 logging:
+  path: ../logx
   level:
     root: INFO
 #    sun: INFO

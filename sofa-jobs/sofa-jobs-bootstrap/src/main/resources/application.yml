@@ -12,7 +12,7 @@ spring:
   application:
     name: job-controller
 logging:
-  path: ./logs
+  path: ../logx
   level:
     root: INFO
 service:

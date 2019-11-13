@@ -56,6 +56,8 @@ public class JobMngImpl implements IJobMngFacade {
     @Autowired
     private ZJobStatsService jobStatsService;
     @Autowired
+    private ZJobConfigService zJobConfigService;
+    @Autowired
     private MongoDistributedLock mongoDistributedLock;
 
     @Autowired
@@ -374,6 +376,11 @@ public class JobMngImpl implements IJobMngFacade {
     @Override
     public void releaseKey(String key) {
         mongoDistributedLock.releaseLock(key);
+    }
+
+    @Override
+    public String findConfigByKey(String configKey) {
+        return zJobConfigService.selectConfigByKey(configKey);
     }
 
 }

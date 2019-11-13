@@ -107,5 +107,7 @@ public interface IJobMngFacade {
     boolean lockKey(String key, long milliseconds);
     void releaseKey(String key);
 
+    //查一些系统的参数
+    String findConfigByKey(String key);
 
 }

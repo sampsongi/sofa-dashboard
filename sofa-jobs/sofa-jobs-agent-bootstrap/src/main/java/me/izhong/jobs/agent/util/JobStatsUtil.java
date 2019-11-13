@@ -6,7 +6,6 @@ import me.izhong.jobs.manage.IJobMngFacade;
 import me.izhong.jobs.model.JobStats;
 import org.springframework.context.annotation.DependsOn;
 
-@DependsOn("contextUtil")
 public class JobStatsUtil {
 
     public static String insertOrUpdate(String key, String type, String value1){

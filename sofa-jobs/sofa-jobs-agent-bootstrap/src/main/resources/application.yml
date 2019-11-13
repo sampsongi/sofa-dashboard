@@ -10,7 +10,7 @@ spring:
   application:
     name: job-agent
 logging:
-  path: ./logs
+  path: ../logx
   level:
     root: INFO
 
