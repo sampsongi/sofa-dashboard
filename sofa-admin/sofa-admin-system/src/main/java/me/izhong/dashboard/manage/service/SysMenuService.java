@@ -10,11 +10,13 @@ import java.util.Set;
 public interface SysMenuService extends CrudBaseService<Long,SysMenu> {
 
     /**
-     * 根据用户ID查询菜单
+     * 根据用户ID查询菜单 Visible可见的
      *
-     * @return 菜单列表
+     * @return 菜单列表 返回的是数形结构
      */
-    public List<SysMenu> selectMenusByUser(Long userId);
+    List<SysMenu> selectVisibleMenusByUser(Long userId);
+
+    List<SysMenu> selectMenusByUser(Long userId);
 
     /**
      * 查询系统菜单列表

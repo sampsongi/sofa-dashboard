@@ -36,6 +36,16 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Override
+    public List<SysMenu> selectVisibleMenusByUser(Long userId) {
+        Assert.notNull(userId,"");
+        List<SysMenu> sysMenus = doSelectPermsByUserId(userId, true);
+        if(sysMenus != null && sysMenus.size() > 0)
+            sysMenus = sysMenus.stream().filter(e -> StringUtils.equals("0",e.getVisible())).collect(toList());
+        sortMenus(sysMenus);
+        return getChildPerms(sysMenus, 0);
+    }
+
     /**
      * 返回正常菜单
      *

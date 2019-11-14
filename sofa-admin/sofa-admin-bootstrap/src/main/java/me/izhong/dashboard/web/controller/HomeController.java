@@ -53,7 +53,10 @@ public class HomeController {
 
         model.addAttribute("demoEnabled", StringUtils.equals(user.getLoginName(),"admin"));
 
-        List<SysMenu> menus2 = sysMenuService.selectMenusByUser(user.getUserId());
+        List<SysMenu> menus2 = sysMenuService.selectVisibleMenusByUser(user.getUserId());
+        if(menus2 !=null && menus2.size() > 0) {
+            //去掉隐藏的菜单
+        }
         model.addAttribute("menus", menus2);
 
         return "index";
