@@ -20,7 +20,7 @@
 								</select>
 							</li>
 							<li>
-								任务状态：<select name="status" th:with="type=${@dict.getType('sys_job_status')}">
+								任务状态：<select name="triggerStatus" th:with="type=${@dict.getType('sys_job_status')}">
 									<option value="">所有</option>
 									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
 								</select>
@@ -151,10 +151,10 @@
 
         /* 状态显示 */
         function statusTools(row) {
-            if (row.triggerStatus == 1) {
-                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="stop1(\'' + row.jobId + '\')"></i> ';
+            if (row.triggerStatus == 0) {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="stop1(\'' + row.jobId + '\')"></i> ';
             } else {
-                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="start1(\'' + row.jobId + '\')"></i> ';
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="start1(\'' + row.jobId + '\')"></i> ';
             }
         }
         /* 调度任务-停用 */

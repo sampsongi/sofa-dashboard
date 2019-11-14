@@ -48,7 +48,7 @@ public class JobInfoController {
 		//	throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
 
-		model.addAttribute("JobGroupList", jobGroupList);
+		model.addAttribute("groupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 		return prefix + "/job";
 	}

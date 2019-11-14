@@ -266,9 +266,7 @@ public class JobMngImpl implements IJobMngFacade {
     public List<JobGroup> selectAllJobGroup() {
         List<XxlJobGroup> gs = jobGroupService.selectAll();
         if(gs != null && gs.size() > 0) {
-            return gs.stream().map(e->{
-                return JobGroupUtil.toRpcBean(e);
-            }).collect(Collectors.toList());
+            return gs.stream().map(e-> JobGroupUtil.toRpcBean(e)).collect(Collectors.toList());
         }
         return null;
     }
@@ -281,9 +279,7 @@ public class JobMngImpl implements IJobMngFacade {
         }
         PageModel<XxlJobGroup> gs = jobGroupService.selectPage(request,se);
         if(gs != null && gs.getRows().size() > 0) {
-            List<JobGroup> jgs = gs.getRows().stream().map(e -> {
-                return JobGroupUtil.toRpcBean(e);
-            }).collect(Collectors.toList());
+            List<JobGroup> jgs = gs.getRows().stream().map(e -> JobGroupUtil.toRpcBean(e)).collect(Collectors.toList());
             return PageModel.instance(gs.getCount(),jgs);
         }
         return null;

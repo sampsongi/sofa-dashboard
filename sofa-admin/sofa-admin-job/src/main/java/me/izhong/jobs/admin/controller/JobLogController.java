@@ -64,7 +64,7 @@ public class JobLogController {
 	@RequestMapping("/log/list")
 	@AjaxWrapper
 	public PageModel<JobLog> pageList(HttpServletRequest request, String jobDesc, Long jobGroupId,
-									  String status, String filterTime) {
+									  String status,Integer handleCode, String filterTime) {
 
 		// parse param
 		Date triggerTimeStart = null;
@@ -82,8 +82,8 @@ public class JobLogController {
 			jLog.setJobDesc(jobDesc);
 		if(jobGroupId != null)
 			jLog.setJobGroupId(jobGroupId);
-		if(StringUtil.isNotBlank(status))
-			jLog.setStatus(status);
+		if(handleCode != null)
+			jLog.setHandleCode(handleCode);
 		
 		return jobServiceReference.jobService.logPageList(PageRequestUtil.fromRequest(request),jLog);
 	}

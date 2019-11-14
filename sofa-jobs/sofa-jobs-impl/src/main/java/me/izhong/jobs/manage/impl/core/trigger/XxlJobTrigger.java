@@ -47,8 +47,8 @@ public class XxlJobTrigger {
                                                   String executorParam){
 
         // param
-        ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
-        ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
+        //ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), ExecutorBlockStrategyEnum.SERIAL_EXECUTION);  // block strategy
+        //ExecutorRouteStrategyEnum executorRouteStrategyEnum = ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null);    // route strategy
 
         // 1、save log-id
 
@@ -77,8 +77,8 @@ public class XxlJobTrigger {
         triggerMsgSb.append("<br>").append("管理IP：").append(IpUtil.getHostIp());
         triggerMsgSb.append("<br>").append("AddressList类型：").append(group.getAddressList() );
         triggerMsgSb.append("<br>").append("RegistryList地址：").append(group.getRegistryList());
-        triggerMsgSb.append("<br>").append("路由策略：").append(executorRouteStrategyEnum.getTitle());
-        triggerMsgSb.append("<br>").append("阻塞策略：").append(blockStrategy.getTitle());
+        //triggerMsgSb.append("<br>").append("路由策略：").append(executorRouteStrategyEnum.getTitle());
+        //triggerMsgSb.append("<br>").append("阻塞策略：").append(blockStrategy.getTitle());
         triggerMsgSb.append("<br>").append("超时时间：").append(jobInfo.getExecutorTimeout());
         triggerMsgSb.append("<br>").append("重试次数：").append(finalFailRetryCount);
 
