@@ -16,7 +16,7 @@
 							<li>
 								任务组：<select name="jobGroupId">
 									<option value="">所有</option>
-									<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}" th:field="*{g.groupId}"></option>
+									<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}"></option>
 								</select>
 							</li>
 							<li>

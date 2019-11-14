@@ -41,20 +41,22 @@ public class JobLogController {
 	private static String prefix = "monitor/djob";
 
 	@RequestMapping("/log")
-	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "0") Long jobId) {
+	public String index(HttpServletRequest request, Model model, Long jobId) {
 
 		// 执行器列表
 		List<JobGroup> jobGroupList_all =  jobServiceReference.jobService.selectAllJobGroup();
 		model.addAttribute("groupList", jobGroupList_all);
 
 		// 任务
-		if (jobId > 0) {
+		if (jobId!= null) {
 			Job jobInfo = jobServiceReference.jobService.findByJobId(jobId);
 			if (jobInfo == null) {
 				throw new RuntimeException("未找到");
 			}
+			JobGroup JobGroup = jobServiceReference.jobService.findJobGroup(jobInfo.getJobGroupId());
 
-			model.addAttribute("jobInfo", jobInfo);
+			model.addAttribute("jobGroupId", JobGroup.getGroupId());
+			model.addAttribute("jobDesc", jobInfo.getJobDesc());
 		}
 
 		return prefix + "/jobLog";
