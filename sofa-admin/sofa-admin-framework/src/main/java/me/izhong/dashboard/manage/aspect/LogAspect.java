@@ -41,9 +41,10 @@ public class LogAspect {
      *
      * @param joinPoint 切点
      */
-    @AfterReturning(pointcut = "logPointCut()")
-    public void doAfterReturning(JoinPoint joinPoint) {
-        handleLog(joinPoint, null);
+    @AfterReturning(pointcut = "logPointCut()", returning = "jsonResult")
+    public void doAfterReturning(JoinPoint joinPoint, Object jsonResult)
+    {
+        handleLog(joinPoint, null, jsonResult);
     }
 
     /**
@@ -53,11 +54,12 @@ public class LogAspect {
      * @param e         异常
      */
     @AfterThrowing(value = "logPointCut()", throwing = "e")
-    public void doAfterThrowing(JoinPoint joinPoint, Exception e) {
-        handleLog(joinPoint, e);
+    public void doAfterThrowing(JoinPoint joinPoint, Exception e)
+    {
+        handleLog(joinPoint, e, null);
     }
 
-    protected void handleLog(final JoinPoint joinPoint, final Exception e) {
+    protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult){
         try {
             // 获得注解
             Log controllerLog = getAnnotationLog(joinPoint);
@@ -76,7 +78,8 @@ public class LogAspect {
             // 请求的地址
             String ip = currentUser.getLoginIp();
             sysOperLog.setOperIp(ip);
-
+            // 返回参数
+            sysOperLog.setJsonResult(JSON.toJSONString(jsonResult));
             sysOperLog.setOperUrl(ServletUtil.getRequest().getRequestURI());
             if (currentUser != null) {
                 sysOperLog.setOperName(currentUser.getLoginName());
@@ -93,6 +96,8 @@ public class LogAspect {
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
             sysOperLog.setMethod(className + "." + methodName + "()");
+            // 设置请求方式
+            sysOperLog.setRequestMethod(ServletUtil.getRequest().getMethod());
             // 处理设置注解上的参数
             getControllerMethodDescription(controllerLog, sysOperLog);
             // 保存数据库

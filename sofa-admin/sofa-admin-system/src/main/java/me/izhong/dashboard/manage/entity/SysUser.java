@@ -127,6 +127,14 @@ public class SysUser extends TimedBasedEntity {
     @Transient
     private Long[] postIds;
 
+    public SysUser(){
+    }
+
+
+    public SysUser(Long userId){
+        this.userId = userId;
+    }
+
     public boolean isAdmin() {
         return isAdmin(this.userId);
     }

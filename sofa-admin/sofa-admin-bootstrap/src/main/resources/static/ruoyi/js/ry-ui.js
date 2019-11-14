@@ -156,7 +156,7 @@ var table = {
                     table.options.responseHandler(res);
                 }
                 if (res.code == 0 || res.code == 'SUCCESS') {
-                    if ($.common.isNotEmpty(table.option.sidePagination) && table.options.sidePagination == 'client') {
+                    if ($.common.isNotEmpty(table.options.sidePagination) && table.options.sidePagination == 'client') {
                         if (res.code == 'SUCCESS')
                             return res.data;
                         return res.rows;
@@ -165,11 +165,11 @@ var table = {
                             var column = $.common.isEmpty(table.options.uniqueId) ? table.options.columns[1].field : table.options.uniqueId;
                             if (res.code == 'SUCCESS') {
                                 $.each(res.data.rows, function (i, row) {
-                                    row.state = $.inArray(row[column], selectionIds) !== -1;
+                                    row.state = $.inArray(row[column], table.rememberSelectedIds[table.options.id]) !== -1;
                                 })
                             } else {
                                 $.each(res.rows, function (i, row) {
-                                    row.state = $.inArray(row[column], selectionIds) !== -1;
+                                    row.state = $.inArray(row[column], table.rememberSelectedIds[table.options.id]) !== -1;
                                 })
                             }
                         }
@@ -356,11 +356,10 @@ var table = {
                 $.modal.confirm("确定导出所有" + table.options.modalName + "吗？", function () {
                     var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                     $.modal.loading("正在导出数据，请稍后...");
-                    var params = $.btTable.bootstrapTable('getOptions');
                     var postData = $("#" + currentId).serializeArray();
-                    if(!$.common.isEmpty(params.sortName)) {
-                        postData.push({"name": "orderByColumn", "value": params.sortName});
-                        postData.push({"name": "isAsc", "value": params.sortOrder});
+                    if($.common.isNotEmpty(table.options.sortName)) {
+                        postData.push({"name": "orderByColumn", "value": table.options.sortName});
+                        postData.push({"name": "isAsc", "value": table.options.sortOrder});
                     }
                     $.post(table.options.exportUrl, postData, function (result) {
                         if (result.code == web_status.SUCCESS) {

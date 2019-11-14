@@ -281,6 +281,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
             if (SysUser.isAdmin(userId)) {
                 throw BusinessException.build("不允许删除超级管理员用户");
             }
+            checkUserAllowed(new SysUser(userId));
         }
 
         Query query = new Query();
@@ -580,4 +581,16 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
     }
 
 
+    /**
+     * 校验用户是否允许操作
+     *
+     * @param user 用户信息
+     */
+    public void checkUserAllowed(SysUser user)
+    {
+        if (user.getUserId() != null && user.isAdmin())
+        {
+            throw BusinessException.build("不允许操作超级管理员用户");
+        }
+    }
 }

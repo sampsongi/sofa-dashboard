@@ -55,6 +55,10 @@ public class SysOperLog extends TimedBasedEntity {
     @Excel(name = "请求方法")
     private String method;
 
+    /** 请求方式 */
+    @Excel(name = "请求方式")
+    private String requestMethod;
+
     /**
      * 操作人类别
      */
@@ -99,6 +103,10 @@ public class SysOperLog extends TimedBasedEntity {
      */
     @Excel(name = "请求参数")
     private String operParam;
+
+    /** 返回参数 */
+    @Excel(name = "返回参数")
+    private String jsonResult;
 
     /**
      * 状态0正常 1异常

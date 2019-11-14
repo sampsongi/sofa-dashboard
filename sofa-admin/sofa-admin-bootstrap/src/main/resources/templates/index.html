@@ -19,7 +19,10 @@
     <link th:href="@{/css/skins.css}" rel="stylesheet"/>
     <link th:href="@{/ruoyi/css/ry-ui.css?v=4.0.0}" rel="stylesheet"/>
 </head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+<!--
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden" th:classappend="|${@config.getKey('sys.index.sideTheme')} ${@config.getKey('sys.index.skinName')}|">
+-->
 <div id="wrapper">
 
     <!--左侧导航开始-->
@@ -29,9 +32,11 @@
         </div>
         <div class="sidebar-collapse">
             <ul class="nav" id="side-menu">
-                <li class="logo">
-                    <span class="logo-lg">后台管理</span>
-                </li>
+                <a th:href="@{/index}">
+                    <li class="logo">
+                        <span class="logo-lg" >后台管理</span>
+                    </li>
+                </a>
                 <li>
                     <div class="user-panel">
                         <a class="menuItem" title="个人中心" th:href="@{/system/user/profile}">
@@ -48,10 +53,10 @@
                         </div>
                     </div>
                 </li>
-                <!--<li class="active">
-                    <a href="index.html"><i class="fa fa-home"></i> <span class="nav-label">主页</span> <span class="fa arrow"></span></a>
+                <!--< <li>
+                    <a href="#"><i class="fa fa-home"></i> <span class="nav-label">主页</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <li class="active"><a class="menuItem" th:href="@{/system/main}">了解</a></li>
+                        <li><a class="menuItem" th:href="@{/system/main}">了解若依</a></li>
                     </ul>
                 </li>-->
                 <li th:each="menu : ${menus}">
@@ -84,6 +89,7 @@
                                 <li><a class="menuItem" th:href="@{/demo/form/button}">按钮</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/form/grid}">栅格</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/form/select}">下拉框</a></li>
+                                <li><a class="menuItem" th:href="@{/demo/form/timeline}">时间轴</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/form/basic}">基本表单</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/form/cards}">卡片列表</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/form/jasny}">功能扩展</a></li>
@@ -111,11 +117,13 @@
                                 <li><a class="menuItem" th:href="@{/demo/table/button}">点击按钮加载表格</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/fixedColumns}">表格冻结列</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/event}">自定义触发事件</a></li>
-                                <li><a class="menuItem" th:href="@{/demo/table/detail}">表格细节视图</a></li>
+                                <li><a class="menuItem" th:href="@{/demo/table/child}">表格父子视图</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/image}">表格图片预览</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/curd}">动态增删改查</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/reorder}">表格拖拽操作</a></li>
+                                <li><a class="menuItem" th:href="@{/demo/table/editable}">表格行内编辑</a></li>
                                 <li><a class="menuItem" th:href="@{/demo/table/other}">表格其他操作</a></li>
+
                             </ul>
                         </li>
                         <li><a>弹框<span class="fa arrow"></span></a>
@@ -201,6 +209,10 @@
                                 <a onclick="resetPwd()" class="menuItem">
                                     <i class="fa fa-key"></i> 修改密码</a>
                             </li>
+                            <li>
+                                <a onclick="switchSkin()">
+                                    <i class="fa fa-dashboard"></i> 切换主题</a>
+                            </li>
                             <li class="divider"></li>
                             <li>
                                 <a th:href="@{logout}">
@@ -223,7 +235,7 @@
             <button class="roll-nav roll-right tabRight">
                 <i class="fa fa-forward"></i>
             </button>
-            <a href="#" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
+            <a href="javascript:void(0);" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i> 刷新</a>
         </div>
 
         <a id="ax_close_max" class="ax_close_max" href="#" title="关闭全屏"> <i class="fa fa-times-circle-o"></i> </a>
@@ -247,16 +259,52 @@
 <script th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
 <script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
 <script th:src="@{/ruoyi/js/ry-ui.js?v=4.0.0}"></script>
+<script th:src="@{/ruoyi/js/common.js?v=4.0.0}"></script>
 <script th:src="@{/ruoyi/index.js}"></script>
 <script th:src="@{/ajax/libs/fullscreen/jquery.fullscreen.js}"></script>
 <script th:inline="javascript">
     var ctx = [[@{/}]];
+        var skin = storage.get("skin");
+        // 本地主题优先，未设置取系统配置
+        if($.common.isNotEmpty(skin)){
+            $("body").addClass(skin.split('|')[0]);
+            $("body").addClass(skin.split('|')[1]);
+        } else {
+            var sideTheme = [[${@config.getKey('sys.index.sideTheme')}]];
+            var skinName = [[${@config.getKey('sys.index.skinName')}]];
+            $("body").addClass(sideTheme);
+            $("body").addClass(skinName);
+        }
 
-        /*用户管理-重置密码*/
+        /* 用户管理-重置密码 */
         function resetPwd() {
             var url = ctx + 'system/user/profile/resetPwd';
-            $.modal.open("重置密码", url, '800', '500');
+            $.modal.open("重置密码", url, '770', '380');
         }
+        /* 切换主题 */
+        function switchSkin() {
+            layer.open({
+                type : 2,
+                shadeClose : true,
+                title : "切换主题",
+                area : ["530px", "386px"],
+                content : [ctx + "system/switchSkin", 'no']
+            })
+        }
+
+// 排除非左侧菜单链接
+        var excludesUrl = ["/system/user/profile"];
+
+        $(function() {
+            var hash = location.hash;
+            if (hash !== '') {
+                var url = hash.substring(1, hash.length);
+                $('a[href$="' + decodeURI(url) + '"]').click();
+                if($.inArray(url, excludesUrl)){
+                    $('a[href$="' + url + '"]').parent("li").addClass("selected").parents("li").addClass("active").end().parents("ul").addClass("in");
+                }
+            }
+        });
 </script>
 </body>
 </html>

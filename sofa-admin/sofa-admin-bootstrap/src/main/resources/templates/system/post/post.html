@@ -52,14 +52,14 @@
         </div>
 
         <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            <table id="bootstrap-table"></table>
         </div>
     </div>
 </div>
 <th:block th:include="include :: footer"/>
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:post:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:post:removeJobGroup')}]];
+    var removeFlag = [[${@permission.hasPermi('system:post:remove')}]];
     var datas = [[${@dict.getType('sys_normal_disable')}]];
     var prefix = ctx + "system/post";
 

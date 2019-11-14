@@ -13,6 +13,7 @@ import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysRoleService;
 import me.izhong.common.util.Convert;
 import me.izhong.db.common.util.CriteriaUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -119,6 +120,7 @@ public class SysRoleServiceImpl extends CrudBaseServiceImpl<Long,SysRole> implem
         Long[] roleIds = Convert.toLongArray(ids);
         for (Long roleId : roleIds) {
             SysRole sysRole = selectByPId(roleId);
+            checkRoleAllowed(sysRole);
             if (countUserRoleByRoleId(roleId) > 0) {
                 throw BusinessException.build(String.format("%1$s已分配,不能删除", sysRole.getRoleName()));
             }
@@ -287,6 +289,14 @@ public class SysRoleServiceImpl extends CrudBaseServiceImpl<Long,SysRole> implem
             list.add(ur);
         }
         return userRoleDao.saveAll(list).size();
+    }
+
+    @Override
+    public void checkRoleAllowed(SysRole sysRole) {
+        if (sysRole.getRoleId() !=null  && sysRole.isAdmin())
+        {
+            throw BusinessException.build("不允许操作超级管理员角色");
+        }
     }
 
     /**

@@ -4,10 +4,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Data
-public class UserInfo {
+public class UserInfo implements Serializable {
 
     private Long userId;
     private String loginName;

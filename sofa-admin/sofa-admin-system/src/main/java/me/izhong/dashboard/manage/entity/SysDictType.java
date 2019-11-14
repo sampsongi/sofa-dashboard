@@ -30,7 +30,7 @@ public class SysDictType extends TimedBasedEntity {
     @Size(min = 0, max = 100, message = "字典类型名称长度不能超过100个字符")
     private String dictName;
 
-    @Excel(name = "字典类型 ")
+    @Excel(name = "字典类型")
     @Search
     @NotBlank(message = "字典类型不能为空")
     @Size(min = 0, max = 100, message = "字典类型类型长度不能超过100个字符")

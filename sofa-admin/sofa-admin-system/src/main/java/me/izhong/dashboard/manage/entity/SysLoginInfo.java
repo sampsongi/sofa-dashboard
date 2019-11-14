@@ -64,7 +64,7 @@ public class SysLoginInfo extends TimedBasedEntity {
     /**
      * 操作系统
      */
-    @Excel(name = "操作系统 ")
+    @Excel(name = "操作系统")
     private String os;
 
     /**

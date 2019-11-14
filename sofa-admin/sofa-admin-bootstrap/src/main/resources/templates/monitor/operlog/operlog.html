@@ -64,7 +64,7 @@
         </div>
 
         <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            <table id="bootstrap-table"></table>
         </div>
     </div>
 </div>
@@ -163,7 +163,7 @@
     function searchPre() {
         var data = {};
         data.businessTypes = $.common.join($('#businessTypes').selectpicker('val'));
-        $.table.search('operlog-form', data);
+        $.table.search('operlog-form', 'bootstrap-table', data);
     }
 
     function resetPre() {

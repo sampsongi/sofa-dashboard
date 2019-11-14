@@ -84,4 +84,15 @@ public class SysRole extends TimedBasedEntity {
      * 部门组（数据权限）
      */
     private Long[] deptIds;
+
+
+    public boolean isAdmin()
+    {
+        return isAdmin(this.roleId);
+    }
+
+    public static boolean isAdmin(Long roleId)
+    {
+        return roleId != null && 1L == roleId;
+    }
 }

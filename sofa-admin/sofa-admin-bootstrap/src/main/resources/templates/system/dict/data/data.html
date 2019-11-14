@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('字典数据列表')"/>
+    <th:block th:include="include :: select2-css" />
 </head>
 <body class="gray-bg">
 <div class="container-div">
@@ -11,10 +12,8 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            字典名称：<select id="dictType" name="dictType">
-                            <option value="">所有</option>
-                            <option th:each="dict : ${dictList}" th:text="${dict['dictName']}"
-                                    th:value="${dict['dictType']}" th:field="*{dict.dictType}"></option>
+                            字典名称：<select id="dictType" name="dictType" class="form-control">
+                            <option th:each="dict : ${dictList}" th:text="${dict['dictName']}" th:value="${dict['dictType']}" th:field="*{dict.dictType}"></option>
                         </select>
                         </li>
                         <li>
@@ -30,8 +29,8 @@
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
-                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="resetPre()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+
                         </li>
                     </ul>
                 </div>
@@ -56,14 +55,15 @@
         </div>
 
         <div class="col-sm-12 select-table table-striped">
-            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            <table id="bootstrap-table"></table>
         </div>
     </div>
 </div>
 <th:block th:include="include :: footer"/>
+<th:block th:include="include :: select2-js" />
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('system:dict:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:dict:removeJobGroup')}]];
+    var removeFlag = [[${@permission.hasPermi('system:dict:remove')}]];
     var datas = [[${@dict.getType('sys_normal_disable')}]];
     var prefix = ctx + "system/dict/data";
 
@@ -138,6 +138,10 @@
     function add() {
         var dictType = $("#dictType option:selected").val();
         $.operate.add(dictType);
+    }
+    function resetPre() {
+        $.form.reset();
+        $("#dictType").val($("#dictType").val()).trigger("change");
     }
 </script>
 </body>
