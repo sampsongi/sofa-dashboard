@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
+import static me.izhong.dashboard.manage.constants.SystemConstants.STATUS_ENABLE;
+
 
 @Controller
 @RequestMapping("/system/dept")
@@ -49,10 +51,10 @@ public class DeptAdminController {
     @GetMapping("/add/{parentId}")
     public String add(@PathVariable("parentId") Long parentId, ModelMap mmap) {
         SysDept sysDept = null;
-        if (parentId == null || parentId.longValue() == 0 || parentId.longValue() == 100) {
+        if (parentId == null || parentId.longValue() == 0) {
             sysDept = new SysDept();
             sysDept.setDeptName("总部");
-            sysDept.setDeptId(0L);
+            sysDept.setDeptId(1L);
         } else {
             sysDept = sysDeptService.selectDeptByDeptId(parentId);
         }
@@ -68,8 +70,20 @@ public class DeptAdminController {
     @PostMapping("/add")
     @AjaxWrapper
     public int addSave(SysDept sysDept) {
+        if (StringUtils.isBlank(sysDept.getDeptName())) {
+            throw BusinessException.build("新增部门失败，部门名称不能为空");
+        }
         if (!sysDeptService.checkDeptNameUnique(sysDept)) {
             throw BusinessException.build("新增部门'" + sysDept.getDeptName() + "'失败，部门名称已存在");
+        }
+        if(sysDept.getParentId() == null) {
+            throw BusinessException.build("新增部门'" + sysDept.getDeptName() + "'失败，上级部门不能为空");
+        }
+        if(sysDept.getParentId().equals(sysDept.getDeptId())) {
+            throw BusinessException.build("新增部门'" + sysDept.getDeptName() + "'失败，上级部门不能是自己");
+        }
+        if(sysDept.getParentId().equals(0L)) {
+            throw BusinessException.build("新增部门'" + sysDept.getDeptName() + "'失败，上级部门不能为空部门");
         }
         sysDept.setCreateBy(UserInfoContextHelper.getCurrentLoginName());
         sysDept.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
@@ -109,6 +123,15 @@ public class DeptAdminController {
             throw BusinessException.build("修改部门'" + sysDept.getDeptName() + "'失败，上级部门不能是自己");
         }
 
+        if(sysDept.getDeptId().equals(1L)) {
+            if(!sysDept.getParentId().equals(0L)) {
+                throw BusinessException.build("总部的上级部门不能修改");
+            }
+            if(!sysDept.getStatus().equals(STATUS_ENABLE)) {
+                throw BusinessException.build("总部的状态不能修改");
+            }
+        }
+
         sysDept.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
         return sysDeptService.updateDept(sysDept);
     }
@@ -134,9 +157,9 @@ public class DeptAdminController {
      */
     @GetMapping("/selectDeptTree")
     public String selectDeptTree(Long deptId, String viewPerm, ModelMap mmap) {
+        if(deptId == null || deptId == 0L)
+            deptId = 1L;
         SysDept sysDept = sysDeptService.selectDeptByDeptId(deptId);
-        if (sysDept == null)
-            sysDept = sysDeptService.selectDeptByDeptId(1L);
         mmap.put("sysDept", sysDept);
         mmap.put("viewPerm", viewPerm);
         return prefix + "/tree";

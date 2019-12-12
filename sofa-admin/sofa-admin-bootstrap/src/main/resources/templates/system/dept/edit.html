@@ -112,7 +112,7 @@
     /*部门管理-修改-选择部门树*/
     function selectDeptTree() {
         var deptId = $("#treeId").val();
-        if (deptId > 0) {
+        //if (deptId > 0) {
             var options = {
                 title: '部门选择',
                 width: "380",
@@ -120,9 +120,9 @@
                 callBack: doSubmit
             };
             $.modal.openOptions(options);
-        } else {
-            $.modal.alertError("父部门不能选择");
-        }
+        //} else {
+        //    $.modal.alertError("父部门不能选择");
+        //}
     }
 
     function doSubmit(index, layero) {
