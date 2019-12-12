@@ -2,3 +2,4 @@ logs
 *.iml
 .idea
 target
+*.DS_Store
