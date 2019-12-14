@@ -133,20 +133,27 @@ public class JobDirectTrigger {
             }
             Map<String, String> params = new HashMap<String, String>();
             if (StringUtils.isNotBlank(executorParams)) {
-                if (executorParams.startsWith("{")) {
-                    params = JSONObject.parseObject(executorParams, new TypeReference<Map<String, String>>() {
-                    });
-                } else if (executorParams.indexOf(",") > 0) {
-                    String[] xx = executorParams.split(",");
-                    for (String x : xx) {
-                        String[] kv = x.split("=");
-                        if (kv.length == 2)
-                            params.put(kv[0], kv[1]);
+                try {
+                    if (executorParams.startsWith("{") && executorParams.endsWith("}")) {
+                        params = JSONObject.parseObject(executorParams, new TypeReference<Map<String, String>>() {
+                        });
                     }
-                } else {
-                    params.put("data", executorParams);
+                } catch (Exception e) {
+
                 }
+//                else if (executorParams.indexOf(",") > 0) {
+//                    String[] xx = executorParams.split(",");
+//                    for (String x : xx) {
+//                        String[] kv = x.split("=");
+//                        if (kv.length == 2)
+//                            params.put(kv[0], kv[1]);
+//                    }
+//                }
+//                else {
+//                    params.put("data", executorParams);
+//                }
             }
+            params.put("rawParams",executorParams);
             logger.info("rpc 远程调用 jobId:{}", triggerParam.getJobId());
             //dubbo 远程调用
             runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), envs, params);
