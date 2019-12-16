@@ -283,23 +283,30 @@ public class FtpUtil {
 		ChannelSftp c = (ChannelSftp) channel;
 
 		try{
-			Vector content = c.ls(destDir);
-			if(content == null) {
-				log.info("mkdir");
-				c.mkdir(destDir);
+			log.info("mkdir");
+			String[] dirs = destDir.split("/");
+			for(String s : dirs){
+				boolean exist = true;
+				try {
+					c.lstat(s);
+				} catch (Exception ee) {
+					exist = false;
+				}
+				if(!exist) {
+					c.mkdir(s.trim());
+				}
+				c.cd(s.trim());
 			}
 		} catch (Exception e) {
-			log.info("mkdir");
-			c.mkdir(destDir);
+			log.info("创建文件目录异常:" + destDir,e);
+			throw new Exception("创建文件目录异常:" + destDir);
 		}
 
-		log.info("cd");
-		c.cd(destDir);
 		@Cleanup
 		FileInputStream fis = new FileInputStream(srcFile);
 		@Cleanup
 		BufferedInputStream bfi = new BufferedInputStream(fis);
-		log.info("put");
+		log.info("put file {} to {}", destFile, c.pwd());
 		c.put(bfi, destFile);
 
 		log.info("disconnect");
@@ -357,7 +364,7 @@ public class FtpUtil {
 		FileInputStream fis = new FileInputStream(srcFile);
 		@Cleanup
 		BufferedInputStream bfi = new BufferedInputStream(fis);
-		log.info("put");
+		log.info("put file {} to {}", destFile, destDir);
 		ftp.storeFile(destFile, bfi);
 
 		log.info("disconnect");
