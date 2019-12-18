@@ -96,14 +96,16 @@ public class AgentScriptRunner implements ApplicationRunner {
                 String paramsString = jobLog.getExecutorParam();
                 //String paramsString = System.getProperty("params");
                 log.info("params:{}", paramsString);
-                Map<String, String> params = new HashMap<>();;
+                Map<String, Object> params = new HashMap<>();;
                 if(StringUtils.isNotBlank(paramsString)) {
                     if(paramsString.startsWith("{\"")) {
-                        params = JSONObject.parseObject(paramsString, new TypeReference<Map<String, String>>() {
+                        params = JSONObject.parseObject(paramsString, new TypeReference<Map<String, Object>>() {
                         });
-                    } else if(paramsString.startsWith("{")) {
-                        params = StringUtil.parseParams(paramsString);
-                    } else {
+                    }
+                    //else if(paramsString.startsWith("{")) {
+                    //    params = StringUtil.parseParams(paramsString);
+                    //}
+                    else {
                         log.info("无法解析参数");
                         System.exit(3);
                     }
@@ -113,6 +115,7 @@ public class AgentScriptRunner implements ApplicationRunner {
                 //====初始化运行环境===
                 ScriptRunContext context = new ScriptRunContext();
                 context.setJobId(jobId);
+                context.setTriggerId(triggerId);
                 context.setScript(script);
                 try {
                     context.setTimeout(Long.valueOf(System.getProperty("timeout")));

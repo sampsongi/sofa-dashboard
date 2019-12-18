@@ -18,13 +18,13 @@ public class ScriptRunContext {
     private File scriptFile;
     private AgentLog log;
     private Map<String,String> envs;
-    private Map<String,String> params;
+    private Map<String,Object> params;
 
     public ScriptRunContext(){
 
     }
 
-    public ScriptRunContext(long jobId, long triggerId, long timeout, Map<String,String> envs, Map<String,String> params){
+    public ScriptRunContext(long jobId, long triggerId, long timeout, Map<String,String> envs, Map<String,Object> params){
         this.jobId = jobId;
         this.triggerId = triggerId;
         this.timeout = timeout;

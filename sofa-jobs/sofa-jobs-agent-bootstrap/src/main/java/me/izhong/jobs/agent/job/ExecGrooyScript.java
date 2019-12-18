@@ -16,6 +16,8 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @DependsOn("contextUtil")
 @Component
@@ -49,10 +51,16 @@ public class ExecGrooyScript implements IBatch {
 		binding.setProperty("ac", ContextUtil.getApplicationContext());
 		binding.setProperty("remoteLog", logger);
 		binding.setProperty("log", slfLog);
-		binding.setProperty("jobId", context.getJobId());
-		binding.setProperty("triggerId", context.getTriggerId());
+		//binding.setProperty("jobId", context.getJobId());
+		//binding.setProperty("triggerId", context.getTriggerId());
 		//binding.setProperty("envs", context.getEnvs());
-		binding.setProperty("params", context.getParams());
+		Map<String,Object> p = context.getParams();
+		if(p == null )
+			p = new HashMap<>();
+		p.put("jobId",context.getJobId());
+		p.put("jobTriggerId",context.getTriggerId());
+		p.put("jobTimeout",context.getTimeout());
+		binding.setProperty("params", p);
 
 		GroovyShell shell = new GroovyShell(binding);
 

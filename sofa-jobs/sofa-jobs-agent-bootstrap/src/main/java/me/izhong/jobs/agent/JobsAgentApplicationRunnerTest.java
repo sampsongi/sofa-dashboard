@@ -29,7 +29,7 @@ public class JobsAgentApplicationRunnerTest {
 
         //String file = "/Users/jimmy/space/tianru/sofa-dashboard/sofa-jobs/sofa-jobs-agent-bootstrap/src/main/groovy/test.groovy";
 
-        String file = "H:\\space\\xxx\\sofa-dashboard\\sofa-jobs\\sofa-jobs-agent-bootstrap\\src\\main\\groovy\\同步表.groovy";
+        String file = "H:\\space\\xxx\\sofa-dashboard\\sofa-jobs\\sofa-jobs-agent-bootstrap\\src\\main\\groovy\\ftp.groovy";
         //初始化运行环境
         ScriptRunContext context = new ScriptRunContext();
         context.setJobId(0L);
@@ -42,7 +42,7 @@ public class JobsAgentApplicationRunnerTest {
 
         Map<String, String> envs = new HashMap<>();
         context.setEnvs(envs);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("log","logv");
         context.setParams(params);
 
