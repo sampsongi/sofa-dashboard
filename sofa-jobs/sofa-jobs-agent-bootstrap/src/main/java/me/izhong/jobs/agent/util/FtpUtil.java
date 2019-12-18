@@ -39,6 +39,7 @@ public class FtpUtil {
 	 */
 	public static void putFileToFtp(String host, String user, String pass,
 			String destDir, String destFile, File srcFile) throws Exception {
+		checkAddress(host);
 		if (host.startsWith("sftp")) {
 			putSftp(host, user, pass, destDir, destFile, srcFile);
 		} else if (host.startsWith("ftp")) {
@@ -46,39 +47,30 @@ public class FtpUtil {
 		}
 	}
 
-	public static boolean getFileFromFtp(String host, String user, String pass,
-			String srcDir, String srcFile, File destFile)
-	{
-		try
-		{
-			if (host.startsWith("sftp"))
-			{
-				getSftp(host, user, pass, srcDir, srcFile, destFile);
-			} else if (host.startsWith("ftp"))
-			{
-				getFtp(host, user, pass, srcDir, srcFile, destFile);
-			}
+	public static void getFileFromFtp(String host, String user, String pass,
+			String srcDir, String srcFile, File destFile) throws Exception {
+		checkAddress(host);
+		if (host.startsWith("sftp")) {
+			getSftp(host, user, pass, srcDir, srcFile, destFile);
+		} else if (host.startsWith("ftp")) {
+			getFtp(host, user, pass, srcDir, srcFile, destFile);
 		}
-		catch (Exception e)
-		{
-			log.error("下载失败",e);
-			return false;
-		}
-		return true;
 	}
 
 	public static FileInfo getFileInfoFromFtp(String host, String user, String pass,
 											  String srcDir, String srcFile) throws Exception{
+		checkAddress(host);
 		if (host.startsWith("sftp")) {
 			return getSftpFileInfo(host, user, pass, srcDir, srcFile);
 		} else if (host.startsWith("ftp")) {
 			return getFtpFileInfo(host, user, pass, srcDir, srcFile);
 		}
-		throw new Exception("地址异常");
+		return null;
 	}
 
 	public static List<String> listFtpFilesInDir(String host, String user,
 			String pass, String destDir) throws Exception {
+		checkAddress(host);
 		if (host.startsWith("sftp")) {
 			return listSftpFiles(host, user, pass, destDir);
 		} else if (host.startsWith("ftp")) {
@@ -90,11 +82,31 @@ public class FtpUtil {
 
 	public static void deleteFileFromFtp(String host, String user, String pass,
 									String destDir, String destFile) throws Exception {
+		checkAddress(host);
 		if (host.startsWith("sftp")) {
 			deleteSftp(host, user, pass, destDir, destFile);
 		} else if (host.startsWith("ftp")) {
 			deleteFtp(host, user, pass, destDir, destFile);
 		}
+	}
+
+	private static void checkAddress(String host) throws Exception {
+		if(StringUtils.isBlank(host) || (!host.startsWith("ftp://") && !host.startsWith("sftp://")) ) {
+			throw new Exception("FTP主机地址配置不正确，正确格式为 ftp://x.x.x.x:port 或者 sftp://x.x.x.x:port 实际地址:" + host);
+		}
+		String s1[] = host.split("://");
+		String s2[] = s1[1].split(":");
+		if(s2 == null || s2.length != 2) {
+			throw new Exception("FTP主机地址配置异常，正确格式为 ftp://x.x.x.x:port 实际地址:" + host);
+		}
+		int port = 0;
+		try {
+			port = Integer.parseInt(s2[1]);
+		} catch (Exception e) {
+			throw new Exception("FTP主机地址配置异常，端口号必须是数字，实际数据为:" + s2[1]);
+		}
+		if(port < 1 || port > 65535)
+			throw new Exception("FTP主机地址配置异常，端口号必须在1到65535");
 	}
 
 	private static void getFtp(String host, String user, String pass,
