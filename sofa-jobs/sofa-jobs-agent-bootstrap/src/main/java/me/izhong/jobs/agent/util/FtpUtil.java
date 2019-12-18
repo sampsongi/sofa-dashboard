@@ -295,19 +295,21 @@ public class FtpUtil {
 		ChannelSftp c = (ChannelSftp) channel;
 
 		try{
-			log.info("mkdir");
-			String[] dirs = destDir.split("/");
-			for(String s : dirs){
-				boolean exist = true;
-				try {
-					c.lstat(s);
-				} catch (Exception ee) {
-					exist = false;
+			if(StringUtils.isNotBlank(destDir)) {
+				log.info("mkdir");
+				String[] dirs = destDir.split("/");
+				for (String s : dirs) {
+					boolean exist = true;
+					try {
+						c.lstat(s);
+					} catch (Exception ee) {
+						exist = false;
+					}
+					if (!exist) {
+						c.mkdir(s.trim());
+					}
+					c.cd(s.trim());
 				}
-				if(!exist) {
-					c.mkdir(s.trim());
-				}
-				c.cd(s.trim());
 			}
 		} catch (Exception e) {
 			log.info("创建文件目录异常:" + destDir,e);
