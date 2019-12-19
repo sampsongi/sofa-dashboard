@@ -13,12 +13,10 @@ import me.izhong.jobs.admin.service.JobServiceReference;
 import me.izhong.db.common.annotation.AjaxWrapper;
 import me.izhong.jobs.model.Job;
 import me.izhong.jobs.model.JobGroup;
-import me.izhong.jobs.type.GlueTypeEnum;
 import me.izhong.jobs.type.TriggerTypeEnum;
 import me.izhong.model.ReturnT;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
-import me.izhong.jobs.admin.service.JobServiceReference;
-import me.izhong.jobs.type.GlueTypeEnum;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,16 +38,10 @@ public class JobInfoController {
 	@GetMapping()
 	public String job( Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup)
 	{
-		// 枚举-字典
-		//model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
-		//model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		//model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
-
 		List<JobGroup> jobGroupList = jobServiceReference.jobService.selectAllJobGroup();
 		if (jobGroupList==null || jobGroupList.size()==0) {
 		//	throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
-
 		model.addAttribute("groupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 		return prefix + "/job";
@@ -186,6 +178,9 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@AjaxWrapper
 	public void triggerJob(Long jobId, String executorParam) {
+		if(StringUtils.isBlank(executorParam)) {
+			executorParam = "{}";
+		}
 		ReturnT<String> rObj = jobServiceReference.jobService.trigger(jobId,TriggerTypeEnum.MANUAL,-1,executorParam);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
 			throw BusinessException.build(rObj.getMsg());

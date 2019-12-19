@@ -967,6 +967,15 @@ var table = {
                     $.operate.submit(url, "post", "json", data);
                 });
             },
+            //获取选中的列
+            selectRow: function () {
+                var row = $("#" + table.options.id).bootstrapTable('getSelections');
+                if ($.common.isEmpty(row)) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                return row[0];
+            },
             //获取选中的列的ID
             selectRowId: function () {
                 var rows = $.common.isEmpty(table.options.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns(table.options.uniqueId);
@@ -1018,7 +1027,6 @@ var table = {
                 var url = $.common.isEmpty(id) ? table.options.createUrl.replace("{id}", "") : table.options.createUrl.replace("{id}", id);
                 return url;
             },
-            // 修改信息
             // 修改信息
             edit: function(id) {
                 table.set();

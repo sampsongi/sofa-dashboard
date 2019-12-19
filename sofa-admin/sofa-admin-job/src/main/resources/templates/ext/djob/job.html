@@ -60,6 +60,33 @@
 			</div>
 		</div>
 	</div>
+	<!-- 执行参数 -->
+	<div class="modal inmodal fade" id="runModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">任务名称:<span id="runJobName"></span></h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal form" role="form" >
+						<input id="runJobId" name="runJobId" type="hidden" value="">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">执行参数</label>
+							<div class="col-sm-10">
+								<textarea id="runParams" name="runParams" class="form-control" style="min-height: 150px"> </textarea>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="doStart()">执行</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<th:block th:include="include :: footer" />
 	<script th:inline="javascript">
         var viewFlag = [[${@permission.hasPermi('ext:job:view')}]];
@@ -196,14 +223,6 @@
                 $.operate.post(prefix + "/start", { "jobId": jobId});
             })
         }
-		
-		/* 立即执行一次 */
-		function trigger() {
-            var rowId = $.operate.selectRowId();
-            $.modal.confirm("确认要立即执行一次任务吗？", function() {
-				$.operate.post(prefix + "/trigger", { "jobId": rowId});
-		    })
-		}
 
 		/* 调度任务-停用 */
 		function stop() {
@@ -215,11 +234,29 @@
 
 		/* 调度任务-启用 */
 		function start() {
-            var rowId = $.operate.selectRowId();
-			$.modal.confirm("确认要启用任务吗？", function() {
-				$.operate.post(prefix + "/start", { "jobId": rowId});
+            $.modal.confirm("确认要启用任务吗？", function() {
+				$.operate.post(prefix + "/start", { "jobId": $.operate.selectRowId()});
 		    })
 		}
+
+        /* 立即执行一次 */
+        function trigger() {
+            var row = $.operate.selectRow();
+            $("#runJobName").text(row.jobDesc);
+            $("#runJobId").val(row.jobId);
+            $("#runParams").val(row.executorParam);
+            $('#runModal').modal({backdrop: false, keyboard: false}).modal('show');
+            //$.modal.confirm("确认要立即执行一次任务吗？", function() {
+             //   $.operate.post(prefix + "/trigger", { "jobId": rowId});
+            //})
+        }
+
+        function doStart() {
+            var jobId = $("#runJobId").val();
+            var params = $("#runParams").val();
+            $.operate.post(prefix + "/trigger", { "jobId": jobId, "executorParam":params});
+            $('#runModal').modal('hide');
+        };
 
         function editCode(id) {
             var url = prefix + "/code?jobId="+id;

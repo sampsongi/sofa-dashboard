@@ -69,7 +69,7 @@ public class JobDirectTrigger {
 
         int finalFailRetryCount = failRetryCount >= 0 ? failRetryCount : (jobInfo.getExecutorFailRetryCount() == null ? 0 : jobInfo.getExecutorFailRetryCount().intValue());
 
-        if (StringUtils.isNotEmpty(executorParam )) {
+        if (StringUtils.isBlank(executorParam )) {
             executorParam = jobInfo.getExecutorParam();
         }
 
