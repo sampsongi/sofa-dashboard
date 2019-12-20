@@ -43,7 +43,7 @@ public class ShellCommandKillJob extends IJobHandler {
 
         String scriptDir = configBean.getScriptPath();
 
-        log.info("shell command kill job[{}]  trigger [{}] timeout:{} ",
+        log.info("shell command kill job[{}]  trigger [{}] timeout:{}s ",
                 jobId, jobContext.getTriggerId(),jobContext.getTimeout());
 
         try {
@@ -62,7 +62,7 @@ public class ShellCommandKillJob extends IJobHandler {
 
             DefaultExecutor shellExecutor = new DefaultExecutor();
 
-            ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+            ExecuteWatchdog watchdog = new ExecuteWatchdog((timeout + 60 )* 1000 );
             shellExecutor.setWatchdog(watchdog);
 
             //正常退出状态码

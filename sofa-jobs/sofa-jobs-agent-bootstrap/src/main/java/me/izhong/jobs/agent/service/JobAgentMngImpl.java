@@ -33,7 +33,7 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
         try {
             ShellCommandKillJob commandJob = new ShellCommandKillJob();
             //后面考虑缓存 进程id
-            JobContext context = new JobContext(jobId, triggerId, 90 * 1000, null, null);
+            JobContext context = new JobContext(jobId, triggerId, 60, null, null);
             return commandJob.execute(context);
         } catch (Exception e) {
             log.error("", e);
@@ -47,7 +47,7 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
         try {
             ShellCommandStatusJob commandJob = new ShellCommandStatusJob();
             //后面考虑缓存 进程id
-            JobContext context = new JobContext(jobId, triggerId, 90 * 1000, null, null);
+            JobContext context = new JobContext(jobId, triggerId, 60, null, null);
             return commandJob.execute(context);
         } catch (Exception e) {
             log.error("", e);
@@ -57,15 +57,15 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
 
 
     @Override
-    public ReturnT<String> trigger(Long jobId, Long triggerId, Map<String, String> envs, Map<String, String> params) {
+    public ReturnT<String> trigger(Long jobId, Long triggerId, Long timeout, Map<String, String> envs, Map<String, String> params) {
 
         if (envs == null)
             envs = new HashMap();
 
-        long timeout = params.get("timeout") == null ? 10 * 60 * 1000 : Long.valueOf(params.get("timeout")).longValue();
+//        默认30分钟超时
+        long tt = (timeout == null ? 30 * 60 : timeout);
 
-
-        JobContext context = new JobContext(jobId, triggerId, timeout, envs, params);
+        JobContext context = new JobContext(jobId, triggerId, tt, envs, params);
         log.info("收到远程任务请求 jobId:{} triggerId:{}",jobId,triggerId);
         new Thread(new Runnable() {
             @Override

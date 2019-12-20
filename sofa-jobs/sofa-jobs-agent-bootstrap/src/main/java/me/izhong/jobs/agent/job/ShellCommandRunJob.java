@@ -60,7 +60,7 @@ public class ShellCommandRunJob extends IJobHandler {
             String dateTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             //String envParams = JSON.toJSONString(envs);
             String execParams = JSON.toJSONString(params);
-            log.info("开始任务:serverName={} command={}, timeout={}",
+            log.info("开始任务:serverName={} command={}, timeout={}s",
                     ContextUtil.getServerName(), command, timeout);
 
             if (StringUtils.isBlank(command)) {
@@ -80,7 +80,8 @@ public class ShellCommandRunJob extends IJobHandler {
 
             DefaultExecutor shellExecutor = new DefaultExecutor();
 
-            ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+            //监控器多等待一分钟
+            ExecuteWatchdog watchdog = new ExecuteWatchdog((timeout + 60 )* 1000);
             shellExecutor.setWatchdog(watchdog);
 
             //正常退出状态码

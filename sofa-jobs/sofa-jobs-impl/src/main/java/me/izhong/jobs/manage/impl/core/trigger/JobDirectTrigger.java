@@ -128,9 +128,9 @@ public class JobDirectTrigger {
 
             String executorParams = triggerParam.getExecutorParams();
             Map<String, String> envs = new HashMap<String, String>();
-            if (triggerParam.getExecutorTimeout() != null) {
-                envs.put("timeout", triggerParam.getExecutorTimeout().toString());
-            }
+//            if (triggerParam.getExecutorTimeout() != null) {
+//                envs.put("timeout", triggerParam.getExecutorTimeout().toString());
+//            }
             Map<String, String> params = new HashMap<String, String>();
             if (StringUtils.isNotBlank(executorParams)) {
                 try {
@@ -156,7 +156,8 @@ public class JobDirectTrigger {
             params.put("rawParams",executorParams);
             logger.info("rpc 远程调用 jobId:{}", triggerParam.getJobId());
             //dubbo 远程调用
-            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), envs, params);
+            Long timeout = triggerParam.getExecutorTimeout();
+            runResult = sr.trigger(triggerParam.getJobId(), triggerParam.getLogId(), timeout, envs, params);
             logger.info("rpc 远程调用应答:{}", runResult);
             if (runResult == null) {
                 runResult = ReturnT.FAIL;
