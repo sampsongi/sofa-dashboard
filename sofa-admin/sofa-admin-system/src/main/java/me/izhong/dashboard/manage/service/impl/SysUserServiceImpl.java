@@ -137,28 +137,24 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
     public SysUser saveUser(SysUser user) throws BusinessException {
         Assert.notNull(user, "用户不能为空");
         try {
+            boolean isNew = true;
             SysUser dbuser = null;
             if (user.getUserId() != null) {
                 dbuser = userDao.findByUserId(user.getUserId());
-                if(dbuser != null)
+                if(dbuser != null) {
+                    isNew = false;
                     user.setId(dbuser.getId());
-            }
-            if (dbuser == null && StringUtils.isNotBlank(user.getPassword())) {
-                user.setSalt(Global.getSalt());
-                String en = MD5Util.encode(Global.getSalt() + user.getPassword());
-                user.setPassword(en);
-            } else if (dbuser != null && StringUtils.isNotBlank(user.getPassword())
-                    && !StringUtils.equals(user.getPassword(), dbuser.getPassword())) {
-                user.setSalt(Global.getSalt());
-                String en = MD5Util.encode(Global.getSalt() + user.getPassword());
-                user.setPassword(en);
+                }
             }
             if (!checkLoginNameUnique(user)) {
                 throw BusinessException.build(String.format("用户名字[%s]重复", user.getLoginName()));
             }
 
-            SysUser u = super.insert(user);
-            return u;
+            if(isNew) {
+                return super.insert(user);
+            } else {
+                return super.update(user);
+            }
         } catch (Exception e) {
             log.error("", e);
             if (e instanceof BusinessException)
@@ -361,6 +357,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
         //dbUser.setPassword(en);
         dbUser.setSalt(salt);
         dbUser.setPassword(newPassword);
+        dbUser.setPasswordUpdateTime(new Date());
         userDao.save(dbUser);
         return dbUser;
     }

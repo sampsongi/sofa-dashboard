@@ -8,7 +8,7 @@ public class UserPasswordRetryLimitExceedException extends BusinessException {
     public static final String KEY = "USER_PASSWORD_EXCEED";
 
     public UserPasswordRetryLimitExceedException() {
-        super(KEY, "密码次数超限");
+        super(KEY, "密码输入错误次数超过限制，请联系管理员");
     }
 
     public UserPasswordRetryLimitExceedException(String message) {
@@ -16,6 +16,6 @@ public class UserPasswordRetryLimitExceedException extends BusinessException {
     }
 
     public UserPasswordRetryLimitExceedException(long count) {
-        super(KEY, "错误次数" + count);
+        super(KEY, "密码输入错误次数超过" + count +"次，请联系管理员");
     }
 }

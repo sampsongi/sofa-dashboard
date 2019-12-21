@@ -884,10 +884,12 @@ var table = {
                         $.modal.loading("正在处理中，请稍后...");
                     },
                     success: function (result) {
+                        var isOver = false;
                         if (typeof callback == "function") {
-                            callback(result);
+                            isOver = callback(result);
                         }
-                        $.operate.ajaxSuccess(result);
+                        if (!isOver)
+                            $.operate.ajaxSuccess(result);
                     }
                 };
                 $.ajax(config)
@@ -1147,6 +1149,8 @@ var table = {
                 } else if (result.code == web_status.SUCCESS && table.options.type == table_type.bootstrapTreeTable) {
                     $.modal.msgSuccess(result.msg);
                     $.treeTable.refresh();
+                } else if (result.code == web_status.SUCCESS) {
+                    $.modal.msgSuccess(result.msg)
                 } else if (result.code == web_status.WARNING) {
                     $.modal.alertWarning(result.msg)
                 } else {

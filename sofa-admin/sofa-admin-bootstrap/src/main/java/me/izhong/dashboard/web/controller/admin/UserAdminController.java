@@ -1,6 +1,7 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import me.izhong.common.util.TimeUtil;
+import me.izhong.dashboard.manage.service.*;
 import me.izhong.db.common.util.PageRequestUtil;
 import me.izhong.domain.PageModel;
 import me.izhong.domain.PageRequest;
@@ -15,10 +16,6 @@ import me.izhong.dashboard.manage.entity.SysUser;
 import me.izhong.db.common.exception.BusinessException;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.security.service.PasswordService;
-import me.izhong.dashboard.manage.service.SysDeptService;
-import me.izhong.dashboard.manage.service.SysPostService;
-import me.izhong.dashboard.manage.service.SysRoleService;
-import me.izhong.dashboard.manage.service.SysUserService;
 import me.izhong.common.util.Convert;
 import me.izhong.dashboard.manage.util.ExcelUtil;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
@@ -59,6 +56,9 @@ public class UserAdminController {
 
     @Autowired
     private PasswordService passwordService;
+
+    @Autowired
+    private SysConfigService sysConfigService;
 
     @RequiresPermissions(PermissionConstants.User.VIEW)
     @RequestMapping
@@ -122,11 +122,13 @@ public class UserAdminController {
             throw BusinessException.build("手机号已经存在");
         }
         if (StringUtils.isBlank(user.getPassword())) {
-            dbUser.setPassword(RandomStringUtils.randomNumeric(20));
+            throw BusinessException.build("密码不能为空");
         } else {
-            dbUser.setPassword(user.getPassword());
-
+            dbUser.setSalt(Global.getSalt());
+            dbUser.setPassword(passwordService.encryptPassword(user.getPassword(), Global.getSalt()));
+            dbUser.setPasswordUpdateTime(new Date());
         }
+
         dbUser.setStatus(user.getStatus());
         dbUser.setPhoneNumber(user.getPhoneNumber());
         dbUser.setEmail(user.getEmail());
@@ -188,9 +190,14 @@ public class UserAdminController {
         if (!sysUserService.checkPhoneUnique(user)) {
             throw BusinessException.build("手机号已经存在");
         }
-        if (StringUtils.isBlank(user.getPassword()) && StringUtils.equals(user.getPassword(),dbUser.getPassword())) {
-            dbUser.setPassword(passwordService.encryptPassword(user.getPassword(),dbUser.getSalt()));
-        }
+//        修改没有密码输入框，需要使用密码重置按钮
+//        if (StringUtils.isNotBlank(user.getPassword())) {
+//            String enPass = passwordService.encryptPassword(user.getPassword(),dbUser.getSalt());
+//            if(!StringUtils.equals(enPass,dbUser.getPassword())) {
+//                dbUser.setPassword(enPass);
+//                dbUser.setPasswordUpdateTime(new Date());
+//            }
+//        }
 
         dbUser.setStatus(user.getStatus());
         dbUser.setAvatar(user.getAvatar());
@@ -321,6 +328,9 @@ public class UserAdminController {
 
         user.setSalt(Global.getSalt());
         user.setPassword(passwordService.encryptPassword(user.getPassword(), user.getSalt()));
+        //解锁账户
+        passwordService.unlock(dbUser.getUserName());
+
         dbUser.setUpdateBy(UserInfoContextHelper.getCurrentLoginName());
 
         sysUserService.resetUserPwd(user.getUserId(), user.getPassword(),user.getSalt());
@@ -337,7 +347,8 @@ public class UserAdminController {
         sysUserService.checkUserAllowed(user);
         SysUser u = sysUserService.findUser(user.getUserId());
         UserInfoContextHelper.checkScopePermission(PermissionConstants.User.EDIT,u.getDeptId());
-
+        //解锁账户
+        passwordService.unlock(u.getUserName());
         u.setStatus(user.getStatus());
         sysUserService.saveUser(u);
         return 1;

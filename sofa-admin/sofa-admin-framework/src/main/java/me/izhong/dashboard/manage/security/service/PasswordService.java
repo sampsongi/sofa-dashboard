@@ -9,6 +9,8 @@ import me.izhong.dashboard.manage.factory.AsyncManager;
 import me.izhong.dashboard.manage.factory.AsyncFactory;
 import me.izhong.dashboard.manage.util.MD5Util;
 import me.izhong.dashboard.manage.util.MessageUtil;
+import me.izhong.db.common.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,12 @@ public class PasswordService {
     }
 
     public String encryptPassword(String password, String salt) {
+        if(StringUtils.isBlank(password)) {
+            throw BusinessException.build("密码异常，不能为空");
+        }
+        if(StringUtils.isBlank(salt)) {
+            throw BusinessException.build("密码异常，随机因子不能为空");
+        }
         return MD5Util.hash(password + salt);
     }
 //    public String randomSalt()

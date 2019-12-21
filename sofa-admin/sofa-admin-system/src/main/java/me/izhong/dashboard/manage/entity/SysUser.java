@@ -1,13 +1,10 @@
 package me.izhong.dashboard.manage.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import me.izhong.db.common.annotation.*;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.izhong.db.common.annotation.AutoId;
-import me.izhong.db.common.annotation.Excel;
-import me.izhong.db.common.annotation.PrimaryId;
-import me.izhong.db.common.annotation.Search;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Transient;
@@ -70,6 +67,8 @@ public class SysUser extends TimedBasedEntity {
     @JSONField(serialize = false)
     private String password;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date passwordUpdateTime;
     /**
      * 盐加密
      */

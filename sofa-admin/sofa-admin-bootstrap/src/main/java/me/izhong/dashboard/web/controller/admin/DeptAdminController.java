@@ -153,13 +153,20 @@ public class DeptAdminController {
     }
 
     /**
-     * 选择部门树,部门菜单上级部门选择,在部门的新增页面，修改页面展示
+     * 选择部门树,部门菜单上级部门选择,
+     *
+     * 部门页面：在部门的新增页面，修改页面展示
+     *
+     * 用户页面：增加修改用户的时候展示的部门树
      */
     @GetMapping("/selectDeptTree")
     public String selectDeptTree(Long deptId, String viewPerm, ModelMap mmap) {
         if(deptId == null || deptId == 0L)
             deptId = 1L;
         SysDept sysDept = sysDeptService.selectDeptByDeptId(deptId);
+        if(sysDept == null) {
+            throw BusinessException.build("加载部门异常");
+        }
         mmap.put("sysDept", sysDept);
         mmap.put("viewPerm", viewPerm);
         return prefix + "/tree";
@@ -176,7 +183,9 @@ public class DeptAdminController {
     }
 
     /**
-     * 加载部门列表树 当前用户有权限的部门树列表
+     * 加载部门列表树
+     *
+     * 用户管理页面： 左侧 当前用户有权限的部门树列表
      */
     @RequiresAuthentication
     @GetMapping("/myTreeData")
@@ -184,6 +193,7 @@ public class DeptAdminController {
     public List<Ztree> myTreeData(String viewPerm) {
         Long userId = UserInfoContextHelper.getCurrentUserId();
         if(StringUtils.isNotBlank(viewPerm)) {
+            //只展示有权限的部门
             Set<Long> scop = UserInfoContextHelper.getLoginUser().getScopeData(viewPerm);
             return sysDeptService.selectDeptTreeData(scop.toArray(new Long[]{}));
         }
