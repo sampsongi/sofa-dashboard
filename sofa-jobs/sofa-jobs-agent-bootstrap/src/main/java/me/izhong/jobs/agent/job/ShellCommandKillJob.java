@@ -94,7 +94,7 @@ public class ShellCommandKillJob extends IJobHandler {
 
 
             Date startTime = new Date();
-            log.info("kill任务开始执行, 上送执行时间:triggerId:{} startTime:{}",triggerId,DateUtil.dateTime(startTime));
+            log.info("kill任务开始执行,triggerId:{} startTime:{}",triggerId,DateUtil.dateTime(startTime));
 
             CommandLine cmdLine = CommandLine.parse(shellCommand);
             int exitValue = shellExecutor.execute(cmdLine);
@@ -103,7 +103,7 @@ public class ShellCommandKillJob extends IJobHandler {
             //jobMng.uploadJobErrorStatics(triggerId, new Date(), 400, exitValue == 0 ? "执行失败（终止成功）":"终止任务异常");
             return ReturnT.SUCCESS;
         } catch (Throwable e) {
-            log.error("kill任务失败 triggerId:{}",triggerId, e);
+            log.error("kill任务异常，上送异常信息，triggerId:{}",triggerId, e);
             jobMng.uploadJobErrorStatics(triggerId,new Date(), 400, "kill任务执行异常:" + e.getMessage());
             return ReturnT.FAIL;
         } finally {
