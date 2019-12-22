@@ -875,6 +875,37 @@ var table = {
         // 操作封装处理
         operate: {
             // 提交数据
+            doSubmit: function (url, type, dataType, data, callback) {
+                var config = {
+                    url: url,
+                    type: type,
+                    dataType: dataType,
+                    data: data,
+                    beforeSend: function () {
+                        $.modal.loading("正在处理中，请稍后...");
+                    },
+                    success: function (result) {
+                        $.modal.closeLoading();
+                        if(result.code == "SUCCESS") {
+                            if (typeof callback == "function") {
+                                callback(result.data);
+                            }
+                        } else {
+                            $.modal.alertError(result.msg);
+                        }
+                    }
+                };
+                $.ajax(config)
+            },
+            // post请求传输
+            doPost: function (url, data, callback) {
+                $.operate.doSubmit(url, "post", "json", data, callback);
+            },
+            // get请求传输
+            doGet: function (url, callback) {
+                $.operate.doSubmit(url, "get", "json", "", callback);
+            },
+            // 提交数据
             submit: function (url, type, dataType, data, callback) {
                 var config = {
                     url: url,
@@ -885,12 +916,10 @@ var table = {
                         $.modal.loading("正在处理中，请稍后...");
                     },
                     success: function (result) {
-                        var isOver = false;
                         if (typeof callback == "function") {
-                            isOver = callback(result);
+                            callback(result);
                         }
-                        if (!isOver)
-                            $.operate.ajaxSuccess(result);
+                        $.operate.ajaxSuccess(result);
                     }
                 };
                 $.ajax(config)

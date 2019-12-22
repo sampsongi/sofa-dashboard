@@ -218,21 +218,15 @@
 
             //$.operate.save(prefix + "/edit", data);
 
-            $.operate.post(prefix + '/code/save', {
+            $.operate.doPost(prefix + '/code/save', {
                 'id' : id,
                 'jobScript' : jobScript,
                 'jobRemark' : jobRemark
             },function(result){
-                if (result.code == web_status.SUCCESS) {
-                    $.modal.msgSuccess(result.msg);
-                    $("#jobRemark").val("");
-                    $('#saveModal').modal('hide');
-                    //window.location.reload();
-                } else {
-                    $.modal.alertError(result.msg);
-                }
-                $.modal.closeLoading();
-                return true;
+				$.modal.msgSuccess("保存成功");
+				$("#jobRemark").val("");
+				$('#saveModal').modal('hide');
+				//window.location.reload();
             });
 
             // $.modal.msgSuccess("modal");

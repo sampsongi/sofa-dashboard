@@ -239,15 +239,11 @@
 
         /* 立即执行一次 */
         function triggerRow(jobId) {
-            $.operate.get(prefix + "/view?jobId="+jobId,function (row) {
-                if(row.code = "SUCCESS") {
-                    $("#runJobName").text(row.data.jobDesc);
-                    $("#runJobId").val(row.data.jobId);
-                    $("#runParams").val(row.data.executorParam);
-                    $('#runModal').modal({backdrop: false, keyboard: false}).modal('show');
-                    $.modal.closeLoading();
-                    return true;
-                }
+            $.operate.doGet(prefix + "/view?jobId="+jobId,function (row) {
+				$("#runJobName").text(row.jobDesc);
+				$("#runJobId").val(row.jobId);
+				$("#runParams").val(row.executorParam);
+				$('#runModal').modal({backdrop: false, keyboard: false}).modal('show');
             })
         }
 
