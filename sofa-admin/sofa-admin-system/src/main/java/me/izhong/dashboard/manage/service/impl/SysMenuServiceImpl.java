@@ -208,7 +208,7 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
 
     @Override
     public int insertMenu(SysMenu sysMenu) {
-        checkMenuNameUnique(sysMenu);
+        checkMenuValid(sysMenu);
         super.insert(sysMenu);
         return 1;
     }
@@ -223,9 +223,52 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
         } else {
             throw BusinessException.build("菜单未找到 menuId=" + sysMenu.getMenuId());
         }
-        checkMenuNameUnique(sysMenu);
+        checkMenuValid(sysMenu);
         menuDao.save(sysMenu);
         return 1;
+    }
+
+    private void checkMenuValid(SysMenu m) throws BusinessException {
+        if(!checkMenuNameUnique(m))
+            throw BusinessException.build("菜单名称重复");
+        if(StringUtils.isBlank(m.getMenuType())){
+            throw BusinessException.build("菜单类型不能为空");
+        }
+        if(StringUtils.equalsAny(m.getMenuType(),"C","F") && StringUtils.isBlank(m.getPerms())){
+            throw BusinessException.build("权限标识不能为空");
+        }
+        if(StringUtils.isBlank(m.getOrderNum())){
+            throw BusinessException.build("显示排序不能为空");
+        }
+        if(!StringUtils.equalsAny(m.getMenuType(),"M","C","F")) {
+            throw BusinessException.build("菜单类型不正确");
+        }
+        if(StringUtils.equalsAny(m.getMenuType(),"M","C")) {
+            if(StringUtils.isBlank(m.getVisible())) {
+                throw BusinessException.build("菜单菜单状态不能为空");
+            }
+            if(StringUtils.equals(m.getMenuType(),"C") && StringUtils.isBlank(m.getTarget())) {
+                throw BusinessException.build("打开方式不能为空");
+            }
+        }
+
+        if(m.getParentId() > 0) {
+            SysMenu parentMenu = menuDao.findByMenuId(m.getParentId());
+            if(parentMenu == null) {
+                throw BusinessException.build("父菜单不存在");
+            }
+            if(!StringUtils.equals(parentMenu.getMenuType(),"M")) {
+                throw BusinessException.build("父菜单不是目录，不能选择");
+            }
+        }
+
+        List<SysMenu> childs = menuDao.findAllByParentId(m.getMenuId());
+        if(childs != null && childs.size() > 0) {
+            if(!StringUtils.equals(m.getMenuType(),"M")) {
+                throw BusinessException.build("菜单有子成员，菜单类型只能为目录，不能修改为其他状态");
+            }
+        }
+
     }
 
     @Override

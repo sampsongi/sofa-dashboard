@@ -70,7 +70,7 @@ public class MenuAdminController {
         } else {
             sysMenu = new SysMenu();
             sysMenu.setMenuId(0L);
-            sysMenu.setMenuName("主目录");
+            sysMenu.setMenuName("根目录");
         }
         mmap.put("menu", sysMenu);
         return prefix + "/add";
@@ -95,7 +95,13 @@ public class MenuAdminController {
      */
     @GetMapping("/edit/{menuId}")
     public String edit(@PathVariable("menuId") Long menuId, ModelMap mmap) {
-        mmap.put("menu", sysMenuService.selectMenuById(menuId));
+        SysMenu sysMenu = sysMenuService.selectMenuById(menuId);
+        mmap.put("menu", sysMenu);
+        if (0L == sysMenu.getParentId()) {
+            sysMenu.setParentId(0L);
+            sysMenu.setParentName("根目录");
+        }
+        mmap.put("menu", sysMenu);
         return prefix + "/edit";
     }
 
@@ -155,7 +161,15 @@ public class MenuAdminController {
      */
     @GetMapping("/selectMenuTree/{menuId}")
     public String selectMenuTree(@PathVariable("menuId") Long menuId, ModelMap mmap) {
-        mmap.put("menu", sysMenuService.selectMenuById(menuId));
+        SysMenu menu;
+        if(menuId.equals(0L)) {
+            menu = new SysMenu();
+            menu.setMenuId(0L);
+            menu.setMenuName("主目录");
+        } else {
+            menu = sysMenuService.selectMenuById(menuId);
+        }
+        mmap.put("menu", menu);
         return prefix + "/tree";
     }
 
