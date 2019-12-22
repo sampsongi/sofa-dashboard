@@ -36,7 +36,7 @@ public class JobInfoController {
 	private JobServiceReference jobServiceReference;
 
 	@GetMapping()
-	public String job( Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup)
+	public String job(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup)
 	{
 		List<JobGroup> jobGroupList = jobServiceReference.jobService.selectAllJobGroup();
 		if (jobGroupList==null || jobGroupList.size()==0) {
@@ -47,6 +47,14 @@ public class JobInfoController {
 		return prefix + "/job";
 	}
 
+	@RequiresPermissions(JobPermissions.JobInfo.VIEW)
+	@RequestMapping("/view")
+	@AjaxWrapper
+	public Job view(Long jobId) {
+		return jobServiceReference.jobService.findByJobId(jobId);
+	}
+
+	@RequiresPermissions(JobPermissions.JobInfo.VIEW)
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<Job> pageList(HttpServletRequest request, Job ino) {
