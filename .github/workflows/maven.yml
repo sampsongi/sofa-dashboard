@@ -42,7 +42,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT2 }}
-        source: "sofa-dashboard/sofa-admin/sofa-admin-bootstrap/target/sofa-admin-bootstrap.jar"
+        source: "/home/runner/work/sofa-dashboard/sofa-dashboard/sofa-admin/sofa-admin-bootstrap/target/sofa-admin-bootstrap.jar"
         target: "~/jobs/application/"
     - name: restart admin bootstrap server
       uses: appleboy/ssh-action@master
