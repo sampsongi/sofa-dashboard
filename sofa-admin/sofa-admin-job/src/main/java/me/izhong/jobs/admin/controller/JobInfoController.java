@@ -187,7 +187,7 @@ public class JobInfoController {
 	@AjaxWrapper
 	public void triggerJob(Long jobId, String executorParam) {
 		if(StringUtils.isBlank(executorParam)) {
-			executorParam = "{}";
+			executorParam = "{\"\":\"\"}";
 		}
 		ReturnT<String> rObj = jobServiceReference.jobService.trigger(jobId,TriggerTypeEnum.MANUAL,-1,executorParam);
 		if( ReturnT.SUCCESS_CODE != rObj.getCode()){
