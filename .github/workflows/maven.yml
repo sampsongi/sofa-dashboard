@@ -22,8 +22,8 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "/home/runner/work/sofa-dashboard/sofa-dashboard/sofa-jobs/sofa-jobs-agent-bootstrap/target/sofa-jobs-agent-bootstrap.jar,/home/runner/work/sofa-dashboard/sofa-dashboard/sofa-jobs/sofa-jobs-bootstrap/target/sofa-jobs-bootstrap.jar"
-        target: "~/jobs/application/"
+        source: "sofa-dashboard/sofa-jobs/sofa-jobs-agent-bootstrap/target/sofa-jobs-agent-bootstrap.jar,sofa-dashboard/sofa-jobs/sofa-jobs-bootstrap/target/sofa-jobs-bootstrap.jar"
+        target: "~/jobs/application"
     - name: restart job bootstrap and job agent bootstrap server
       uses: appleboy/ssh-action@master
       with:
@@ -42,7 +42,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT2 }}
-        source: "/home/runner/work/sofa-dashboard/sofa-dashboard/sofa-admin/sofa-admin-bootstrap/target/sofa-admin-bootstrap.jar"
+        source: "sofa-dashboard/sofa-admin/sofa-admin-bootstrap/target/sofa-admin-bootstrap.jar"
         target: "~/jobs/application/"
     - name: restart admin bootstrap server
       uses: appleboy/ssh-action@master
