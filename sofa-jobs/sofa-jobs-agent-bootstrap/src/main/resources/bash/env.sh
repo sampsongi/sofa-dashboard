@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export BASE_DIR=/home/nuis/jobs
+export BASE_DIR=/home/server/jobs
 export APP_DIR=$BASE_DIR/application
 export BIN_DIR=$BASE_DIR/bin
 export LOG_DIR=$BASE_DIR/logs

@@ -46,7 +46,7 @@ public class ExecGrooyScript implements IBatch {
 		AgentLog logger = context.getLog();
 
 		Logger slfLog = LoggerFactory.getLogger("脚本日志");
-		log.info("envs:{} params:{}",context.getEnvs(),context.getParams());
+		log.info("Groovy脚本收到执行参数:{}",context.getParams());
 		Binding binding = new Binding();
 		binding.setProperty("ac", ContextUtil.getApplicationContext());
 		binding.setProperty("remoteLog", logger);
@@ -64,7 +64,7 @@ public class ExecGrooyScript implements IBatch {
 
 		GroovyShell shell = new GroovyShell(binding);
 
-		log.info("执行Groovy脚本");
+		log.info("执行Groovy脚本,注入参数:{}",context.getParams());
 		Object result;
 		if(scriptPath != null) {
 			result = shell.evaluate(scriptPath);
