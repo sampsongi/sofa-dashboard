@@ -23,7 +23,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "sofa-jobs/sofa-jobs-bootstrap/target/sofa-jobs-bootstrap.jar"
-        target: "jobs/application/sofa-jobs-bootstrap.jar"
+        target: "jobs/application"
     - name: copy job agent file to server
       uses: appleboy/scp-action@master
       with:
@@ -32,7 +32,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "sofa-jobs/sofa-jobs-agent-bootstrap/target/sofa-jobs-agent-bootstrap.jar"
-        target: "jobs/application/sofa-jobs-agent-bootstrap.jar"
+        target: "jobs/application"
     - name: restart job bootstrap and job agent bootstrap server
       uses: appleboy/ssh-action@master
       with:
@@ -51,7 +51,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT2 }}
         source: "sofa-admin/sofa-admin-bootstrap/target/sofa-admin-bootstrap.jar"
-        target: "jobs/application/sofa-admin-bootstrap.jar"
+        target: "jobs/application"
     - name: restart admin bootstrap server
       uses: appleboy/ssh-action@master
       with:
