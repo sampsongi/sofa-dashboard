@@ -297,7 +297,7 @@ public class FtpUtil {
 		session.setConfig(sshConfig);
 
 		log.info("connect {}:{}", s2[0], Integer.parseInt(s2[1]));
-		session.connect(1500);
+		session.connect(15000);
 
 		Channel channel = session.openChannel("sftp");
 		channel.connect();
