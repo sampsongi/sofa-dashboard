@@ -42,6 +42,11 @@ public class FtpUtil {
 		checkAddress(host,user,pass);
 		if(srcFile == null || !srcFile.exists())
 			throw new Exception("srcFile为空,或者不存在");
+		String srcName = srcFile.getName();
+		String sep = (StringUtils.isBlank(destDir)||destDir.endsWith("/")) ? "" : "/";
+		log.info("上传文件 {} 到 {}{}{}",srcName,destDir,sep,destFile);
+		if(srcFile == null || !srcFile.exists())
+			throw new Exception("srcFile为空,或者不存在");
 		if (host.startsWith("sftp")) {
 			putSftp(host, user, pass, destDir, destFile, srcFile);
 		} else if (host.startsWith("ftp")) {
@@ -297,7 +302,7 @@ public class FtpUtil {
 		session.setConfig(sshConfig);
 
 		log.info("connect {}:{}", s2[0], Integer.parseInt(s2[1]));
-		session.connect(15000);
+		session.connect(3000);
 
 		Channel channel = session.openChannel("sftp");
 		channel.connect();
