@@ -257,8 +257,14 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
             if(parentMenu == null) {
                 throw BusinessException.build("父菜单不存在");
             }
-            if(!StringUtils.equals(parentMenu.getMenuType(),"M")) {
-                throw BusinessException.build("父菜单不是目录，不能选择");
+            if(StringUtils.equalsAny(m.getMenuType(),"M","C")) {
+                if (!StringUtils.equals(parentMenu.getMenuType(), "M")) {
+                    throw BusinessException.build("父菜单不是目录，不能选择");
+                }
+            } else if(StringUtils.equals(m.getMenuType(),"F")) {
+                if (StringUtils.equals(parentMenu.getMenuType(), "F")) {
+                    throw BusinessException.build("父菜单不是目录或者菜单，不能选择");
+                }
             }
         }
 

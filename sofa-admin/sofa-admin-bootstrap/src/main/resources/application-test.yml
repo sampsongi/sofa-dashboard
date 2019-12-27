@@ -1,8 +1,0 @@
-upload:
-  filepath: /home/server/boot/dashboard/data/upload/
-dashboard:
-  profile: /home/server/boot/dashboard/data/
-  ip:
-    addressEnabled: true
-    userLocalDatabase: true
-    filepath: /home/server/boot/dashboard/data/qqwry.dat

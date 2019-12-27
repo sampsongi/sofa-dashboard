@@ -39,7 +39,14 @@ public class FtpUtil {
 	 */
 	public static void putFileToFtp(String host, String user, String pass,
 			String destDir, String destFile, File srcFile) throws Exception {
-		checkAddress(host);
+		checkAddress(host,user,pass);
+		if(srcFile == null || !srcFile.exists())
+			throw new Exception("srcFile为空,或者不存在");
+		String srcName = srcFile.getName();
+		String sep = (StringUtils.isBlank(destDir)||destDir.endsWith("/")) ? "" : "/";
+		log.info("上传文件 {} 到 {}{}{}",srcName,destDir,sep,destFile);
+		if(srcFile == null || !srcFile.exists())
+			throw new Exception("srcFile为空,或者不存在");
 		if (host.startsWith("sftp")) {
 			putSftp(host, user, pass, destDir, destFile, srcFile);
 		} else if (host.startsWith("ftp")) {
@@ -49,7 +56,9 @@ public class FtpUtil {
 
 	public static void getFileFromFtp(String host, String user, String pass,
 			String srcDir, String srcFile, File destFile) throws Exception {
-		checkAddress(host);
+		checkAddress(host,user,pass);
+		if(destFile == null || !destFile.exists())
+			throw new Exception("destFile为空,或者不存在");
 		if (host.startsWith("sftp")) {
 			getSftp(host, user, pass, srcDir, srcFile, destFile);
 		} else if (host.startsWith("ftp")) {
@@ -59,7 +68,7 @@ public class FtpUtil {
 
 	public static FileInfo getFileInfoFromFtp(String host, String user, String pass,
 											  String srcDir, String srcFile) throws Exception{
-		checkAddress(host);
+		checkAddress(host,user,pass);
 		if (host.startsWith("sftp")) {
 			return getSftpFileInfo(host, user, pass, srcDir, srcFile);
 		} else if (host.startsWith("ftp")) {
@@ -70,19 +79,21 @@ public class FtpUtil {
 
 	public static List<String> listFtpFilesInDir(String host, String user,
 			String pass, String destDir) throws Exception {
-		checkAddress(host);
+		checkAddress(host,user,pass);
 		if (host.startsWith("sftp")) {
 			return listSftpFiles(host, user, pass, destDir);
 		} else if (host.startsWith("ftp")) {
 			return listFtpFiles(host, user, pass, destDir);
 		} else {
-			return new ArrayList<String>();
+			throw new Exception("FTP地址异常");
 		}
 	}
 
 	public static void deleteFileFromFtp(String host, String user, String pass,
 									String destDir, String destFile) throws Exception {
-		checkAddress(host);
+		if(StringUtils.isBlank(destFile))
+			throw new Exception("destFile不能为空");
+		checkAddress(host,user,pass);
 		if (host.startsWith("sftp")) {
 			deleteSftp(host, user, pass, destDir, destFile);
 		} else if (host.startsWith("ftp")) {
@@ -90,7 +101,7 @@ public class FtpUtil {
 		}
 	}
 
-	private static void checkAddress(String host) throws Exception {
+	private static void checkAddress(String host,String user, String pass) throws Exception {
 		if(StringUtils.isBlank(host) || (!host.startsWith("ftp://") && !host.startsWith("sftp://")) ) {
 			throw new Exception("FTP主机地址配置不正确，正确格式为 ftp://x.x.x.x:port 或者 sftp://x.x.x.x:port 实际地址:" + host);
 		}
@@ -107,6 +118,10 @@ public class FtpUtil {
 		}
 		if(port < 1 || port > 65535)
 			throw new Exception("FTP主机地址配置异常，端口号必须在1到65535");
+		if(StringUtils.isBlank(user))
+			throw new Exception("FTP用户名不能为空");
+		if(StringUtils.isBlank(pass))
+			throw new Exception("FTP密码不能为空");
 	}
 
 	private static void getFtp(String host, String user, String pass,
@@ -275,7 +290,6 @@ public class FtpUtil {
 
 	private static void putSftp(String host, String user, String pass,
 			String destDir, String destFile, File srcFile) throws Exception {
-		log.info("u:{},p:{}",user,pass);
 		String s1[] = host.split("://");
 		String s2[] = s1[1].split(":");
 
@@ -288,7 +302,7 @@ public class FtpUtil {
 		session.setConfig(sshConfig);
 
 		log.info("connect {}:{}", s2[0], Integer.parseInt(s2[1]));
-		session.connect(1500);
+		session.connect(3000);
 
 		Channel channel = session.openChannel("sftp");
 		channel.connect();
@@ -430,7 +444,6 @@ public class FtpUtil {
 
 	private static List<String> listSftpFiles(String host, String user,
 			String pass, String destDir) throws Exception {
-		log.info("ftp:{},user:{},p:{}",host,user,pass);
 		String s1[] = host.split("://");
 		String s2[] = s1[1].split(":");
 
