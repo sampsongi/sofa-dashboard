@@ -124,10 +124,14 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
             reader = new LineNumberReader(new InputStreamReader(new FileInputStream(logFile), ahrEncode));
             String line = null;
 
+            int rCount = 0;
             while ((line = reader.readLine()) != null) {
                 toLineNum = reader.getLineNumber();        // [from, to], start as 1
                 if (toLineNum >= fromLineNum) {
-                    logContentBuffer.append(line).append("\n");
+                    rCount ++;
+//                    if(rCount > 1000)
+//                        break;
+                    logContentBuffer.append(toLineNum).append(" ").append(line).append("\n");
                 }
             }
         } catch (IOException e) {

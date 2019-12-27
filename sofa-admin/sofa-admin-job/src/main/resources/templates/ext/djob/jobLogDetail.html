@@ -4,25 +4,22 @@
 	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
 	<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
 	<style type="text/css">
-		html,body{height:100%}
-		.layout-boxed html,.layout-boxed body{height:100%}
+		html,body{padding: 0px; margin: 0px}
 		body{font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:400;}
-		.wrapper{height:100%;position:relative;overflow-x:hidden;overflow-y:auto}
+		.wrapper{position:relative;}
+/*
+		.content-code{position:relative;overflow-x:hidden;overflow-y:scroll}
+*/
 		.main-header .navbar{background-color:#c2e4b5;}
-		.main-header .navbar-custom-menu,.main-header .navbar-right{float:right;}
-		.fixed .main-header,.fixed .main-sidebar,.fixed .left-side{position:fixed;}
+		.main-header .navbar-custom-menu,.main-header {float:right;}
+		.fixed .main-header{position:fixed;}
 		.fixed .main-header{top:0;right:0;left:0}
 		.main-header{position:relative;max-height:100px;z-index:1030}
-		.fixed .content-wrapper,.fixed .right-side{padding-top:50px}
-		.fixed.layout-boxed .wrapper{max-width:100%}
-
-		.layout-top-nav .content-wrapper,.layout-top-nav .main-footer{margin-left:0;}
-
+		.fixed .content-wrapper {padding-top:50px}
 		.main-header .navbar{margin-bottom:0;border:none;min-height:50px;border-radius:0;}
-		.content-wrapper{min-height:100%;background-color:#ecf0f5;z-index:800;}
+		.content-wrapper{height:200px;background-color:#ecf0f5;z-index:800;}
 		.wrapper:before,.wrapper:after{content:" ";display:table}
 		.wrapper:after{clear:both}
-		.layout-boxed .wrapper{max-width:1250px;margin:0 auto;min-height:100%;box-shadow:0 0 8px rgba(0,0,0,0.5);position:relative}
 	</style>
 </head>
 <body class="fixed layout-top-nav">
@@ -55,8 +52,9 @@
 	</header>
 
 	<div class="content-wrapper" >
-		<section class="content">
+		<section class="content-code">
             <pre style="font-size:12px;position:relative;white-space:pre-wrap;" >
+				<div>[[${jobLogContent}]]</div>
                 <div id="logConsole"></div>
                 <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
                 <div><hr><hr></div>
@@ -78,6 +76,8 @@
     var logId = '[[${jobLog.jobLogId}]]';
     var jobId = '[[${jobLog.jobId}]]';
 
+    var fromLineNum = '[[${jobLogFromLineNumber}]]';
+
     $(function() {
 
         // trigger fail, end
@@ -88,7 +88,7 @@
         }
 
         // pull log
-        var fromLineNum = 1;    // [from, to], start as 1
+        //var fromLineNum = 1;    // [from, to], start as 1
         var pullFailCount = 0;
         var isStop = false;
         function pullLog() {
@@ -167,7 +167,7 @@
         // round until end
         var logRun = setInterval(function () {
             pullLog()
-        }, 3000);
+        }, 1000);
         function logRunStop(content){
             $('#logConsoleRunning').hide();
             logRun = window.clearInterval(logRun);

@@ -110,7 +110,16 @@ public class JobLogController {
 		if (jobLog == null) {
             throw new RuntimeException("日志异常,日志未找到");
 		}
-        model.addAttribute("jobLog", jobLog);
+		String content = "";
+		int lineNumber = 1;
+		if(jobLog.getTriggerTime() != null ) {
+			LogResult logResult = jobServiceReference.jobService.catLog(jobLog.getJobId(), logId, jobLog.getTriggerTime().getTime(), 1);
+			content = logResult.getLogContent();
+			lineNumber = logResult.getToLineNum() + 1;
+		}
+		model.addAttribute("jobLogContent", content);
+		model.addAttribute("jobLogFromLineNumber", lineNumber);
+		model.addAttribute("jobLog", jobLog);
 		return prefix +  "/jobLogDetail";
 	}
 
