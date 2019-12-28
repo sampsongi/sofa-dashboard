@@ -131,7 +131,8 @@ public class JobAgentMngImpl implements IJobAgentMngFacade {
                     rCount ++;
 //                    if(rCount > 1000)
 //                        break;
-                    logContentBuffer.append(toLineNum).append(" ").append(line).append("\n");
+                    logContentBuffer.append(line).append("\n");
+//                    logContentBuffer.append(toLineNum).append(" ").append(line).append("\n");
                 }
             }
         } catch (IOException e) {
