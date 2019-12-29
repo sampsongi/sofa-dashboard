@@ -42,6 +42,7 @@ public class DictTypeController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysDictType sysDictType, HttpServletRequest request) {
+        sysDictType.setIsDelete(false);
         PageModel<SysDictType> list = sysDictTypeService.selectPage(PageRequestUtil.fromRequest(request), sysDictType);
         return list;
     }

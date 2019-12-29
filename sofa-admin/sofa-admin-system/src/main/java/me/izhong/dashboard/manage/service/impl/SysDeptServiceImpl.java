@@ -55,6 +55,31 @@ public class SysDeptServiceImpl extends CrudBaseServiceImpl<Long,SysDept> implem
     }
 
     @Override
+    public List<SysDept> selectDeptList(SysDept search) {
+        List<SysDept> lists = super.selectList(search);
+        sortDepts(lists);
+        return lists;
+    }
+
+    private void sortDepts(List<SysDept> lists) {
+        if(lists == null || lists.size() == 0)
+            return;
+        lists.stream().sorted( (e1,e2)->{
+            if(e1.getParentId() == null)
+                return -1;
+            if(e2.getParentId() == null)
+                return 1;
+            if(e1.getParentId() > e2.getParentId()) {
+                return 1;
+            } else if(e1.getParentId() < e2.getParentId()) {
+                return -1;
+            } else {
+                return e1.getOrderNum().compareTo(e2.getOrderNum());
+            }
+        });
+    }
+
+    @Override
     public List<Ztree> selectDeptTree(SysDept sysDept) {
         List<SysDept> sysDeptList = selectList(sysDept);
         List<Ztree> ztrees = initZtree(sysDeptList);

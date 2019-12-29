@@ -47,6 +47,7 @@ public class RoleAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel<SysRole> list(SysRole sysRole, HttpServletRequest request) {
+        sysRole.setIsDelete(false);
         PageModel<SysRole> list = sysRoleService.selectPage(PageRequestUtil.fromRequest(request), sysRole);
         return list;
     }

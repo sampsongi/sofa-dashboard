@@ -58,6 +58,7 @@ public class JobInfoController {
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<Job> pageList(HttpServletRequest request, Job ino) {
+		ino.setIsDelete(false);
 		PageModel<Job>  pm = jobServiceReference.jobService.pageList(PageRequestUtil.fromRequest(request),ino);
 		if(pm != null){
 			List<Job> jobs = pm.getRows();

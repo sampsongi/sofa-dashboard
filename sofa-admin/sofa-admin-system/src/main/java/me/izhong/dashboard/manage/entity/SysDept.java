@@ -89,25 +89,9 @@ public class SysDept extends TimedBasedEntity {
     private String status;
 
     /**
-     * 删除标志（0代表存在 2代表删除）
-     */
-    private String delFlag;
-
-    /**
      * 父部门名称
      */
     private String parentName;
-
-    public void addChild(Long deptId) {
-        if (!children.contains(deptId))
-            children.add(deptId);
-    }
-
-    public void addAncestor(Long deptId) {
-        if (!ancestors.contains(deptId)) {
-            ancestors.add(deptId);
-        }
-    }
 
     @Override
     public String toString() {
@@ -121,7 +105,6 @@ public class SysDept extends TimedBasedEntity {
                 .append("phone", getPhone())
                 .append("email", getEmail())
                 .append("status", getStatus())
-                .append("delFlag", getDelFlag())
                 .append("createBy", getCreateBy())
                 .append("createTime", getCreateTime())
                 .append("updateBy", getUpdateBy())

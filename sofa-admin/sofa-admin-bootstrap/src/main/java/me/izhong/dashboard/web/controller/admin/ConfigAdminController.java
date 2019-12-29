@@ -38,6 +38,7 @@ public class ConfigAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysConfig sysConfig, HttpServletRequest request) {
+        sysConfig.setIsDelete(false);
         return sysConfigService.selectPage(PageRequestUtil.fromRequest(request), sysConfig);
     }
 

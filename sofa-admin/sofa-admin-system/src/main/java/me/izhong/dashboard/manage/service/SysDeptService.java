@@ -11,6 +11,8 @@ public interface SysDeptService extends CrudBaseService<Long,SysDept> {
 
     List<Long> selectAllDeptId();
 
+    List<SysDept> selectDeptList(SysDept search);
+
     /**
      * 查询部门管理树
      *

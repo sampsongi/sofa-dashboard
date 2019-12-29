@@ -42,6 +42,7 @@ public class PostAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysPost sysPost, HttpServletRequest request) {
+        sysPost.setIsDelete(false);
         PageRequest pageRequest = PageRequestUtil.fromRequest(request);
         PageModel<SysPost> list = sysPostService.selectPage(pageRequest, sysPost);
         return list;

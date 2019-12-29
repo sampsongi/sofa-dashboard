@@ -16,7 +16,7 @@
                                 </li>
                                 <li>
                                     菜单状态：
-                                    <select name="visible" th:with="type=${@dict.getType('sys_show_hide')}">
+                                    <select name="visible" th:with="type=${@dict.getType('sys_normal_disable')}">
                                         <option value="">所有</option>
                                         <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
                                                 th:value="${dict.dictValue}"></option>
@@ -92,6 +92,12 @@
                             }
                         },
                         {
+                            field: 'menuId',
+                            title: 'ID',
+                            width: '10%',
+                            align: "left"
+                        },
+                        {
                             field: 'orderNum',
                             title: '排序',
                             width: '10%',
@@ -122,7 +128,7 @@
                         },
                         {
                             field: 'visible',
-                            title: '可见',
+                            title: '状态',
                             width: '10%',
                             align: "left",
                             formatter: function (value, row, index) {

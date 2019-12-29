@@ -42,6 +42,7 @@ public class DictDataController {
     @RequiresPermissions(PermissionConstants.Dict.VIEW)
     @AjaxWrapper
     public PageModel list(SysDictData sysDictData, HttpServletRequest request) {
+        sysDictData.setIsDelete(false);
         PageModel<SysDictData> list = sysDictDataService.selectPage(PageRequestUtil.fromRequest(request), sysDictData);
         return list;
     }

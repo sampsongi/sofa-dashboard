@@ -17,6 +17,7 @@ public class JobGroup implements Serializable {
     private String remark;
     private Long groupId;
     private Long order;
+    private Boolean isDelete;
 
     private Date createTime;
     private String createBy;

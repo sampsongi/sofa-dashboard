@@ -40,6 +40,7 @@ public class NoticeAdminController {
     @PostMapping("/list")
     @AjaxWrapper
     public PageModel list(SysNotice sysNotice, HttpServletRequest request) {
+        sysNotice.setIsDelete(false);
         return sysNoticeService.selectPage(PageRequestUtil.fromRequest(request), sysNotice);
     }
 

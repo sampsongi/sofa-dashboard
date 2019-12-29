@@ -36,12 +36,19 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * 首页菜单显示
+     * @param userId
+     * @return
+     */
     @Override
     public List<SysMenu> selectVisibleMenusByUser(Long userId) {
-        Assert.notNull(userId,"");
+        Assert.notNull(userId,"用户ID不能为空");
         List<SysMenu> sysMenus = doSelectPermsByUserId(userId, true);
-        if(sysMenus != null && sysMenus.size() > 0)
-            sysMenus = sysMenus.stream().filter(e -> StringUtils.equals("0",e.getVisible())).collect(toList());
+        if(sysMenus != null && sysMenus.size() > 0) {
+            sysMenus = sysMenus.stream().filter(e -> StringUtils.equals("0", e.getVisible()))
+                    .filter(e -> e.getIsDelete() == null || !e.getIsDelete().booleanValue()).collect(toList());
+        }
         sortMenus(sysMenus);
         return getChildPerms(sysMenus, 0);
     }
@@ -68,8 +75,20 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
     private void sortMenus(List<SysMenu> sysMenus) {
         if (sysMenus == null || sysMenus.size() == 0)
             return;
-        Collections.sort(sysMenus, Comparator.comparing(SysMenu::getParentId));
-        Collections.sort(sysMenus, Comparator.comparing(SysMenu::getOrderNum));
+        Collections.sort(sysMenus, (o1, o2) -> {
+            if(o1.getParentId() == null) {
+                return -1;
+            } else if(o2.getParentId() == null) {
+                return 1;
+            }
+            if(o1.getParentId() == o2.getParentId()) {
+                return o1.getOrderNum().compareTo(o2.getOrderNum());
+            } else if (o1.getParentId() > o2.getParentId()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
     }
 
     @Override
@@ -108,6 +127,10 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
     public List<Ztree> roleMenuTreeData(Long roleId) {
         List<Ztree> ztrees = null;
         List<SysMenu> sysMenuList = selectMenuList(null);
+        //只显示正常的
+        sysMenuList = sysMenuList.stream().filter(e -> StringUtils.equals("0",e.getVisible()))
+                .filter(e -> e.getIsDelete() == null || !e.getIsDelete().booleanValue()).collect(toList());
+
         sortMenus(sysMenuList);
         if (roleId != null) {
             List<SysRoleMenu> sysRoleMenus = roleMenuDao.findAllByRoleId(roleId);
@@ -295,6 +318,7 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
      * 用户userId所拥有的权限
      *
      * @param userId
+     * @param menuOnly 只显示菜单，不显示按钮
      * @return
      */
     private List<SysMenu> doSelectPermsByUserId(Long userId, boolean menuOnly) {

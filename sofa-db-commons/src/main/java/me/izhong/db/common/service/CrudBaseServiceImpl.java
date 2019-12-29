@@ -116,10 +116,20 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
                 }
                 if (value != null) {
                     if (op.equals(Search.Op.IS)) {
-                        if (value instanceof String)
-                            CriteriaUtil.addCriteria(query,Criteria.where(key).is(value.toString().trim()));
-                        else
-                            CriteriaUtil.addCriteria(query,Criteria.where(key).is(value));
+                        if(key.equals("isDelete")) {
+                            if (value instanceof Boolean) {
+                                if(((Boolean) value).booleanValue()) {
+                                    CriteriaUtil.addCriteria(query, CriteriaUtil.deleteCriteria());
+                                } else if(!((Boolean) value).booleanValue()){
+                                    CriteriaUtil.addCriteria(query, CriteriaUtil.notDeleteCriteria());
+                                }
+                            }
+                        } else {
+                            if (value instanceof String)
+                                CriteriaUtil.addCriteria(query, Criteria.where(key).is(value.toString().trim()));
+                            else
+                                CriteriaUtil.addCriteria(query, Criteria.where(key).is(value));
+                        }
                     } else if (op.equals(Search.Op.REGEX)) {
                         if (value instanceof String)
                             CriteriaUtil.addCriteria(query,Criteria.where(key).regex(value.toString().trim()));
@@ -137,7 +147,6 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
                 }
             }
         }
-        CriteriaUtil.addCriteria(query,CriteriaUtil.notDeleteCriteria());
     }
 
     @Override

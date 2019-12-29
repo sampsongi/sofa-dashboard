@@ -43,7 +43,8 @@ public class DeptAdminController {
     @PostMapping("/list")
     @ResponseBody
     public List<SysDept> list(SysDept sysDept) {
-        List<SysDept> sysDeptList = sysDeptService.selectList(sysDept);
+        sysDept.setIsDelete(false);
+        List<SysDept> sysDeptList = sysDeptService.selectDeptList(sysDept);
         return sysDeptList;
     }
 

@@ -42,6 +42,7 @@ public class JobGroupController {
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<JobGroup> pageList(HttpServletRequest request, JobGroup ino) {
+		ino.setIsDelete(false);
 		return jobServiceReference.jobService.selectJobGroupPage(PageRequestUtil.fromRequest(request),ino);
 	}
 
