@@ -34,7 +34,8 @@
             <ul class="nav" id="side-menu">
                 <a th:href="@{/index}">
                     <li class="logo">
-                        <span class="logo-lg" >后台管理</span>
+                        <span class="logo-lg" th:if="${@config.getKey('sys.main.name')!=null}">[[${@config.getKey('sys.main.name')}]]</span>
+                        <span class="logo-lg" th:if="${@config.getKey('sys.main.name')==null}">后台管理</span>
                     </li>
                 </a>
                 <li>
