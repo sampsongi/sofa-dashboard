@@ -42,7 +42,6 @@ import java.util.Map;
  **/
 @Configuration
 public class ShiroConfig {
-    public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     // Session超时时间，单位为毫秒（默认30分钟）
     @Value("${shiro.session.expireTime}")
@@ -80,7 +79,7 @@ public class ShiroConfig {
     @Value("${shiro.cookie.httpOnly}")
     private boolean httpOnly;
 
-    // 设置Cookie的过期时间，秒为单位
+    // 设置Cookie的过期时间，天
     @Value("${shiro.cookie.maxAge}")
     private int maxAge;
 
@@ -306,7 +305,7 @@ public class ShiroConfig {
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(Base64.decode("fCq+/xW488hMTCD+cmJ3aQ=="));
+        cookieRememberMeManager.setCipherKey(Base64.decode("fCq+/xW488hMTCE+cmJ3FF=="));
         return cookieRememberMeManager;
     }
 
