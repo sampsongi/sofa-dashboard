@@ -71,11 +71,16 @@
             },
                 {
                     field: 'deptName',
-                    title: '部门名称[部门ID]',
-                    align: "left",
-                    formatter: function (value, item, index) {
-                        return item.deptName + "[" + item.deptId + "]";
-                    }
+                    title: '部门名称',
+                    align: "left"
+                    // formatter: function (value, item, index) {
+                    //     return item.deptName + "[" + item.deptId + "]";
+                    // }
+                },
+                {
+                    field: 'deptId',
+                    title: '部门ID',
+                    visible: false
                 },
                 {
                     field: 'orderNum',
