@@ -1,9 +1,9 @@
-#/bin/bash
-
+#!/bin/bash
 DIR=`dirname $0`
+. $DIR/env.sh
 
 if [ $# -lt 2 ] ; then
-  echo "run.sh <jobId> <triggerId>"
+  echo "status.sh <jobId> <triggerId>"
   exit 1
 fi
 JOB_ID=$1
@@ -13,6 +13,7 @@ echo "JOB_ID:$JOB_ID TRIGGER_ID:$TRIGGER_ID"
 SERVER_NAME=sofa-jobs-agent-bootstrap
 
 echo "command:ps -efc|grep java|grep isJobAgent|grep $USER|grep batch|grep SERVER_NAME=${SERVER_NAME}\\\\s|grep isJobAgent=true|grep jobId=${JOB_ID}|grep triggerId=${TRIGGER_ID}| wc -l"
+
 
 count=`ps -efc|grep java|grep isJobAgent|grep $USER|grep batch|grep SERVER_NAME=${SERVER_NAME}\\\\s|grep isJobAgent=true|grep jobId=${JOB_ID}|grep triggerId=${TRIGGER_ID}| wc -l`
 if [ $count -eq 0 ]; then

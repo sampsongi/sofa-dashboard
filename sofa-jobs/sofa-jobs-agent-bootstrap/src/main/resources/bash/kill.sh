@@ -1,9 +1,9 @@
-#/bin/bash
-
+#!/bin/bash
 DIR=`dirname $0`
+. $DIR/env.sh
 
 if [ $# -lt 2 ] ; then
-  echo "run.sh <jobId> <triggerId>"
+  echo "kill.sh <jobId> <triggerId>"
   exit 1
 fi
 JOB_ID=$1
