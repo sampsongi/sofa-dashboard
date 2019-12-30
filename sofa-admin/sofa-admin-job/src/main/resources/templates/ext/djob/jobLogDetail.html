@@ -54,8 +54,7 @@
 	<div class="content-wrapper" >
 		<section class="content-code">
             <pre style="font-size:12px;position:relative;white-space:pre-wrap;" >
-				<div>[[${jobLogContent}]]</div>
-                <div id="logConsole"></div>
+                <div id="logConsole">[[${jobLogContent}]]</div>
                 <li class="fa fa-refresh fa-spin" style="font-size: 20px;float: left;" id="logConsoleRunning" ></li>
                 <div><hr><hr></div>
             </pre>
@@ -167,7 +166,7 @@
         // round until end
         var logRun = setInterval(function () {
             pullLog()
-        }, 1000);
+        }, 3000);
         function logRunStop(content){
             $('#logConsoleRunning').hide();
             logRun = window.clearInterval(logRun);
