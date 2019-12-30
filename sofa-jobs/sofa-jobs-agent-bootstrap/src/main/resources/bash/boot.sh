@@ -2,6 +2,7 @@
 DIR=`dirname $0`
 . $DIR/env.sh
 
+
 if [ $# -ne 1 ] ; then
   echo "sm <Server>"
   exit 1
