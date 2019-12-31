@@ -293,8 +293,8 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
 
         List<SysMenu> childs = menuDao.findAllByParentId(m.getMenuId());
         if(childs != null && childs.size() > 0) {
-            if(!StringUtils.equals(m.getMenuType(),"M")) {
-                throw BusinessException.build("菜单有子成员，菜单类型只能为目录，不能修改为其他状态");
+            if(!StringUtils.equalsAny(m.getMenuType(),"M","C")) {
+                throw BusinessException.build("菜单有子成员，类型只能修改为目录或者菜单，不能修改为其他类型");
             }
         }
 
