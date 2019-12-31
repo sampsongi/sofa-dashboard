@@ -498,8 +498,10 @@ public class FtpUtil {
 		}
 
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
-		log.info("cd:{}",destDir);
-		ftp.changeWorkingDirectory(destDir);
+		if(StringUtils.isNotBlank(destDir)) {
+			log.info("cd:{}", destDir);
+			ftp.changeWorkingDirectory(destDir);
+		}
 
 		// 设置被动模式
 		ftp.enterLocalPassiveMode();
@@ -535,8 +537,10 @@ public class FtpUtil {
 		channel.connect();
 		ChannelSftp c = (ChannelSftp) channel;
 
-		log.info("cd:{}",destDir);
-		c.cd(destDir);
+		if(StringUtils.isNotBlank(destDir)) {
+			log.info("cd:{}", destDir);
+			c.cd(destDir);
+		}
 		log.info("delete :{}",destFile);
 		c.rm(destFile);
 
