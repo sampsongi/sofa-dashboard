@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -55,9 +56,16 @@ public class JobStateMonitorHelper {
                         List<ZJobLog> jobLogs = jobLogService.findRunningJobs();
                         if (jobLogs != null && !jobLogs.isEmpty()) {
                             for (ZJobLog jobLog : jobLogs) {
-                                if(jobLog.getTriggerCode() != null && jobLog.getTriggerCode().intValue() !=0) {
-                                    //触发失败的任务 直接关闭
-                                    setJobLogResult(jobLog, 404, "异常结束，超时未执行(stats触发)");
+                                if (jobLog.getTriggerCode() == null) {
+                                    //20s 触发失败的任务 直接关闭
+                                    if(System.currentTimeMillis() - jobLog.getTriggerTime().getTime() > 20 * 1000) {
+                                        log.info("异常结束，超时未执行 TriggerCode:{}，(stats触发)",jobLog.getTriggerCode());
+                                        setJobLogResult(jobLog, 404, "异常结束，超时20s未执行(stats触发)");
+                                        continue;
+                                    }
+                                } else if (jobLog.getTriggerCode().intValue() !=0) {
+                                    log.info("异常结束 触发失败 TriggerCode:{}，(stats触发)",jobLog.getTriggerCode());
+                                    setJobLogResult(jobLog, 404, "异常结束，触发失败(stats触发)");
                                     continue;
                                 }
                                 //
@@ -67,7 +75,7 @@ public class JobStateMonitorHelper {
                                     if(triggerTime != null && (System.currentTimeMillis() - triggerTime.getTime())/1000 > jobLog.getExecutorTimeout().longValue()){
                                         ReturnT<String> rt = jobAgentServiceReference.jobAgentService.kill(jobLog.getJobId(),jobLog.getJobLogId());
                                         log.info("任务{}:{}超时了发出kill命令,结果{}",jobLog.getJobId(),jobLog.getJobLogId(),rt);
-                                        continue;
+                                        //continue; 去掉，否则下面的状态检测无效了
                                     }
                                 }
                                 //去检测任务是不是还活着
@@ -95,7 +103,7 @@ public class JobStateMonitorHelper {
                                         if (triggerTimeDes.before(new Date())) {
                                             //检测报错了，过去了一分钟，还没吊起任务，直接失败
                                             if (jobLog.getHandleCode() == null) {
-                                                setJobLogResult(jobLog, 404, "异常结束，超时未执行(stats触发)");
+                                                setJobLogResult(jobLog, 404, "异常结束，任务检测异常, 60s未执行(stats触发)");
                                             }
                                         }
                                     }
@@ -146,6 +154,7 @@ public class JobStateMonitorHelper {
         monitorThread.start();
     }
 
+    @PreDestroy
     public void toStop() {
         toStop = true;
         // interrupt and wait
