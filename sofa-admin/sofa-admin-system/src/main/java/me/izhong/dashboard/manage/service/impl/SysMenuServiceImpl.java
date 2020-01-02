@@ -82,7 +82,7 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
                 return 1;
             }
             if(o1.getParentId() == o2.getParentId()) {
-                return o1.getOrderNum().compareTo(o2.getOrderNum());
+                return o1.getOrderNum() - o2.getOrderNum();
             } else if (o1.getParentId() > o2.getParentId()) {
                 return 1;
             } else {
@@ -260,9 +260,9 @@ public class SysMenuServiceImpl extends CrudBaseServiceImpl<Long,SysMenu> implem
         if(StringUtils.equalsAny(m.getMenuType(),"C","F") && StringUtils.isBlank(m.getPerms())){
             throw BusinessException.build("权限标识不能为空");
         }
-        if(StringUtils.isBlank(m.getOrderNum())){
-            throw BusinessException.build("显示排序不能为空");
-        }
+//        if(StringUtils.isBlank(m.getOrderNum())){
+//            throw BusinessException.build("显示排序不能为空");
+//        }
         if(!StringUtils.equalsAny(m.getMenuType(),"M","C","F")) {
             throw BusinessException.build("菜单类型不正确");
         }

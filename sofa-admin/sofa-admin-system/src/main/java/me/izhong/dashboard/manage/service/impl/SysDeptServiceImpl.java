@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -64,17 +61,20 @@ public class SysDeptServiceImpl extends CrudBaseServiceImpl<Long,SysDept> implem
     private void sortDepts(List<SysDept> lists) {
         if(lists == null || lists.size() == 0)
             return;
-        lists.stream().sorted( (e1,e2)->{
-            if(e1.getParentId() == null)
-                return -1;
-            if(e2.getParentId() == null)
-                return 1;
-            if(e1.getParentId() > e2.getParentId()) {
-                return 1;
-            } else if(e1.getParentId() < e2.getParentId()) {
-                return -1;
-            } else {
-                return e1.getOrderNum().compareTo(e2.getOrderNum());
+        Collections.sort(lists, new Comparator<SysDept>() {
+            @Override
+            public int compare(SysDept e1, SysDept e2) {
+                if(e1.getParentId() == null)
+                    return -1;
+                if(e2.getParentId() == null)
+                    return 1;
+                if(e1.getParentId() > e2.getParentId()) {
+                    return 1;
+                } else if(e1.getParentId() < e2.getParentId()) {
+                    return -1;
+                } else {
+                    return e1.getOrderNum()-e2.getOrderNum();
+                }
             }
         });
     }
@@ -197,6 +197,7 @@ public class SysDeptServiceImpl extends CrudBaseServiceImpl<Long,SysDept> implem
                 });
             }
         }
+        sortDepts(toShow);
         List<Ztree> ztrees = initZtree2(toShow, Arrays.asList(deptIds), true, null,true);
         return ztrees;
     }
