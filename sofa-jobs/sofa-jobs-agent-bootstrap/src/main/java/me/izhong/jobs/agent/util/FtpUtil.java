@@ -313,6 +313,10 @@ public class FtpUtil {
 		try{
 			if(StringUtils.isNotBlank(destDir)) {
 				log.info("mkdir");
+				if(destDir.startsWith("/")) {
+					c.cd("/");
+					destDir = destDir.substring(1);
+				}
 				String[] dirs = destDir.split("/");
 				for (String s : dirs) {
 					boolean exist = true;
