@@ -20,6 +20,10 @@ import java.util.*;
 
 @Slf4j
 public class FtpUtil {
+
+	private static String FTP_DEFAULT_CHARSET = "UTF-8";
+	private static String FTP_SERVER_CHARSET = "ISO-8859-1";
+
 	/**
 	 * 发送文件到ftp服务器
 	 * 
@@ -139,9 +143,14 @@ public class FtpUtil {
 
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
 		ftp.setBufferSize(1024);
+		String charset = getFtpEncode(ftp);
 		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd");
-			ftp.changeWorkingDirectory(ftpDir);
+			boolean rt = ftp.changeWorkingDirectory(toFtpEncode(ftpDir,charset));
+			if(rt) {
+				log.info("cd {} success",ftpDir);
+			} else {
+				log.info("cd {} fail",ftpDir);
+			}
 		}
 
 		// 设置被动模式
@@ -180,18 +189,20 @@ public class FtpUtil {
 		channel.connect();
 		ChannelSftp c = (ChannelSftp) channel;
 
-		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd");
-			c.cd(ftpDir);
+		try {
+			if (StringUtils.isNotBlank(ftpDir)) {
+				log.info("cd");
+				c.cd(ftpDir);
+			}
+			@Cleanup
+			FileOutputStream fos = new FileOutputStream(destFile);
+			log.info("get");
+			c.get(ftpFile, fos);
+		} finally {
+			log.info("disconnect");
+			c.disconnect();
+			session.disconnect();
 		}
-		@Cleanup
-		FileOutputStream fos = new FileOutputStream(destFile);
-		log.info("get");
-		c.get(ftpFile, fos);
-
-		log.info("disconnect");
-		c.disconnect();
-		session.disconnect();
 	}
 
 
@@ -215,23 +226,27 @@ public class FtpUtil {
 		channel.connect();
 		ChannelSftp c = (ChannelSftp) channel;
 
-		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd");
-			c.cd(ftpDir);
+		SftpATTRS sts;
+		try {
+			if (StringUtils.isNotBlank(ftpDir)) {
+				log.info("cd {}", ftpDir);
+				c.cd(ftpDir);
+			}
+			log.info("get");
+			sts = c.stat(ftpFile);
+		} finally {
+			log.info("disconnect");
+			c.disconnect();
+			session.disconnect();
 		}
-		log.info("get");
-		SftpATTRS sts = c.stat(ftpFile);
-		if(sts == null)
+		if (sts == null)
 			return null;
+
 		FileInfo fileInfo = new FileInfo();
 		fileInfo.setFileName(ftpFile);
 		Date var1 = new Date((long)sts.getMTime() * 1000L);
 		fileInfo.setModifyTime(var1);
 		fileInfo.setSize(sts.getSize());
-
-		log.info("disconnect");
-		c.disconnect();
-		session.disconnect();
 		return fileInfo;
 	}
 
@@ -255,18 +270,25 @@ public class FtpUtil {
 
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
 		ftp.setBufferSize(1024);
+		String charset = getFtpEncode(ftp);
 		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd");
-			ftp.changeWorkingDirectory(ftpDir);
+			boolean rt = ftp.changeWorkingDirectory(toFtpEncode(ftpDir,charset));
+			if(rt) {
+				log.info("cd {} success",ftpDir);
+			} else {
+				log.info("cd {} fail",ftpDir);
+			}
 		}
 
 		// 设置被动模式
 		ftp.enterLocalPassiveMode();
 
 		log.info("get");
-		FTPFile[] ftpFiles = ftp.listFiles(ftpFile);
-		if(ftpFiles == null || ftpFiles.length  == 0)
+		FTPFile[] ftpFiles = ftp.listFiles(toFtpEncode(ftpFile,charset));
+		if(ftpFiles == null || ftpFiles.length  == 0) {
+			log.info("文件 {} 不存在",ftpFile);
 			return null;
+		}
 		FTPFile ff = ftpFiles[0];
 
 		Calendar calendar = ff.getTimestamp();
@@ -274,7 +296,7 @@ public class FtpUtil {
 
 		FileInfo fileInfo = new FileInfo();
 		fileInfo.setFileName(ftpFile);
-		String modifyString = ftp.getModificationTime(ftpFile);
+		String modifyString = ftp.getModificationTime(toFtpEncode(ftpFile,charset));
 		if(StringUtils.isBlank(modifyString))
 			return null;
 		String dateStr = modifyString.split(" ")[1];
@@ -287,7 +309,6 @@ public class FtpUtil {
 		log.info("disconnect");
 		ftp.disconnect();
 		return fileInfo;
-
 	}
 
 	private static void putSftp(String host, String user, String pass,
@@ -310,42 +331,44 @@ public class FtpUtil {
 		channel.connect();
 		ChannelSftp c = (ChannelSftp) channel;
 
-		try{
-			if(StringUtils.isNotBlank(destDir)) {
-				log.info("mkdir");
-				if(destDir.startsWith("/")) {
-					c.cd("/");
-					destDir = destDir.substring(1);
-				}
-				String[] dirs = destDir.split("/");
-				for (String s : dirs) {
-					boolean exist = true;
-					try {
-						c.lstat(s);
-					} catch (Exception ee) {
-						exist = false;
+		try {
+			try {
+				if (StringUtils.isNotBlank(destDir)) {
+					log.info("mkdir");
+					if (destDir.startsWith("/")) {
+						c.cd("/");
+						destDir = destDir.substring(1);
 					}
-					if (!exist) {
-						c.mkdir(s.trim());
+					String[] dirs = destDir.split("/");
+					for (String s : dirs) {
+						boolean exist = true;
+						try {
+							c.lstat(s);
+						} catch (Exception ee) {
+							exist = false;
+						}
+						if (!exist) {
+							c.mkdir(s.trim());
+						}
+						c.cd(s.trim());
 					}
-					c.cd(s.trim());
 				}
+			} catch (Exception e) {
+				log.info("创建文件目录异常:" + destDir, e);
+				throw new Exception("创建文件目录异常:" + destDir);
 			}
-		} catch (Exception e) {
-			log.info("创建文件目录异常:" + destDir,e);
-			throw new Exception("创建文件目录异常:" + destDir);
+
+			@Cleanup
+			FileInputStream fis = new FileInputStream(srcFile);
+			@Cleanup
+			BufferedInputStream bfi = new BufferedInputStream(fis);
+			log.info("put file {} to {}", destFile, c.pwd());
+			c.put(bfi, destFile);
+		} finally {
+			log.info("disconnect");
+			c.disconnect();
+			session.disconnect();
 		}
-
-		@Cleanup
-		FileInputStream fis = new FileInputStream(srcFile);
-		@Cleanup
-		BufferedInputStream bfi = new BufferedInputStream(fis);
-		log.info("put file {} to {}", destFile, c.pwd());
-		c.put(bfi, destFile);
-
-		log.info("disconnect");
-		c.disconnect();
-		session.disconnect();
 	}
 
 	private static void putFtp(String host, String user, String pass,
@@ -370,19 +393,28 @@ public class FtpUtil {
 		ftp.setBufferSize(1024);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
 
+		String charset = getFtpEncode(ftp);
+		ftp.setControlEncoding(charset);
+		// 设置被动模式
+		ftp.enterLocalPassiveMode();
+
 		log.info("cd");
 		if (!ftp.changeWorkingDirectory(destDir)) {
 			log.info("mkdir");
+			if(destDir.startsWith("/")) {
+				ftp.changeWorkingDirectory("/");
+				destDir = destDir.substring(1);
+			}
 			if(destDir.length() > 0 && destDir.indexOf("/") > 0){
 				String[] temp = destDir.split("/");
 				for(String dd : temp){
-					if(ftp.changeWorkingDirectory(destDir)) {
+					if(ftp.changeWorkingDirectory(toFtpEncode(destDir,charset))) {
 						break;
 					} else {
-						if(!ftp.changeWorkingDirectory(dd)) {
+						if(!ftp.changeWorkingDirectory(toFtpEncode(dd,charset))) {
 							log.info("mkdir:{}",dd);
-							ftp.makeDirectory(dd);
-							if (!ftp.changeWorkingDirectory(dd)) {
+							ftp.makeDirectory(toFtpEncode(dd,charset));
+							if (!ftp.changeWorkingDirectory(toFtpEncode(dd,charset))) {
 								throw new Exception("FTP mkdir fail. des:" + destDir);
 							}
 						}
@@ -391,22 +423,19 @@ public class FtpUtil {
 			}
 		}
 
-		// 设置被动模式
-		ftp.enterLocalPassiveMode();
-
 		@Cleanup
 		FileInputStream fis = new FileInputStream(srcFile);
 		@Cleanup
 		BufferedInputStream bfi = new BufferedInputStream(fis);
-		log.info("put file {} to {}", destFile, destDir);
-		ftp.storeFile(destFile, bfi);
+		log.info("put file {} to {}", destFile, fromFtpEncode(ftp.printWorkingDirectory(),charset));
+		ftp.storeFile(toFtpEncode(destFile,charset), bfi);
 
 		log.info("disconnect");
 		ftp.disconnect();
 	}
 
 	private static List<String> listFtpFiles(String host, String user,
-			String pass, String destDir) throws Exception {
+			String pass, String ftpDir) throws Exception {
 		String s1[] = host.split("://");
 		String s2[] = s1[1].split(":");
 
@@ -425,10 +454,13 @@ public class FtpUtil {
 		}
 
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
-
-		log.info("cd");
-		ftp.changeWorkingDirectory(destDir);
-
+		String charset = getFtpEncode(ftp);
+		boolean rt = ftp.changeWorkingDirectory(toFtpEncode(ftpDir,charset));
+		if(rt) {
+			log.info("cd {} success",ftpDir);
+		} else {
+			log.info("cd {} fail",ftpDir);
+		}
 		// 设置被动模式
 		ftp.enterLocalPassiveMode();
 
@@ -438,13 +470,11 @@ public class FtpUtil {
 		if(names != null)
 			for (String name : names) {
 				if (name != null) {
-					list.add(name);
+					list.add(fromFtpEncode(name,charset));
 				}
 			}
-
 		log.info("disconnect");
 		ftp.disconnect();
-
 		return list;
 	}
 
@@ -468,19 +498,21 @@ public class FtpUtil {
 		channel.connect();
 		ChannelSftp c = (ChannelSftp) channel;
 
-		log.info("ls");
-		Vector v = c.ls(destDir);
-		List<String> list = new ArrayList<String>(v.size());
-		for (Object o : v) {
-			String s = o.toString();
-			String[] parts = s.split(" ");
-			list.add(parts[parts.length - 1]);
+		List<String> list;
+		try {
+			log.info("ls");
+			Vector v = c.ls(destDir);
+			list = new ArrayList<String>(v.size());
+			for (Object o : v) {
+				String s = o.toString();
+				String[] parts = s.split(" ");
+				list.add(parts[parts.length - 1]);
+			}
+		} finally {
+			log.info("disconnect");
+			c.disconnect();
+			session.disconnect();
 		}
-
-		log.info("disconnect");
-		c.disconnect();
-		session.disconnect();
-
 		return list;
 	}
 
@@ -503,23 +535,31 @@ public class FtpUtil {
 			throw new Exception("FTP login fail.");
 		}
 
+		String charset = getFtpEncode(ftp);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
 		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd:{}", ftpDir);
-			ftp.changeWorkingDirectory(ftpDir);
+			boolean rt = ftp.changeWorkingDirectory(toFtpEncode(ftpDir,charset));
+			if(rt) {
+				log.info("cd {} success",ftpDir);
+			} else {
+				log.info("cd {} fail",ftpDir);
+			}
 		}
 
 		// 设置被动模式
 		ftp.enterLocalPassiveMode();
 
 		log.info("delete:{}",ftpFile);
-		boolean result = ftp.deleteFile(ftpFile);
+		boolean result = ftp.deleteFile(toFtpEncode(ftpFile,charset));
+		if(!result) {
+			result = ftp.removeDirectory(toFtpEncode(ftpFile,charset));
+		}
 
 		log.info("disconnect");
 		ftp.disconnect();
 
 		if (result == false)
-			throw new Exception("Cannot get remote file");
+			throw new Exception("Cannot delete remote file");
 	}
 
 	private static void deleteSftp(String host, String user, String pass,
@@ -544,23 +584,38 @@ public class FtpUtil {
 		ChannelSftp c = (ChannelSftp) channel;
 
 		if(StringUtils.isNotBlank(ftpDir)) {
-			log.info("cd:{}", ftpDir);
+			log.info("cd {}", ftpDir);
 			c.cd(ftpDir);
 		}
-		log.info("delete :{}",ftpFile);
-		c.rm(ftpFile);
-
-		log.info("disconnect");
-		c.disconnect();
-		session.disconnect();
-	}
-
-	static public void main(String args[]) throws Exception {
-		List<String> files = listFtpFilesInDir("ftp://mirrors.kernel.org:21",
-				"anonymous", "adf", "centos");
-		for (String file : files) {
-			System.out.println(file);
+		log.info("delete {}", ftpFile);
+		try {
+			try {
+				c.rm(ftpFile);
+			} catch (Exception e) {
+				c.rmdir(ftpFile);
+			}
+		} catch (Exception a) {
+			throw new Exception("删除文件失败:" + ftpFile);
+		} finally {
+			log.info("disconnect");
+			c.disconnect();
+			session.disconnect();
 		}
 	}
 
+	static private String getFtpEncode(FTPClient ftp) throws Exception{
+		String charset = FTP_DEFAULT_CHARSET;
+		if (FTPReply.isPositiveCompletion(ftp.sendCommand("OPTS UTF8", "ON"))) {
+			charset = "UTF-8";
+		} else if (FTPReply.isPositiveCompletion(ftp.sendCommand("OPTS GBK", "ON"))) {
+			charset = "GBK";
+		}
+		return charset;
+	}
+	static private String toFtpEncode(String data, String ftpEncode) throws Exception{
+		return new String(data.getBytes(ftpEncode),FTP_SERVER_CHARSET);
+	}
+	static private String fromFtpEncode(String data, String ftpEncode) throws Exception{
+		return new String(data.getBytes(FTP_SERVER_CHARSET),ftpEncode);
+	}
 }
