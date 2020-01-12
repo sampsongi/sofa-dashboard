@@ -36,6 +36,7 @@ public class JobCodeController {
 			throw new RuntimeException("任务未找到");
 		}
 		model.addAttribute("jobId", jobInfo.getJobId());
+		model.addAttribute("jobDesc", jobInfo.getJobDesc());
 
 		Long scriptId = jobInfo.getJobScriptId();
 		if(scriptId != null) {
