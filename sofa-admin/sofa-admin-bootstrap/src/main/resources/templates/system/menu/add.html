@@ -8,7 +8,7 @@
             <form class="form-horizontal m" id="form-menu-add">
                 <input id="treeId" name="parentId" type="hidden" th:value="${menu.menuId}"/>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label ">上级菜单：</label>
+                    <label class="col-sm-3 control-label is-required">上级菜单：</label>
                     <div class="col-sm-8">
                         <div class="input-group">
                             <input class="form-control" type="text" onclick="selectMenuTree()" id="treeName"
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">菜单类型：</label>
+                    <label class="col-sm-3 control-label is-required">菜单类型：</label>
                     <div class="col-sm-8">
                         <label class="radio-box">
                             <input type="radio" name="menuType" value="M"/>
