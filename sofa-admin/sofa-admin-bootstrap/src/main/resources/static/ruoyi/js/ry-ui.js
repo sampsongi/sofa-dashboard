@@ -412,7 +412,7 @@ var table = {
                         var index = layer.load(2, {shade: false});
                         $.modal.disable();
                         var formData = new FormData();
-                        formData.append("file", $('#file')[0].files[0]);
+                        formData.append("file", layero.find('#file')[0].files[0]);
                         formData.append("updateSupport", $("input[name='updateSupport']").is(':checked'));
                         $.ajax({
                             url: table.options.importUrl,
@@ -546,7 +546,7 @@ var table = {
                     height: options.height,                             // 表格树的高度
                     expandColumn: options.expandColumn,                 // 在哪一列上面显示展开按钮
                     striped: options.striped,                           // 是否显示行间隔色
-                    bordered: true,                                     // 是否显示边框
+                    bordered: false,                                     // 是否显示边框
                     toolbar: '#' + options.toolbar,                     // 指定工作栏
                     showSearch: options.showSearch,                     // 是否显示检索信息
                     showRefresh: options.showRefresh,                   // 是否显示刷新按钮
