@@ -8,14 +8,14 @@
 			<form class="form-horizontal m" id="form-job-edit"  th:object="${job}">
 				<input id="jobId" name="jobId" type="hidden" th:field="*{jobId}"/>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">分组</label>
+					<label class="col-sm-2 control-label is-required">分组</label>
 					<div class="col-sm-4">
 						<select name="jobGroupId" class="form-control m-b">
 							<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}" th:field="*{jobGroupId}"></option>
 						</select>
 					</div>
 
-					<label class="col-sm-2 control-label">任务描述</label>
+					<label class="col-sm-2 control-label is-required">任务描述</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="jobDesc" placeholder="描述"  th:field="*{jobDesc}" maxlength="50" required>
 					</div>
@@ -27,7 +27,7 @@
 							<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{glueType}"></option>
 						</select>
 					</div>-->
-					<label class="col-sm-2 control-label">Cron表达式</label>
+					<label class="col-sm-2 control-label is-required">Cron表达式</label>
 					<div class="col-sm-4"><input type="text" class="form-control" id="jobCron" name="jobCron"  th:field="*{jobCron}" ></div>
 
 					<label class="col-sm-2 control-label">下次运行时间</label>
@@ -67,7 +67,7 @@
 				</div>
 				-->
 				<div class="form-group">
-					<label class="col-sm-2 control-label">阻塞处理策略</label>
+					<label class="col-sm-2 control-label is-required">阻塞处理策略</label>
 					<div class="col-sm-4">
 						<select name="executorBlockStrategy" class="form-control m-b">
 							<option th:each="da:${T(me.izhong.jobs.type.ExecutorBlockStrategyEnum).values()}" th:text="${da.title}" th:value="${da}" th:field="*{executorBlockStrategy}"></option>
@@ -84,7 +84,7 @@
 					<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount" th:field="*{executorFailRetryCount}"></div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">负责人</label>
+					<label class="col-sm-2 control-label is-required">负责人</label>
 					<div class="col-sm-4"><input type="text" class="form-control" name="author" th:field="*{author}"></div>
 					<label class="col-sm-2 control-label">报警邮件</label>
 					<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" th:field="*{alarmEmail}"></div>

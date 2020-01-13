@@ -7,14 +7,14 @@
 	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
 		<form class="form-horizontal m" id="form-job-add">
 			<div class="form-group">
-				<label class="col-sm-2 control-label">分组</label>
+				<label class="col-sm-2 control-label is-required">分组</label>
 				<div class="col-sm-4">
 					<select name="jobGroupId" class="form-control m-b">
 						<option th:each="g : ${groupList}" th:text="${g.groupName}" th:value="${g.groupId}"></option>
 					</select>
 				</div>
 
-				<label class="col-sm-2 control-label">任务描述</label>
+				<label class="col-sm-2 control-label is-required">任务描述</label>
 				<div class="col-sm-4">
 					<input type="text" class="form-control" name="jobDesc" placeholder="描述" maxlength="50" >
 				</div>
@@ -35,12 +35,12 @@
 						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" ></option>
 					</select>
 				</div>-->
-				<label class="col-sm-2 control-label">Cron表达式</label>
+				<label class="col-sm-2 control-label is-required">Cron表达式</label>
 				<div class="col-sm-4"><input type="text" class="form-control" id="jobCron" name="jobCron"></div>
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-2 control-label">阻塞处理策略</label>
+				<label class="col-sm-2 control-label is-required">阻塞处理策略</label>
 				<div class="col-sm-4">
 					<select name="executorBlockStrategy" class="form-control m-b" th:with="type=${@dict.getType('sys_job_block_strategy')}">
 						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" ></option>
@@ -57,7 +57,7 @@
 				<div class="col-sm-4"><input type="text" class="form-control" name="executorFailRetryCount"></div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">负责人</label>
+				<label class="col-sm-2 control-label is-required">负责人</label>
 				<div class="col-sm-4"><input type="text" class="form-control" name="author"></div>
 				<label class="col-sm-2 control-label">报警邮件</label>
 				<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail"></div>
