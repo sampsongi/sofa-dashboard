@@ -43,6 +43,9 @@ public class JobLog implements Serializable {
     private Integer handleCode;
     private String handleMsg;
 
+    private Long processResult;
+    private String processMessage;
+
     // alarm info
     private int alarmStatus;
 }

@@ -36,8 +36,7 @@ public class JobInfoController {
 	private JobServiceReference jobServiceReference;
 
 	@GetMapping()
-	public String job(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup)
-	{
+	public String job(Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 		List<JobGroup> jobGroupList = jobServiceReference.jobService.selectAllJobGroup();
 		if (jobGroupList==null || jobGroupList.size()==0) {
 		//	throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
@@ -134,6 +133,7 @@ public class JobInfoController {
 		exists_jobInfo.setExecutorRouteStrategy(jobInfo.getExecutorRouteStrategy());
 		exists_jobInfo.setExecutorParam(jobInfo.getExecutorParam());
 		exists_jobInfo.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());
+		exists_jobInfo.setConcurrentSize(jobInfo.getConcurrentSize());
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());

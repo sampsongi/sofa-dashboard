@@ -65,6 +65,15 @@ public class JobDirectTrigger {
                 }
                 jobInfoService.updateRunningTriggers(jobId,new ArrayList<>());
             }
+        } else if(ExecutorBlockStrategyEnum.CONCURRENT_EXECUTION == blockStrategy) {
+            //并发执行
+            Integer concurrentSize = jobInfo.getConcurrentSize();
+            if (concurrentSize == null)
+                concurrentSize = 2;
+            if (jobInfo.getRunningTriggerIds() != null && jobInfo.getRunningTriggerIds().size() >= concurrentSize) {
+                logger.info("任务[{}]正在执行中，策略[{}]并发调度数量超限[{}], RunningTriggerIds:{}", jobInfo.getJobDesc(), blockStrategy, concurrentSize, jobInfo.getRunningTriggerIds());
+                return new ReturnT<String>(ReturnT.FAIL_CODE, "并发原因，放弃本次调度:" + blockStrategy.getTitle());
+            }
         }
 
         int finalFailRetryCount = failRetryCount >= 0 ? failRetryCount : (jobInfo.getExecutorFailRetryCount() == null ? 0 : jobInfo.getExecutorFailRetryCount().intValue());

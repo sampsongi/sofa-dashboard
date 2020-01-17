@@ -38,6 +38,8 @@ public class Job implements Serializable {
     private String triggerLastTimeString;	// 上次调度时间
     private String triggerNextTimeString;	// 下次调度时间
 
+    private Integer concurrentSize; //并发执行的数量
+
     private Boolean isDelete;
     private Date createTime;
     private String createBy;

@@ -23,6 +23,8 @@ public interface ZJobLogService extends CrudBaseService<Long, ZJobLog> {
     void updateTriggerDoneMessage(Long jobLogId, String executorParam,
                                   Integer triggerCode, String triggerMsg);
 
+    void updateProcessRemark(Long jobLogId, Long processResult, String processMessage);
+
     void updateHandleStartMessage(Long jobLogId, Date startTime);
 
     void updateHandleDoneMessage(Long jobLogId, Integer handleCode, String handleMsg);

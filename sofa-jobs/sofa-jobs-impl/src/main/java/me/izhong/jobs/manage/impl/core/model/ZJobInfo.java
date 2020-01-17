@@ -1,5 +1,6 @@
 package me.izhong.jobs.manage.impl.core.model;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.db.common.annotation.Search;
 import me.izhong.db.common.domain.TimedBasedEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Slf4j
 @Data
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "sys_djob_info")
 public class ZJobInfo extends TimedBasedEntity implements Serializable {
@@ -55,4 +57,6 @@ public class ZJobInfo extends TimedBasedEntity implements Serializable {
 	private List<Long> runningTriggerIds = new ArrayList<>();
 
 	private Boolean wakeAgain;  //如果过true，说明后续有这个任务的执行因为前一个任务在执行中没有调度起来
+
+	private Integer concurrentSize; //并发执行的数量
 }

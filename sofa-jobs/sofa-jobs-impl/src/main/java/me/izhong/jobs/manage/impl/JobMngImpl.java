@@ -166,6 +166,15 @@ public class JobMngImpl implements IJobMngFacade {
     }
 
     @Override
+    public void uploadJobProcessRemark(Long triggerId, Long processResult, String processMessage) {
+        log.info("收到Job结果信息统计 triggerId:{}",triggerId);
+        if(triggerId == null) {
+            throw BusinessException.build("上送信息异常 triggerId为空");
+        }
+        jobLogService.updateProcessRemark(triggerId,processResult,processMessage);
+    }
+
+    @Override
     public void uploadJobStartStatics(Long triggerId, Date startTime) {
         log.info("收到Job执行开始信息 triggerId:{}",triggerId);
         if(triggerId == null) {

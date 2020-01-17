@@ -43,6 +43,14 @@ public interface IJobMngFacade {
      * @return
      */
     void uploadStatics(LogStatics logStatics);
+
+    /**
+     * 任务处理结束后记录一下任务本次具体处理的内容
+     * @param triggerId
+     * @param processResult
+     * @param processMessage
+     */
+    void uploadJobProcessRemark(Long triggerId, Long processResult, String processMessage);
     void uploadJobStartStatics(Long triggerId, Date startTime);
     void uploadJobEndStatics(Long triggerId, Date endTime, Integer resultStatus, String message);
     void uploadJobErrorStatics(Long triggerId, Date endTime, Integer resultStatus, String message);

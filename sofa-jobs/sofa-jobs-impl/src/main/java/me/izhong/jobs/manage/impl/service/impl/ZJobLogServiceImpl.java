@@ -107,6 +107,18 @@ public class ZJobLogServiceImpl extends CrudBaseServiceImpl<Long,ZJobLog> implem
     }
 
     @Override
+    public void updateProcessRemark(Long jobLogId, Long processResult, String processMessage) {
+        Assert.notNull(jobLogId,"");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("jobLogId").is(jobLogId));
+
+        Update update = new Update();
+        update.set("processResult",processResult);
+        update.set("processMessage",processMessage);
+        mongoTemplate.findAndModify(query, update, ZJobLog.class);
+    }
+
+    @Override
     public void updateHandleStartMessage(Long jobLogId, Date startTime) {
         Assert.notNull(jobLogId,"");
         Query query = new Query();

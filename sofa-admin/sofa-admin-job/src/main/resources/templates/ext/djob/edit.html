@@ -31,7 +31,7 @@
 					<div class="col-sm-4"><input type="text" class="form-control" id="jobCron" name="jobCron"  th:field="*{jobCron}" ></div>
 
 					<label class="col-sm-2 control-label">下次运行时间</label>
-					<div class="col-sm-4 form-control-static" th:text="*{triggerNextTimeString}">
+					<div class="col-sm-4 form-control-static" th:text="*{triggerNextTimeString}"></div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">创建时间</label>
@@ -69,14 +69,17 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label is-required">阻塞处理策略</label>
 					<div class="col-sm-4">
-						<select name="executorBlockStrategy" class="form-control m-b">
+						<select name="executorBlockStrategy" class="form-control">
 							<option th:each="da:${T(me.izhong.jobs.type.ExecutorBlockStrategyEnum).values()}" th:text="${da.title}" th:value="${da}" th:field="*{executorBlockStrategy}"></option>
 						</select>
 					</div>
 					<label class="col-sm-2 control-label">子任务ID</label>
-					<div class="col-sm-4"><input type="text" class="form-control" name="childJobId" th:field="*{childJobId}" ></div>
+					<div class="col-sm-4"><input type="text" class="form-control" name="childJobId" th:field="*{childJobId}"></div>
 				</div>
-
+				<div class="form-group">
+					<label class="col-sm-2 control-label">并行任务数量</label>
+					<div class="col-sm-4"><input id="concurrentSize" type="text" class="form-control" name="concurrentSize" th:field="*{concurrentSize}"></div>
+				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">任务超时时间</label>
 					<div class="col-sm-4"><input type="text" class="form-control" name="executorTimeout" th:field="*{executorTimeout}"></div>
@@ -89,7 +92,6 @@
 					<label class="col-sm-2 control-label">报警邮件</label>
 					<div class="col-sm-4"><input type="text" class="form-control" name="alarmEmail" th:field="*{alarmEmail}"></div>
 				</div>
-
 				<div class="form-group">
 					<label class="col-sm-2 control-label">参数：</label>
 					<div class="col-sm-8">
@@ -144,6 +146,27 @@
                 $.operate.save(prefix + "/edit", data);
 	        }
 	    }
+
+		$(function () {
+			var selectStrategy = $('select[name="executorBlockStrategy"] option:selected').val();
+			concurrentVisible(selectStrategy);
+		});
+
+		$(function () {
+			$("select[name='executorBlockStrategy']").click(function (event) {
+				var obj = event.srcElement || event.target;
+				var value = obj.value
+				concurrentVisible(value)
+			});
+		});
+
+		function concurrentVisible(v) {
+			if (v == "CONCURRENT_EXECUTION") {
+				$("#concurrentSize").parents(".form-group").show();
+			} else {
+				$("#concurrentSize").parents(".form-group").hide();
+			}
+		}
 	</script>
 </body>
 </html>

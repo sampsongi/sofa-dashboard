@@ -196,20 +196,20 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 	}
 	private void validateJobInfo(ZJobInfo jobInfo){
 		if(jobInfo.getJobGroupId() == null) {
-			throw BusinessException.build("任务组必填");
+			throw BusinessException.build("任务分组必填");
 		}
 		ZJobGroup group = xxlJobGroupService.selectByPId(jobInfo.getJobGroupId());
 		if (group == null) {
-			throw BusinessException.build("任务组不存在");
+			throw BusinessException.build("任务分组不存在");
 		}
 		if (!CronExpression.isValidExpression(jobInfo.getJobCron())) {
-			throw BusinessException.build("cron表达式非法");
+			throw BusinessException.build("Cron表达式非法");
 		}
 		if (jobInfo.getJobDesc()==null || jobInfo.getJobDesc().trim().length()==0) {
 			throw BusinessException.build("任务描述不能为空");
 		}
 		if (jobInfo.getAuthor()==null || jobInfo.getAuthor().trim().length()==0) {
-			throw BusinessException.build("作者不能为空");
+			throw BusinessException.build("负责人不能为空");
 		}
 //		if (ExecutorRouteStrategyEnum.match(jobInfo.getExecutorRouteStrategy(), null) == null) {
 //			throw BusinessException.build("路由策略不能为空");
@@ -217,7 +217,11 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == null) {
 			throw BusinessException.build("阻塞处理策略不能为空");
 		}
-
+		if (ExecutorBlockStrategyEnum.match(jobInfo.getExecutorBlockStrategy(), null) == ExecutorBlockStrategyEnum.CONCURRENT_EXECUTION) {
+			if(jobInfo.getConcurrentSize() == null) {
+				throw BusinessException.build("并发策略时，并行任务数量不能空");
+			}
+		}
 		// ChildJobId valid
 		if (jobInfo.getChildJobId()!=null && jobInfo.getChildJobId().trim().length()>0) {
 			String[] childJobIds = jobInfo.getChildJobId().split(",");
@@ -249,10 +253,9 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 	@Transactional
 	@Override
 	public ZJobInfo updateJob(ZJobInfo jobInfo) {
-
 		Assert.notNull(jobInfo,"");
 		Assert.notNull(jobInfo.getJobId(),"任务ID不能为空");
-		log.info("update jobInfo JobDesc{}",jobInfo.getJobDesc());
+		log.info("更新 jobInfo {}",jobInfo);
 		// valid
 		validateJobInfo(jobInfo);
 		ZJobInfo exists_jobInfo = zJobInfoService.selectByPId(jobInfo.getJobId());
@@ -260,8 +263,7 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 			throw BusinessException.build("任务不存在无法修改");
 		}
 
-		// next trigger time (5s后生效，避开预读周期)
-		Long nextTriggerTime = exists_jobInfo.getTriggerNextTime();
+		Long nextTriggerTime;
 			try {
 				Date nextValidTime = new CronExpression(jobInfo.getJobCron()).getNextValidTimeAfter(new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 				if (nextValidTime == null) {
@@ -284,6 +286,7 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 		exists_jobInfo.setExecutorTimeout(jobInfo.getExecutorTimeout());
 		exists_jobInfo.setExecutorFailRetryCount(jobInfo.getExecutorFailRetryCount());
 		exists_jobInfo.setChildJobId(jobInfo.getChildJobId());
+		exists_jobInfo.setConcurrentSize(jobInfo.getConcurrentSize());
 		exists_jobInfo.setTriggerNextTime(nextTriggerTime);
 
 		exists_jobInfo.setTriggerStatus(jobInfo.getTriggerStatus());
@@ -313,8 +316,7 @@ public class ZJobInfoServiceImpl extends CrudBaseServiceImpl<Long,ZJobInfo> impl
 	public long enableJob(long id) {
 		ZJobInfo zJobInfo = zJobInfoService.selectByPId(id);
 
-		// next trigger time (5s后生效，避开预读周期)
-		long nextTriggerTime = 0;
+		long nextTriggerTime;
 		try {
 			Date nextValidTime = new CronExpression(zJobInfo.getJobCron()).getNextValidTimeAfter(new Date(System.currentTimeMillis() + JobScheduleHelper.PRE_READ_MS));
 			if (nextValidTime == null) {
