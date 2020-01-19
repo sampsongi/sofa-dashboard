@@ -506,7 +506,9 @@ public class FtpUtil {
 			for (Object o : v) {
 				String s = o.toString();
 				String[] parts = s.split(" ");
-				list.add(parts[parts.length - 1]);
+				String fn = parts[parts.length - 1];
+				if(!fn.equals(".") && !fn.equals(".."))
+					list.add(fn);
 			}
 		} finally {
 			log.info("disconnect");
