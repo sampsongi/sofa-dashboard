@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Slf4j
@@ -157,14 +158,23 @@ public class ZipUtil {
         if(!path.endsWith(File.separator)) {
             path += File.separator;
         }
-        ZipFile zf = new ZipFile(new File(zipFileName),charset);
-        Enumeration<? extends ZipEntry> en = zf.entries();
-        while (en.hasMoreElements()) {
-            unzip(zf, en.nextElement(),path);
+        ZipInputStream zi = new ZipInputStream(new FileInputStream(zipFileName),charset);
+
+        ZipEntry ze = zi.getNextEntry();
+        while (zi.available() > 0) {
+            unzip(zi, ze,path);
+            ze = zi.getNextEntry();
         }
+        zi.close();
+//        使用 ZipEntry 无法解析大文件，ZipInputStream可以
+//        ZipFile zf = new ZipFile(new File(zipFileName),charset);
+//        Enumeration<? extends ZipEntry> en = zf.entries();
+//        while (en.hasMoreElements()) {
+//            unzip(zf, en.nextElement(),path);
+//        }
     }
 
-    private static void unzip(ZipFile zf , ZipEntry zipEntry, String base) throws Exception {
+    private static void unzip(ZipInputStream zi , ZipEntry zipEntry, String base) throws Exception {
         if (zipEntry.isDirectory()) {
             base = base + File.separator + zipEntry.getName();
             File dir = new File(base);
@@ -173,18 +183,16 @@ public class ZipUtil {
             }
         } else {
             String filepath = base + File.separator + zipEntry.getName();
-            FileOutputStream fos = new FileOutputStream(filepath);
-            InputStream is = zf.getInputStream(zipEntry);
             File f = new File(filepath);
             File parentFile = f.getParentFile();
             if(!parentFile.exists())
                 parentFile.mkdirs();
-            int len = 0;
+            FileOutputStream fos = new FileOutputStream(filepath);
+            int len;
             byte buf[] = new byte[DEFAULT_BUFFER_SIZE];
-            while (-1 != (len = is.read(buf))) {
+            while (-1 != (len = zi.read(buf))) {
                 fos.write(buf, 0, len);
             }
-            is.close();
             fos.close();
         }
     }
