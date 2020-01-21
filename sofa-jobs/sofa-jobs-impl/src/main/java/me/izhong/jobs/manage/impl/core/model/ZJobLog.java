@@ -55,7 +55,7 @@ public class ZJobLog extends TimedBasedEntity implements Serializable {
 	private Integer handleCode;
 	private String handleMsg;
 
-	@Search
+	@Search(op = Search.Op.GTE)
 	private Long processResult;
 	private String processMessage;
 

@@ -143,6 +143,26 @@ public class CrudBaseServiceImpl<K,T> implements CrudBaseService<K,T> {
                             if(strValue.length > 0)
                                 CriteriaUtil.addCriteria(query,Criteria.where(key).in(strValue));
                         }
+                    } else if (op.equals(Search.Op.GT)) {
+                        if(value instanceof Number) {
+                            Number numValue = (Number) value;
+                            CriteriaUtil.addCriteria(query,Criteria.where(key).gt(numValue));
+                        }
+                    } else if (op.equals(Search.Op.GTE)) {
+                        if(value instanceof Number) {
+                            Number numValue = (Number) value;
+                            CriteriaUtil.addCriteria(query,Criteria.where(key).gte(numValue));
+                        }
+                    } else if (op.equals(Search.Op.LT)) {
+                        if(value instanceof Number) {
+                            Number numValue = (Number) value;
+                            CriteriaUtil.addCriteria(query,Criteria.where(key).lt(numValue));
+                        }
+                    } else if (op.equals(Search.Op.GTE)) {
+                        if(value instanceof Number) {
+                            Number numValue = (Number) value;
+                            CriteriaUtil.addCriteria(query,Criteria.where(key).lte(numValue));
+                        }
                     }
                 }
             }

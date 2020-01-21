@@ -7,9 +7,11 @@ import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.util.StringUtil;
 import me.izhong.db.common.annotation.AjaxWrapper;
+import me.izhong.db.common.annotation.Search;
 import me.izhong.db.common.exception.BusinessException;
 import me.izhong.db.common.util.PageRequestUtil;
 import me.izhong.domain.PageModel;
+import me.izhong.domain.PageRequest;
 import me.izhong.jobs.admin.config.JobPermissions;
 import me.izhong.jobs.admin.service.JobServiceReference;
 import me.izhong.jobs.model.Job;
@@ -17,6 +19,7 @@ import me.izhong.jobs.model.JobGroup;
 import me.izhong.jobs.model.JobLog;
 import me.izhong.jobs.model.LogResult;
 import me.izhong.model.ReturnT;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +69,8 @@ public class JobLogController {
 	@RequestMapping("/list")
 	@AjaxWrapper
 	public PageModel<JobLog> pageList(HttpServletRequest request, String jobDesc, Long jobGroupId,
-									  String status,Integer handleCode, String filterTime) {
-
+									  String status,Integer handleCode, String processResult, String filterTime) {
+		PageRequest pageRequest = PageRequestUtil.fromRequest(request);
 		// parse param
 		Date triggerTimeStart = null;
 		Date triggerTimeEnd = null;
@@ -86,8 +89,10 @@ public class JobLogController {
 			jLog.setJobGroupId(jobGroupId);
 		if(handleCode != null)
 			jLog.setHandleCode(handleCode);
-		
-		return jobServiceReference.jobService.logPageList(PageRequestUtil.fromRequest(request),jLog);
+		if(StringUtils.equals(processResult,"HAVE_JOB")){
+			jLog.setProcessResult(1L);
+		}
+		return jobServiceReference.jobService.logPageList(pageRequest,jLog);
 	}
 
 	@RequiresPermissions(JobPermissions.JobInfo.LOG_VIEW)

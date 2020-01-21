@@ -26,6 +26,12 @@
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                             </select>
                             </li>
+							<li>
+								执行结果：<select name="processResult" th:with="type=${@dict.getType('sys_job_process_result')}">
+								<option value="">所有</option>
+								<option value="HAVE_JOB">有处理结果</option>
+							</select>
+							</li>
 							<li class="select-time">
 								<label>执行时间： </label>
 								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="startTime"/>
