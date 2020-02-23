@@ -1,13 +1,13 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import me.izhong.dashboard.manage.security.UserRealm;
-import me.izhong.db.common.annotation.AjaxWrapper;
-import me.izhong.model.UserInfo;
+import me.izhong.common.annotation.AjaxWrapper;
+import me.izhong.common.model.UserInfo;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.constants.Global;
 import me.izhong.dashboard.manage.entity.SysUser;
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 import me.izhong.dashboard.manage.service.SysUserService;
 import me.izhong.dashboard.manage.util.FileUploadUtil;
 import me.izhong.dashboard.manage.security.service.PasswordService;

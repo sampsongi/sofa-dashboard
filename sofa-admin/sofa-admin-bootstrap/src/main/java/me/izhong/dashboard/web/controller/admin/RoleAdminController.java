@@ -1,9 +1,9 @@
 package me.izhong.dashboard.web.controller.admin;
 
 import me.izhong.db.common.util.PageRequestUtil;
-import me.izhong.domain.PageModel;
+import me.izhong.common.domain.PageModel;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.db.common.annotation.AjaxWrapper;
+import me.izhong.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
 import me.izhong.dashboard.manage.entity.SysRole;
@@ -12,7 +12,7 @@ import me.izhong.dashboard.manage.entity.SysUserRole;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import me.izhong.dashboard.manage.service.SysRoleService;
 import me.izhong.dashboard.manage.service.SysUserService;
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 import me.izhong.dashboard.manage.security.config.PermissionConstants;
 import me.izhong.dashboard.manage.util.ExcelUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

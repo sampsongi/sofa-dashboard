@@ -1,7 +1,7 @@
 package me.izhong.dashboard.manage.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import me.izhong.db.common.annotation.*;
+import me.izhong.common.annotation.*;
 import me.izhong.db.common.domain.TimedBasedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

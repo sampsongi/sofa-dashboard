@@ -1,15 +1,14 @@
 package me.izhong.jobs.admin.controller;
 
-import me.izhong.dashboard.manage.security.config.PermissionConstants;
-import me.izhong.db.common.annotation.AjaxWrapper;
+import me.izhong.common.annotation.AjaxWrapper;
 import me.izhong.db.common.util.PageRequestUtil;
-import me.izhong.domain.PageModel;
+import me.izhong.common.domain.PageModel;
 import me.izhong.jobs.admin.config.JobPermissions;
 import me.izhong.jobs.admin.service.JobServiceReference;
 import me.izhong.jobs.model.JobGroup;
 import me.izhong.dashboard.manage.annotation.Log;
 import me.izhong.dashboard.manage.constants.BusinessType;
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 import me.izhong.common.util.Convert;
 import me.izhong.dashboard.manage.security.UserInfoContextHelper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

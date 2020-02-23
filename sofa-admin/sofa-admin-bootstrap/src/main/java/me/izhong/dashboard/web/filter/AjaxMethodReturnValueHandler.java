@@ -1,6 +1,6 @@
 package me.izhong.dashboard.web.filter;
 
-import me.izhong.db.common.annotation.AjaxWrapper;
+import me.izhong.common.annotation.AjaxWrapper;
 import me.izhong.dashboard.web.bean.ResponseContainer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;

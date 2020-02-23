@@ -1,11 +1,11 @@
 package me.izhong.dashboard.manage.expection.user;
 
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 
 public class UserDeleteException extends BusinessException {
 
 
-    public static final String KEY = "USER_DELETE";
+    public static final int KEY = 400;
 
     public UserDeleteException() {
         super(KEY, "用户已删除");

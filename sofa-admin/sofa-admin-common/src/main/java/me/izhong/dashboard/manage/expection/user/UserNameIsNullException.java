@@ -1,11 +1,11 @@
 package me.izhong.dashboard.manage.expection.user;
 
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 
 public class UserNameIsNullException extends BusinessException {
 
 
-    public static final String KEY = "USER_NAME_IS_NULL";
+    public static final int KEY = 400;
 
     public UserNameIsNullException() {
         super(KEY, "用户名为空");

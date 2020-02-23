@@ -2,7 +2,7 @@ package me.izhong.dashboard.web.filter;
 
 
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 import me.izhong.dashboard.manage.expection.user.UserHasNotPermissionException;
 import me.izhong.dashboard.manage.expection.user.UserNotLoginException;
 import me.izhong.dashboard.manage.util.HttpUtil;
@@ -35,7 +35,7 @@ public class ExceptionFilter implements HandlerExceptionResolver {
         //httpServletResponse.flushBuffer();
 
 
-        String code = ResponseContainer.FAIL_CODE;
+        int code = ResponseContainer.FAIL_CODE;
         String msg = "系统异常";
         if (e instanceof UserHasNotPermissionException) {
             UserHasNotPermissionException ce = (UserHasNotPermissionException) e;

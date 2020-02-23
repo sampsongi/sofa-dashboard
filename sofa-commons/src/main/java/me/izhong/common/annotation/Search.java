@@ -1,4 +1,4 @@
-package me.izhong.db.common.annotation;
+package me.izhong.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +16,7 @@ public @interface Search {
 
     Op op() default Op.IS;
 
-    public enum Op {
+    enum Op {
         IS, REGEX, IN, GT, GTE, LT,LTE;
     }
 

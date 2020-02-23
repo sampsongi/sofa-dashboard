@@ -1,7 +1,6 @@
-package me.izhong.model;
+package me.izhong.common.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -9,13 +8,15 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 public class UserInfo implements Serializable {
 
     private Long userId;
     private String loginName;
     private String loginIp;
     private String userName;
+    private String nickName;
     private String email;
     private String phoneNumber;
     private String sex;

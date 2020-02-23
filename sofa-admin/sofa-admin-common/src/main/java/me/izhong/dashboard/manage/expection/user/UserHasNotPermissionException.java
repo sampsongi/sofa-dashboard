@@ -1,10 +1,10 @@
 package me.izhong.dashboard.manage.expection.user;
 
-import me.izhong.db.common.exception.BusinessException;
+import me.izhong.common.exception.BusinessException;
 
 public class UserHasNotPermissionException extends BusinessException {
 
-    public static final String KEY = "USER_NOT_PERMIT";
+    public static final int KEY = 400;
 
     private String permission;
 
