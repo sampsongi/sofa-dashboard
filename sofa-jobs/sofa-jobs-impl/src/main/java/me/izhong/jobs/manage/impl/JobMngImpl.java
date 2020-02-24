@@ -189,20 +189,8 @@ public class JobMngImpl implements IJobMngFacade {
         //收集agent的日志
         ZJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
-            jobLog.setFinishHandleTime(endTime);
-            Date startTime = jobLog.getHandleTime();
-            if(startTime != null){
-                long second1 = DateUtils.getFragmentInMilliseconds(startTime,Calendar.YEAR);
-                long second2 = DateUtils.getFragmentInMilliseconds(endTime,Calendar.YEAR);
-                String dur = DurationFormatUtils.formatPeriod(second1,second2,"HH:mm:ss");
-                jobLog.setCostHandleTime(dur);
-            }
-            jobLog.setHandleCode(resultStatus);
-            jobLog.setHandleMsg(message + (jobLog.getHandleMsg() == null ? "" : ":" + jobLog.getHandleMsg()));
-            jobLogService.update(jobLog);
-
+            jobLogService.updateHandleDoneMessage(triggerId,resultStatus,jobLog.getHandleMsg() == null ? "" : ":" + jobLog.getHandleMsg(),endTime);
             triggerJobFinished(jobLog);
-
         }
     }
 

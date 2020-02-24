@@ -166,7 +166,7 @@ public class JobStateMonitorHelper {
     }
 
     private void setJobLogResult(ZJobLog jobLog, Integer code, String message){
-        jobLogService.updateHandleDoneMessage(jobLog.getJobLogId(), code, message);
+        jobLogService.updateHandleDoneMessage(jobLog.getJobLogId(), code, message,null);
         ZJobInfo jobInfo = jobInfoService.selectByPId(jobLog.getJobId());
         if (jobInfo.getRunningTriggerIds() != null && jobInfo.getRunningTriggerIds().contains(jobLog.getJobLogId())) {
             jobInfo.getRunningTriggerIds().remove(jobLog.getJobLogId());
