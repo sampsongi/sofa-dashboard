@@ -23,7 +23,7 @@ public class ZJobConfigServiceImpl extends CrudBaseServiceImpl<Long,ZJobConfig> 
      * @return 参数键值
      */
     @Override
-    public String selectConfigByKey(String configKey) {
+    public String selectNormalConfigByKey(String configKey) {
         Query query = new Query();
         query.addCriteria(Criteria.where("configKey").is(configKey));
         query.addCriteria(CriteriaUtil.notDeleteCriteria());

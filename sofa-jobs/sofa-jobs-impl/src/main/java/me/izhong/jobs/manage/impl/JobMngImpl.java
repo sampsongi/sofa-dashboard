@@ -490,7 +490,7 @@ public class JobMngImpl implements IJobMngFacade {
 
     @Override
     public String findConfigByKey(String configKey) {
-        return zJobConfigService.selectConfigByKey(configKey);
+        return zJobConfigService.selectNormalConfigByKey(configKey);
     }
 
 }
