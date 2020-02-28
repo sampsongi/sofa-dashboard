@@ -3,7 +3,7 @@ package me.izhong.dashboard.web.controller;
 import me.izhong.dashboard.manage.constants.SystemConstants;
 import me.izhong.dashboard.manage.util.StringUtil;
 import me.izhong.common.annotation.AjaxWrapper;
-import me.izhong.db.common.config.ServerConfig;
+import me.izhong.dashboard.config.ServerConfig;
 import me.izhong.dashboard.manage.constants.Global;
 import me.izhong.common.exception.BusinessException;
 import me.izhong.dashboard.manage.util.FileUploadUtil;

@@ -1,4 +1,4 @@
-package me.izhong.db.common.config;
+package me.izhong.dashboard.config;
 
 import me.izhong.dashboard.manage.util.ServletUtil;
 import org.springframework.stereotype.Component;
