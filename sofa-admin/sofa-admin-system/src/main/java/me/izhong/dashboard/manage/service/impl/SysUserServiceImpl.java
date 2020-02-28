@@ -275,15 +275,13 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
             }
             checkUserAllowed(new SysUser(userId));
             deleteAllUserInfoByUserId(userId);
-            return userIds.length;
         }
-        return 0;
+        return userIds.length;
     }
 
     @Transactional
     @Override
     public void deleteAllUserInfoByUserId(Long userId) {
-        SysUser sysUser = findUser(userId);
         if (SysUser.isAdmin(userId)) {
             throw BusinessException.build("不允许删除超级管理员用户");
         }
