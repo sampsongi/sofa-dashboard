@@ -1,10 +1,10 @@
 package me.izhong.dashboard.manage.service.impl;
 
-import me.izhong.db.common.service.CrudBaseServiceImpl;
+import me.izhong.db.mongo.service.CrudBaseServiceImpl;
 import me.izhong.dashboard.manage.dao.ConfigDao;
 import me.izhong.dashboard.manage.entity.SysConfig;
 import me.izhong.dashboard.manage.service.SysConfigService;
-import me.izhong.db.common.util.CriteriaUtil;
+import me.izhong.db.mongo.util.CriteriaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

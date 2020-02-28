@@ -3,7 +3,7 @@ package me.izhong.jobs.manage.impl.service.impl;
 import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
 import me.izhong.common.exception.BusinessException;
-import me.izhong.db.common.service.CrudBaseServiceImpl;
+import me.izhong.db.mongo.service.CrudBaseServiceImpl;
 import com.mongodb.client.result.UpdateResult;
 import me.izhong.jobs.manage.impl.core.model.ZJobLog;
 import me.izhong.jobs.manage.impl.service.ZJobLogService;

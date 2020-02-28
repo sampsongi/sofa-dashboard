@@ -6,7 +6,8 @@ spring:
     banner-mode: "OFF"
   data:
     mongodb:
-      uri: mongodb://10.10.51.212:27017/training
+      uri: mongodb://10.10.51.212:27017/jobs
+      #&replicaSet=rs0
   http:
     encoding:
       charset: UTF-8
@@ -122,21 +123,8 @@ com:
     sofa:
       rpc:
         registry:
-          address: zookeeper://172.30.251.92:2181
-        bolt-port: 13301
-
----
-spring:
-  profiles: zz
-  data:
-    mongodb:
-      uri: mongodb://10.10.51.212:27017/training
-com:
-  alipay:
-    sofa:
-      rpc:
-        registry:
           address: zookeeper://10.10.51.212:2181
+        bolt-port: 13301
 
 ---
 spring:
@@ -144,7 +132,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://10.10.51.212:27017/training
+      uri: mongodb://10.10.51.212:27017/jobs
 
 com:
   alipay:

@@ -1,7 +1,7 @@
 package me.izhong.jobs.manage.impl.service.impl;
 
-import me.izhong.db.common.service.CrudBaseServiceImpl;
-import me.izhong.db.common.util.CriteriaUtil;
+import me.izhong.db.mongo.service.CrudBaseServiceImpl;
+import me.izhong.db.mongo.util.CriteriaUtil;
 import me.izhong.jobs.manage.impl.core.model.ZJobConfig;
 import me.izhong.jobs.manage.impl.service.ZJobConfigService;
 import org.springframework.beans.factory.annotation.Autowired;

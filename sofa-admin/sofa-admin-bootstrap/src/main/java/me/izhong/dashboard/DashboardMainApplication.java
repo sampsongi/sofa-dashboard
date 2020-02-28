@@ -3,7 +3,6 @@ package me.izhong.dashboard;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import lombok.extern.slf4j.Slf4j;
-import me.izhong.dashboard.manage.config.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,12 +24,11 @@ import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-@SpringBootApplication(exclude = {JacksonAutoConfiguration.class,
-        DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {JacksonAutoConfiguration.class,DataSourceAutoConfiguration.class})
 //,MongoAutoConfiguration.class
 @EnableCaching
-@ComponentScan(value = {"com.nuis,me.izhong"})
-@EnableConfigurationProperties(ApplicationProperties.class)
+@ComponentScan(value = {"me.izhong"})
+//@EnableConfigurationProperties(ApplicationProperties.class)
 @Slf4j
 public class DashboardMainApplication {
 
@@ -54,7 +52,7 @@ public class DashboardMainApplication {
 
     @PostConstruct
     public void init() {
-        Annotation[] anns = DashboardMainApplication.class.getDeclaredAnnotations();
-        Arrays.stream(anns).forEach(e -> System.out.println(e.annotationType()));
+        //Annotation[] anns = DashboardMainApplication.class.getDeclaredAnnotations();
+        //Arrays.stream(anns).forEach(e -> System.out.println(e.annotationType()));
     }
 }
