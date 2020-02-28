@@ -189,7 +189,7 @@ public class JobMngImpl implements IJobMngFacade {
         //收集agent的日志
         ZJobLog jobLog = jobLogService.selectByPId(triggerId);
         if(jobLog != null) {
-            jobLogService.updateHandleDoneMessage(triggerId,resultStatus,jobLog.getHandleMsg() == null ? "" : ":" + jobLog.getHandleMsg(),endTime);
+            jobLogService.updateHandleDoneMessage(triggerId,resultStatus,message == null ? "" : message,endTime);
             triggerJobFinished(jobLog);
         }
     }
