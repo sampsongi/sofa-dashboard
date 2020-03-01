@@ -3,6 +3,7 @@ package me.izhong.dashboard.manage.service;
 
 import me.izhong.common.domain.PageModel;
 import me.izhong.common.domain.PageRequest;
+import me.izhong.common.exception.BusinessException;
 import me.izhong.dashboard.manage.entity.SysUser;
 
 import java.util.Date;
@@ -19,6 +20,8 @@ public interface SysUserService {
     SysUser findUserByEmail(String email);
 
     SysUser findUserByPhoneNumber(String phoneNumber);
+
+    SysUser recordLoginIp(Long userId, String loginIp);
 
     SysUser saveUser(SysUser user);
 

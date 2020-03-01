@@ -132,6 +132,18 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
 
     @Transactional
     @Override
+    public SysUser recordLoginIp(Long userId, String loginIp) throws BusinessException {
+        SysUser dbuser = userDao.findByUserId(userId);
+        if(dbuser != null) {
+            dbuser.setLoginIp(loginIp);
+            dbuser.setLoginDate(new Date());
+            dbuser = userDao.save(dbuser);
+        }
+        return dbuser;
+    }
+
+    @Transactional
+    @Override
     public SysUser saveUser(SysUser user) throws BusinessException {
         Assert.notNull(user, "用户不能为空");
         checkUserAllowed(user,"删除");
