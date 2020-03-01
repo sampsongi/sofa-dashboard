@@ -24,10 +24,6 @@ public interface SysUserService {
 
     SysUser saveUserAndPerms(SysUser user);
 
-    List<SysUser> getTop(int size, String order, SysUser searchUser);
-
-    List<SysUser> getList(int pageNum, int pageSize, String order, String isAsc, SysUser searchUser, Date bTime, Date eTime);
-
     List<SysUser> findUsersByUserIds(Long[] id);
 
     PageModel getPage(PageRequest pageRequest, SysUser searchUser);
@@ -56,5 +52,4 @@ public interface SysUserService {
 
     String importUser(List<SysUser> userList, boolean updateSupport, String operName);
 
-    void checkUserAllowed(SysUser user);
 }

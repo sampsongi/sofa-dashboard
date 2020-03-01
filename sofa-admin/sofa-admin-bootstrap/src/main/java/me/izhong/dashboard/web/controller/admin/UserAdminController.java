@@ -163,11 +163,8 @@ public class UserAdminController {
     @PostMapping("edit")
     @AjaxWrapper
     public UserInfo editUser(SysUser user) {
-        sysUserService.checkUserAllowed(user);
-
         UserInfoContextHelper.checkScopePermission(PermissionConstants.User.EDIT,user.getDeptId());
-
-        SysUser dbUser = null;
+        SysUser dbUser;
         if (user == null) {
             throw BusinessException.build("user不能为空");
         }
@@ -320,7 +317,6 @@ public class UserAdminController {
     @PostMapping("/resetPwd")
     @AjaxWrapper
     public void resetPwd(SysUser user) {
-        sysUserService.checkUserAllowed(user);
 
         SysUser dbUser = sysUserService.findUser(user.getUserId());
         UserInfoContextHelper.checkScopePermission(PermissionConstants.User.RESET_PWD,dbUser.getDeptId());
@@ -343,7 +339,6 @@ public class UserAdminController {
     @PostMapping("/changeStatus")
     @AjaxWrapper
     public int changeStatus(SysUser user) {
-        sysUserService.checkUserAllowed(user);
         SysUser u = sysUserService.findUser(user.getUserId());
         UserInfoContextHelper.checkScopePermission(PermissionConstants.User.EDIT,u.getDeptId());
         //解锁账户
