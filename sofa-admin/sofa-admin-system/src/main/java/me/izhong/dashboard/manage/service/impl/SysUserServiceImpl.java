@@ -133,6 +133,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
     @Transactional
     @Override
     public SysUser recordLoginIp(Long userId, String loginIp) throws BusinessException {
+        Assert.notNull(userId, "用户不能为空");
         SysUser dbuser = userDao.findByUserId(userId);
         if(dbuser != null) {
             dbuser.setLoginIp(loginIp);
@@ -144,9 +145,35 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
 
     @Transactional
     @Override
+    public SysUser updateMyInfos(Long userId,String userName,String email,String phoneNumber,String sex) throws BusinessException {
+        Assert.notNull(userId, "用户不能为空");
+        SysUser dbuser = userDao.findByUserId(userId);
+        if(dbuser != null) {
+            dbuser.setUserName(userName);
+            dbuser.setEmail(email);
+            dbuser.setPhoneNumber(phoneNumber);
+            dbuser.setSex(sex);
+            dbuser = userDao.save(dbuser);
+        }
+        return dbuser;
+    }
+
+    @Transactional
+    @Override
+    public SysUser updateMyAvatar(Long userId,String avatar) throws BusinessException {
+        Assert.notNull(userId, "用户不能为空");
+        SysUser dbuser = userDao.findByUserId(userId);
+        if(dbuser != null) {
+            dbuser.setAvatar(avatar);
+            dbuser = userDao.save(dbuser);
+        }
+        return dbuser;
+    }
+
+    @Transactional
+    @Override
     public SysUser saveUser(SysUser user) throws BusinessException {
         Assert.notNull(user, "用户不能为空");
-        checkUserAllowed(user,"删除");
         try {
             boolean isNew = true;
             SysUser dbuser;
@@ -322,7 +349,6 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
         SysUser dbUser = findUser(userId);
         if (dbUser == null)
             throw new UserNotFoundException();
-        checkUserAllowed(dbUser,"重置");
         if (StringUtils.isBlank(newPassword)) {
             throw BusinessException.build("password不能为空");
         }
@@ -347,6 +373,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
             try {
                 // 验证是否存在这个用户
                 SysUser u = userDao.findByLoginName(user.getLoginName());
+                checkUserAllowed(u,"导入");
                 if (u == null) {
                     user.setSalt(Global.getSalt());
                     user.setPassword(MD5Util.encode(Global.getSalt() + password));
@@ -482,7 +509,6 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
         insertUserPost(user);
     }
 
-
     private PageModel<SysUser> doGetUserAllocatedList(PageRequest request,
                                                       Long roleId, SysUser user, List<Long> deptIds, boolean inRoles) {
         Assert.notNull(roleId, "roleId cant null");
@@ -557,6 +583,7 @@ public class SysUserServiceImpl extends CrudBaseServiceImpl<Long,SysUser> implem
      *
      * @param user 用户信息
      */
+    @Override
     public void checkUserAllowed(SysUser user,String actionName) {
         if (user.getUserId() != null && user.isAdmin()) {
             throw BusinessException.build("不允许" + StringUtils.defaultIfBlank(actionName,"操作") + "超级管理员用户" + StringUtils.defaultIfBlank(user.getLoginName(),""));

@@ -23,6 +23,10 @@ public interface SysUserService {
 
     SysUser recordLoginIp(Long userId, String loginIp);
 
+    SysUser updateMyInfos(Long userId,String userName,String email,String phoneNumber,String sex);
+
+    SysUser updateMyAvatar(Long userId,String avatar);
+
     SysUser saveUser(SysUser user);
 
     SysUser saveUserAndPerms(SysUser user);
@@ -55,4 +59,5 @@ public interface SysUserService {
 
     String importUser(List<SysUser> userList, boolean updateSupport, String operName);
 
+    void checkUserAllowed(SysUser user,String actionName);
 }
