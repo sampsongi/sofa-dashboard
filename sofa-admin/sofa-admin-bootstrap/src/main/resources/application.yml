@@ -104,6 +104,10 @@ dashboard:
   version: 4.0.0
   salt: salt@defalut
   filepath: ${BASE_DIR:/Users/jimmy/tmp}/data/job
+  redis:
+    host: 1.redis.rds.aliyuncs.com
+    port: 6379
+    password: 111
   ali:
     oss:
       enable: false

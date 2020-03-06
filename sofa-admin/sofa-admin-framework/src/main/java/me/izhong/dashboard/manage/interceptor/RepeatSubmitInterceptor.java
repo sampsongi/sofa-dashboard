@@ -12,11 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
-/**
- * 防止重复提交拦截器
- * 
- */
-@Component
 public abstract class RepeatSubmitInterceptor extends HandlerInterceptorAdapter
 {
     @Override

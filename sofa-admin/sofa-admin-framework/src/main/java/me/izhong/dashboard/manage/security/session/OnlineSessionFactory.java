@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 自定义sessionFactory会话
  */
-@Component
+//@Component
 public class OnlineSessionFactory implements SessionFactory {
     @Override
     public Session createSession(SessionContext initData) {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -19,14 +20,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 import javax.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-@SpringBootApplication(exclude = {JacksonAutoConfiguration.class,DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {JacksonAutoConfiguration.class,DataSourceAutoConfiguration.class, CacheAutoConfiguration.class})
 //,MongoAutoConfiguration.class
-@EnableCaching
+//@EnableCaching
 @ComponentScan(value = {"me.izhong"})
 //@EnableConfigurationProperties(ApplicationProperties.class)
 @Slf4j

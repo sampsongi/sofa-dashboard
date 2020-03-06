@@ -65,14 +65,14 @@ public class UserRealm extends AuthorizingRealm {
         // 角色列表
         Set<String> roles = new HashSet<String>();
         // 菜单，按钮权限列表
-        Set<String> menus = new HashSet<String>();
+        Set<String> perms = new HashSet<String>();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         roles = sysRoleService.selectRoleKeys(user.getUserId());
-        menus = sysMenuService.selectPermsByUserId(user.getUserId());
+        perms = sysMenuService.selectPermsByUserId(user.getUserId());
         // 角色加入AuthorizationInfo认证对象
         info.setRoles(roles);
         // 权限加入AuthorizationInfo认证对象
-        info.setStringPermissions(menus);
+        info.setStringPermissions(perms);
 
         log.info("用户[{}]从数据库加载权限成功", UserInfoContextHelper.getCurrentLoginName());
         return info;
@@ -192,6 +192,17 @@ public class UserRealm extends AuthorizingRealm {
                 });
             }
         });
+    }
+
+    @Override
+    public String getAuthorizationCacheName() {
+        return "perm";
+    }
+
+    @Override
+    protected Object getAuthorizationCacheKey(PrincipalCollection principals) {
+        UserInfo u = (UserInfo)((SimplePrincipalCollection)principals).asList().get(0);
+        return u.getUserId();
     }
 
     /**

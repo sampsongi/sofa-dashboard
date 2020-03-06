@@ -2,6 +2,8 @@ package me.izhong.dashboard.manage.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
+import me.izhong.dashboard.manage.cache.redis.RedisCacheManager;
+import me.izhong.dashboard.manage.cache.redis.RedisManager;
 import me.izhong.dashboard.manage.security.UserRealm;
 import me.izhong.dashboard.manage.security.filter.LogoutFilter;
 import me.izhong.dashboard.manage.security.filter.SyncOnlineSessionFilter;
@@ -97,7 +99,7 @@ public class ShiroConfig {
     /**
      * 缓存管理器 使用Ehcache实现
      */
-    @Bean
+    //@Bean
     public EhCacheManager getEhCacheManager() {
         net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.getCacheManager("dashboard");
         EhCacheManager em = new EhCacheManager();
@@ -110,6 +112,22 @@ public class ShiroConfig {
         }
     }
 
+    @Bean
+    public RedisCacheManager getRedisCacheManager(){
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        //redis中针对不同用户缓存
+        redisCacheManager.setPrincipalIdFieldName("username");
+        //用户权限信息缓存时间
+        redisCacheManager.setExpire(200000);
+        return redisCacheManager;
+    }
+
+    @Bean
+    public RedisManager redisManager(){
+        RedisManager redisManager = new RedisManager();
+        return redisManager;
+    }
     /**
      * 返回配置文件流 避免ehcache配置文件一直被占用，无法完全销毁项目重新部署
      */
@@ -133,9 +151,10 @@ public class ShiroConfig {
      * 自定义Realm
      */
     @Bean
-    public UserRealm userRealm(EhCacheManager cacheManager) {
+    public UserRealm userRealm() {
         UserRealm userRealm = new UserRealm();
-        userRealm.setCacheManager(cacheManager);
+//        userRealm.setCacheManager(getEhCacheManager());
+        userRealm.setCacheManager(getRedisCacheManager());
         return userRealm;
     }
 
@@ -165,6 +184,7 @@ public class ShiroConfig {
         OnlineWebSessionManager manager = new OnlineWebSessionManager();
         // 加入缓存管理器
         manager.setCacheManager(getEhCacheManager());
+//        manager.setCacheManager(getRedisCacheManager());
         // 删除过期的session
         manager.setDeleteInvalidSessions(true);
         // 设置全局session超时时间
@@ -194,6 +214,7 @@ public class ShiroConfig {
         securityManager.setRememberMeManager(rememberMeManager());
         // 注入缓存管理器;
         securityManager.setCacheManager(getEhCacheManager());
+        //securityManager.setCacheManager(getRedisCacheManager());
         // session管理器
         securityManager.setSessionManager(sessionManager());
         return securityManager;

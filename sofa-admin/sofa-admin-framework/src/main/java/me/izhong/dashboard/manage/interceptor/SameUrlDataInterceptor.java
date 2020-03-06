@@ -1,4 +1,4 @@
-package me.izhong.dashboard.manage.interceptor.impl;
+package me.izhong.dashboard.manage.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import me.izhong.dashboard.manage.interceptor.RepeatSubmitInterceptor;

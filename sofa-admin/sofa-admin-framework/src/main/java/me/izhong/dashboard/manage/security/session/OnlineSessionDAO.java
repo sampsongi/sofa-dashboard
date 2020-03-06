@@ -1,5 +1,6 @@
 package me.izhong.dashboard.manage.security.session;
 
+import lombok.extern.slf4j.Slf4j;
 import me.izhong.dashboard.manage.entity.SysUserOnline;
 import me.izhong.dashboard.manage.security.service.SysShiroService;
 import me.izhong.dashboard.manage.factory.AsyncManager;
@@ -16,6 +17,7 @@ import java.util.Date;
 /**
  * 针对自定义的ShiroSession的db操作
  */
+@Slf4j
 public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
     /**
      * 同步session到数据库的周期 单位为毫秒（默认1分钟）
@@ -93,6 +95,7 @@ public class OnlineSessionDAO extends EnterpriseCacheSessionDAO {
         if (null == onlineSession) {
             return;
         }
+        log.info("回话停止 {}",onlineSession.getLoginName());
         onlineSession.setStatus(SysUserOnline.OnlineStatus.off_line);
         sysShiroService.deleteSession(onlineSession);
     }
