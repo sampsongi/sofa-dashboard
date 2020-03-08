@@ -79,14 +79,14 @@ public class UserRealm extends AuthorizingRealm {
         if(user.getPerms() !=null) {
             roles = user.getRoles();
             menus = user.getPerms();
-            log.debug("用户[{}]从session加载权限成功", UserInfoContextHelper.getCurrentLoginName());
+            log.debug("用户[{}]从session加载权限成功", user.getLoginName());
         } else {
             roles = sysRoleService.selectRoleKeys(user.getUserId());
             menus = sysMenuService.selectPermsByUserId(user.getUserId());
             user.setRoles(roles);
             user.setPerms(menus);
-            UserInfoContextHelper.setUser(user);
-            log.debug("用户[{}]从数据库加载权限成功", UserInfoContextHelper.getCurrentLoginName());
+            //UserInfoContextHelper.setUser(user);
+            log.debug("用户[{}]从数据库加载权限成功", user.getLoginName());
         }
 
         // 角色加入AuthorizationInfo认证对象
