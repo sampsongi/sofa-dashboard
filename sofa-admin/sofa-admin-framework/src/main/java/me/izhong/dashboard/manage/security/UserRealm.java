@@ -142,7 +142,7 @@ public class UserRealm extends AuthorizingRealm {
         return info;
     }
     public static void refreshUserScope() {
-        UserInfo u = (UserInfo) SecurityUtils.getSubject().getPrincipal();
+        UserInfo u = UserInfoContextHelper.getLoginUser();
 
         SpringUtil.getBean(UserRealm.class).setUserScope(u);
 
@@ -151,18 +151,18 @@ public class UserRealm extends AuthorizingRealm {
         SimplePrincipalCollection principals = new SimplePrincipalCollection(u, realmName);
         subject.runAs(principals);
 
-        //清理缓存
+/*        //清理缓存
         DefaultWebSecurityManager rsm = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
         UserRealm myShiroRealm = (UserRealm) rsm.getRealms().iterator().next();
-        if(myShiroRealm.isAuthenticationCachingEnabled()) {
+        if(myShiroRealm.isAuthenticationCachingEnabled() && myShiroRealm.getAuthenticationCache() != null) {
             myShiroRealm.getAuthenticationCache().remove(principals);
         }
-        if(myShiroRealm.isAuthorizationCachingEnabled()) {
+        if(myShiroRealm.isAuthorizationCachingEnabled() && myShiroRealm.getAuthorizationCache() != null) {
             // 删除指定用户shiro权限
             myShiroRealm.getAuthorizationCache().remove(principals);
         }
         // 刷新权限
-        subject.releaseRunAs();
+        subject.releaseRunAs();*/
     }
     private void setUserScope(UserInfo loginUser){
         //根据roles 计算数据权限

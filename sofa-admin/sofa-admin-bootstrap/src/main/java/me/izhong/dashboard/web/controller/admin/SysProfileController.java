@@ -123,7 +123,7 @@ public class SysProfileController {
     @PostMapping("/update")
     @AjaxWrapper
     public void update(String userName, String phoneNumber, String email, String sex) {
-        UserInfo loginUser = UserInfoContextHelper.getSubjectUser();
+        UserInfo loginUser = UserInfoContextHelper.getLoginUser();
         sysUserService.updateMyInfos(loginUser.getUserId(),userName,email,phoneNumber,sex);
 
         loginUser.setUserName(userName);
